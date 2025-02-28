@@ -715,11 +715,6 @@
             const clickCooldown = 250; // 0.25 seconds in milliseconds
             let isClickOnCooldown = false;
 
-            let lastUpgradeTime = 0;
-            const upgradeCooldown = 10000; // 10 seconds in milliseconds
-            let isUpgradeOnCooldown = false;
-            let upgradeCooldownTimer = null;
-
             // Check if cookies were previously accepted
             if (getCookie('cookiesAccepted') === 'true') {
                 cookiesAccepted = true;
@@ -894,7 +889,7 @@
             // Function to update the counter display
             function updateCounter(saveData = true) {
                 counterElement.textContent = formatNumber(count);
-                upgradeButton.disabled = count < upgradeCost || isUpgradeOnCooldown;
+                upgradeButton.disabled = count < upgradeCost;
                 rebirthButton.disabled = count < rebirthCost;
                 rebirthButton.textContent = `Rebirth: ${formatNumber(rebirthCost)} points`;
                 multiplierElement.textContent = formatNumber(multiplier);
@@ -906,10 +901,6 @@
                 // Update shop display
                 upgradeCostDisplay.textContent = formatNumber(upgradeCost);
                 rebirthCostDisplay.textContent = formatNumber(rebirthCost);
-
-                if (isUpgradeOnCooldown) {
-                    upgradeCooldownElement.style.display = 'flex';
-                }
 
                 if (saveData) {
                     saveGameData();
@@ -956,38 +947,10 @@
 
             // Upgrade button functionality
             upgradeButton.addEventListener('click', function() {
-                const now = Date.now();
-
-                if (isUpgradeOnCooldown) {
-                    return;
-                }
-
                 if (count >= upgradeCost) {
                     count -= upgradeCost;
                     multiplier *= 2;
                     upgradeCost *= 2;
-                    isUpgradeOnCooldown = true;
-                    lastUpgradeTime = now;
-                    upgradeCooldownElement.style.display = 'flex';
-
-                    let remainingCooldown = upgradeCooldown;
-
-                    upgradeCooldownTimer = setInterval(() => {
-                        remainingCooldown -= 100;
-                        const widthPercentage = (remainingCooldown / upgradeCooldown) * 100;
-                        upgradeCooldownElement.style.width = `${widthPercentage}%`;
-                        const secondsLeft = Math.ceil(remainingCooldown / 1000);
-                        upgradeCooldownElement.textContent = `${secondsLeft}s`;
-
-                        if (remainingCooldown <= 0) {
-                            clearInterval(upgradeCooldownTimer);
-                            isUpgradeOnCooldown = false;
-                            upgradeCooldownElement.style.width = '0%';
-                            upgradeCooldownElement.style.display = 'none';
-                            updateCounter();
-                        }
-                    }, 100);
-
                     updateCounter();
                 }
             });
@@ -1015,13 +978,6 @@
                     upgradeCost = 10;
                     rebirthLevel = 0;
                     rebirthCost = 1000;
-
-                    if (upgradeCooldownTimer) {
-                        clearInterval(upgradeCooldownTimer);
-                    }
-                    isUpgradeOnCooldown = false;
-                    upgradeCooldownElement.style.width = '0%';
-                    upgradeCooldownElement.style.display = 'none';
 
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
