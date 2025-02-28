@@ -14,6 +14,8 @@
             margin: 0;
             background-color: #f5f5f5;
             flex-direction: column;
+            position: relative;
+            padding-bottom: 70px; /* Space for cookie banner */
         }
         .credit-box {
             font-size: 0.75rem;
@@ -129,6 +131,36 @@
             margin-top: 5px;
             font-style: italic;
         }
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(51, 51, 51, 0.9);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .cookie-text {
+            margin-right: 20px;
+        }
+        .cookie-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .cookie-button:hover {
+            background-color: #388E3C;
+        }
     </style>
 </head>
 <body>
@@ -146,7 +178,7 @@
         <div class="stats">
             <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
             <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
-            <p class="save-message" id="saveMessage">Progress is saved automatically</p>
+            <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
         </div>
         
         <div class="button-container">
@@ -160,6 +192,11 @@
     <div class="warning-box">
         No autoclickers or blacklisted from the website!
     </div>
+    
+    <div id="cookieConsent" class="cookie-consent">
+        <div class="cookie-text">This site uses cookies to save your game progress. By accepting, you'll never lose your clicks again!</div>
+        <button id="acceptCookies" class="cookie-button">Accept Cookies</button>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -170,45 +207,91 @@
             const multiplierElement = document.getElementById('multiplier');
             const upgradeCostElement = document.getElementById('upgradeCost');
             const saveMessageElement = document.getElementById('saveMessage');
+            const cookieConsentElement = document.getElementById('cookieConsent');
+            const acceptCookiesButton = document.getElementById('acceptCookies');
             
-            // Initialize game state with saved values or defaults
+            // Initialize game state with defaults
             let count = 0;
             let multiplier = 1;
             let upgradeCost = 10;
+            let cookiesAccepted = false;
             
-            // Load saved game data
-            loadGameData();
-            
-            // Function to save game data to localStorage
-            function saveGameData() {
-                const gameData = {
-                    count: count,
-                    multiplier: multiplier,
-                    upgradeCost: upgradeCost,
-                    lastSaved: new Date().toLocaleString()
-                };
-                
-                localStorage.setItem('enterClickerSave', JSON.stringify(gameData));
-                saveMessageElement.textContent = `Progress saved automatically (Last: ${gameData.lastSaved})`;
+            // Check if cookies were previously accepted
+            if (getCookie('cookiesAccepted') === 'true') {
+                cookiesAccepted = true;
+                cookieConsentElement.style.display = 'none';
+                loadGameData();
             }
             
-            // Function to load game data from localStorage
-            function loadGameData() {
-                const savedData = localStorage.getItem('enterClickerSave');
+            // Accept cookies button click handler
+            acceptCookiesButton.addEventListener('click', function() {
+                cookiesAccepted = true;
+                setCookie('cookiesAccepted', 'true', 365); // Cookie lasts for 1 year
+                cookieConsentElement.style.display = 'none';
+                saveGameData();
+                saveMessageElement.textContent = 'Cookies accepted! Your progress will be saved automatically.';
+            });
+            
+            // Cookie utility functions
+            function setCookie(name, value, days) {
+                let expires = '';
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = '; expires=' + date.toUTCString();
+                }
+                document.cookie = name + '=' + (value || '') + expires + '; path=/';
+            }
+            
+            function getCookie(name) {
+                const nameEQ = name + '=';
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+            
+            // Function to save game data to cookies
+            function saveGameData() {
+                if (!cookiesAccepted) return;
                 
-                if (savedData) {
-                    const gameData = JSON.parse(savedData);
-                    count = gameData.count;
-                    multiplier = gameData.multiplier;
-                    upgradeCost = gameData.upgradeCost;
-                    saveMessageElement.textContent = `Progress loaded (Last saved: ${gameData.lastSaved})`;
+                const now = new Date().toLocaleString();
+                
+                setCookie('clickerCount', count.toString(), 365);
+                setCookie('clickerMultiplier', multiplier.toString(), 365);
+                setCookie('clickerUpgradeCost', upgradeCost.toString(), 365);
+                setCookie('clickerLastSaved', now, 365);
+                
+                saveMessageElement.textContent = `Progress saved (Last: ${now})`;
+            }
+            
+            // Function to load game data from cookies
+            function loadGameData() {
+                const savedCount = getCookie('clickerCount');
+                const savedMultiplier = getCookie('clickerMultiplier');
+                const savedUpgradeCost = getCookie('clickerUpgradeCost');
+                const lastSaved = getCookie('clickerLastSaved');
+                
+                if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
+                    count = parseInt(savedCount, 10);
+                    multiplier = parseInt(savedMultiplier, 10);
+                    upgradeCost = parseInt(savedUpgradeCost, 10);
+                    
+                    if (lastSaved) {
+                        saveMessageElement.textContent = `Progress loaded (Last saved: ${lastSaved})`;
+                    } else {
+                        saveMessageElement.textContent = 'Progress loaded successfully';
+                    }
                 }
                 
-                updateCounter();
+                updateCounter(false);
             }
 
             // Function to update the counter display
-            function updateCounter() {
+            function updateCounter(saveData = true) {
                 counterElement.textContent = count;
                 
                 // Disable upgrade button if not enough points
@@ -221,8 +304,10 @@
                 // Update the upgrade button text
                 upgradeButton.textContent = `Buy Multiplier: ${upgradeCost} points`;
                 
-                // Save the game data after each update
-                saveGameData();
+                // Save the game data after each update if needed
+                if (saveData) {
+                    saveGameData();
+                }
             }
             
             // Function to increment counter
@@ -271,15 +356,20 @@
                     multiplier = 1;
                     upgradeCost = 10;
                     updateCounter();
-                    saveMessageElement.textContent = "Game reset. Progress saved automatically";
+                    saveMessageElement.textContent = cookiesAccepted ? 
+                        "Game reset. Progress saved automatically" : 
+                        "Game reset. Accept cookies to save progress";
                 }
             });
+            
+            // Save game data every 30 seconds as a backup
+            setInterval(saveGameData, 30000);
             
             // Save game data when tab/window is closed
             window.addEventListener('beforeunload', saveGameData);
             
             // Initial update
-            updateCounter();
+            updateCounter(false);
         });
     </script>
 </body>
