@@ -167,48 +167,13 @@
             color: white;
         }
         
-        .upgrade-button:hover:not(:disabled) {
+        .upgrade-button:hover {
             background-color: #388E3C;
         }
         
         .upgrade-button:disabled {
             background-color: #9E9E9E;
             cursor: not-allowed;
-        }
-        
-        .rebirth-button {
-            background-color: #8B4513;
-            color: white;
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-        }
-        
-        .rebirth-button:hover:not(:disabled) {
-            background-color: #654321;
-        }
-        
-        .rebirth-button:disabled {
-            background-color: #9E9E9E;
-            cursor: not-allowed;
-        }
-        
-        .cooldown-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 100%;
-            width: 0;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 3px;
-            pointer-events: none;
-            transition: width 0.1s linear;
-        }
-        
-        .button-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
         }
         
         .stats {
@@ -223,11 +188,6 @@
         .multiplier {
             font-weight: bold;
             color: #4CAF50;
-        }
-        
-        .rootBeer {
-            font-weight: bold;
-            color: #8B4513;
         }
         
         .enter-button {
@@ -355,25 +315,14 @@
             <div class="stats">
                 <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
                 <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
-                <p>Root Beer Multiplier: <span id="rootBeerMultiplier" class="rootBeer">1</span>x</p>
                 <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
             </div>
             
             <div class="button-container">
-                <div class="button-wrapper">
-                    <button class="button upgrade-button" id="upgradeButton">
-                        Buy Multiplier: 10 points
-                    </button>
-                    <div class="cooldown-overlay" id="upgradeCooldown"></div>
-                </div>
-                <button class="button reset-button" id="resetButton">Reset Game</button>
-            </div>
-            
-            <div class="button-wrapper">
-                <button class="button rebirth-button" id="rebirthButton">
-                    Root Beer: 1,000 points
+                <button class="button upgrade-button" id="upgradeButton">
+                    Buy Multiplier: 10 points
                 </button>
-                <div class="cooldown-overlay" id="rebirthCooldown"></div>
+                <button class="button reset-button" id="resetButton">Reset Game</button>
             </div>
         </div>
         
@@ -392,28 +341,20 @@
             const counterElement = document.getElementById('counter');
             const resetButton = document.getElementById('resetButton');
             const upgradeButton = document.getElementById('upgradeButton');
-            const rebirthButton = document.getElementById('rebirthButton');
             const enterButton = document.getElementById('enterButton');
             const multiplierElement = document.getElementById('multiplier');
-            const rootBeerMultiplierElement = document.getElementById('rootBeerMultiplier');
             const upgradeCostElement = document.getElementById('upgradeCost');
             const saveMessageElement = document.getElementById('saveMessage');
             const cookieConsentElement = document.getElementById('cookieConsent');
             const acceptCookiesButton = document.getElementById('acceptCookies');
             const darkModeToggle = document.getElementById('darkModeToggle');
-            const upgradeCooldownElement = document.getElementById('upgradeCooldown');
-            const rebirthCooldownElement = document.getElementById('rebirthCooldown');
             
             // Initialize game state with defaults
             let count = 0;
             let multiplier = 1;
-            let rootBeerMultiplier = 1;
-            let rootBeerCost = 1000;
             let upgradeCost = 10;
             let cookiesAccepted = false;
             let darkMode = false;
-            let canClick = true;
-            let isUpgradeCoolingDown = false;
             
             // Check if cookies were previously accepted
             if (getCookie('cookiesAccepted') === 'true') {
@@ -494,9 +435,7 @@
                 
                 setCookie('clickerCount', count.toString(), 365);
                 setCookie('clickerMultiplier', multiplier.toString(), 365);
-                setCookie('clickerRootBeerMultiplier', rootBeerMultiplier.toString(), 365);
                 setCookie('clickerUpgradeCost', upgradeCost.toString(), 365);
-                setCookie('clickerRootBeerCost', rootBeerCost.toString(), 365);
                 setCookie('clickerLastSaved', now, 365);
                 
                 saveMessageElement.textContent = `Progress saved (Last: ${now})`;
@@ -506,23 +445,13 @@
             function loadGameData() {
                 const savedCount = getCookie('clickerCount');
                 const savedMultiplier = getCookie('clickerMultiplier');
-                const savedRootBeerMultiplier = getCookie('clickerRootBeerMultiplier');
                 const savedUpgradeCost = getCookie('clickerUpgradeCost');
-                const savedRootBeerCost = getCookie('clickerRootBeerCost');
                 const lastSaved = getCookie('clickerLastSaved');
                 
                 if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
                     count = parseInt(savedCount, 10);
                     multiplier = parseInt(savedMultiplier, 10);
                     upgradeCost = parseInt(savedUpgradeCost, 10);
-                    
-                    if (savedRootBeerMultiplier !== null) {
-                        rootBeerMultiplier = parseInt(savedRootBeerMultiplier, 10);
-                    }
-                    
-                    if (savedRootBeerCost !== null) {
-                        rootBeerCost = parseInt(savedRootBeerCost, 10);
-                    }
                     
                     if (lastSaved) {
                         saveMessageElement.textContent = `Progress loaded (Last saved: ${lastSaved})`;
@@ -580,21 +509,16 @@
                 counterElement.textContent = formatNumber(count);
                 
                 // Disable upgrade button if not enough points
-                upgradeButton.disabled = count < upgradeCost || isUpgradeCoolingDown;
-                
-                // Disable rebirth button if not enough points
-                rebirthButton.disabled = count < rootBeerCost;
+                upgradeButton.disabled = count < upgradeCost;
                 
                 // Update displays
                 multiplierElement.textContent = formatNumber(multiplier);
-                rootBeerMultiplierElement.textContent = rootBeerMultiplier;
                 
-                // Format costs for display
+                // Format upgrade cost for display
                 upgradeCostElement.textContent = formatNumber(upgradeCost);
                 
-                // Update the button texts with formatted costs
+                // Update the upgrade button text with formatted cost
                 upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
-                rebirthButton.textContent = `Root Beer: ${formatNumber(rootBeerCost)} points`;
                 
                 // Save the game data after each update if needed
                 if (saveData) {
@@ -604,9 +528,7 @@
             
             // Function to increment counter
             function incrementCounter() {
-                if (!canClick) return;
-                
-                count += multiplier * rootBeerMultiplier;
+                count += multiplier;
                 updateCounter();
                 
                 // Add a visual feedback when clicked
@@ -614,30 +536,13 @@
                 setTimeout(() => {
                     enterButton.classList.remove('active');
                 }, 100);
-                
-                // Set click cooldown
-                canClick = false;
-                setTimeout(() => {
-                    canClick = true;
-                }, 500); // 0.5 second cooldown
             }
-
-            // Variable to track if Enter key is being held down
-            let isEnterKeyDown = false;
 
             // Listen for keydown events
             document.addEventListener('keydown', function(event) {
-                // Check if the Enter key was pressed and not already being held down
-                if (event.key === 'Enter' && !isEnterKeyDown) {
-                    isEnterKeyDown = true;
-                    incrementCounter();
-                }
-            });
-            
-            // Listen for keyup events
-            document.addEventListener('keyup', function(event) {
+                // Check if the Enter key was pressed
                 if (event.key === 'Enter') {
-                    isEnterKeyDown = false;
+                    incrementCounter();
                 }
             });
             
@@ -646,7 +551,7 @@
 
             // Upgrade button functionality
             upgradeButton.addEventListener('click', function() {
-                if (count >= upgradeCost && !isUpgradeCoolingDown) {
+                if (count >= upgradeCost) {
                     // Deduct the cost
                     count -= upgradeCost;
                     
@@ -656,73 +561,16 @@
                     // Double the cost for next upgrade
                     upgradeCost *= 2;
                     
-                    // Start cooldown
-                    isUpgradeCoolingDown = true;
-                    upgradeButton.disabled = true;
-                    
-                    // Animate cooldown
-                    upgradeCooldownElement.style.width = '100%';
-                    
-                    // Reset cooldown after 10 seconds
-                    let cooldownTime = 10;
-                    const cooldownInterval = setInterval(() => {
-                        cooldownTime--;
-                        
-                        // Update cooldown bar width
-                        const percentRemaining = (cooldownTime / 10) * 100;
-                        upgradeCooldownElement.style.width = percentRemaining + '%';
-                        
-                        // Update button text
-                        upgradeButton.textContent = `Cooldown: ${cooldownTime}s`;
-                        
-                        if (cooldownTime <= 0) {
-                            clearInterval(cooldownInterval);
-                            isUpgradeCoolingDown = false;
-                            upgradeButton.disabled = count < upgradeCost;
-                            upgradeCooldownElement.style.width = '0%';
-                            upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
-                        }
-                    }, 1000);
-                    
                     updateCounter();
-                }
-            });
-
-            // Rebirth (Root Beer) button functionality
-            rebirthButton.addEventListener('click', function() {
-                if (count >= rootBeerCost) {
-                    if (confirm("Are you sure you want to rebirth? You'll lose all your points and multipliers, but gain a permanent Root Beer multiplier!")) {
-                        // Increment Root Beer multiplier
-                        rootBeerMultiplier++;
-                        
-                        // Double the cost for next rebirth
-                        rootBeerCost *= 5;
-                        
-                        // Reset score and multiplier
-                        count = 0;
-                        multiplier = 1;
-                        upgradeCost = 10;
-                        
-                        // Show animation on rebirth
-                        document.body.style.backgroundColor = '#8B4513';
-                        setTimeout(() => {
-                            document.body.style.backgroundColor = '';
-                        }, 300);
-                        
-                        updateCounter();
-                        saveMessageElement.textContent = `Rebirth successful! Root Beer Multiplier: ${rootBeerMultiplier}x`;
-                    }
                 }
             });
 
             // Reset button functionality
             resetButton.addEventListener('click', function() {
-                if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including Root Beer multipliers!")) {
+                if (confirm("Are you sure you want to reset your game progress?")) {
                     count = 0;
                     multiplier = 1;
-                    rootBeerMultiplier = 1;
                     upgradeCost = 10;
-                    rootBeerCost = 1000;
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
                         "Game reset. Progress saved automatically" : 
@@ -750,6 +598,38 @@
             
             // Initial update
             updateCounter(false);
+            
+            // For testing large numbers, uncomment this:
+            /*
+            // Debug buttons for testing different number ranges
+            const testButtons = [
+                { label: "1K", value: 1000 },
+                { label: "1M", value: 1000000 },
+                { label: "1B", value: 1000000000 },
+                { label: "1T", value: 1000000000000 },
+                { label: "1Qd", value: 1000000000000000 },
+                { label: "1Qt", value: 1000000000000000000 }
+            ];
+            
+            const debugDiv = document.createElement('div');
+            debugDiv.style.position = 'absolute';
+            debugDiv.style.left = '10px';
+            debugDiv.style.top = '10px';
+            
+            testButtons.forEach(btn => {
+                const button = document.createElement('button');
+                button.textContent = btn.label;
+                button.className = 'button';
+                button.style.margin = '2px';
+                button.addEventListener('click', () => {
+                    count = btn.value;
+                    updateCounter();
+                });
+                debugDiv.appendChild(button);
+            });
+            
+            document.body.appendChild(debugDiv);
+            */
         });
     </script>
 </body>
