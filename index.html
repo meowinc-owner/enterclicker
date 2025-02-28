@@ -48,7 +48,8 @@
             --cooldown-overlay: rgba(0, 0, 0, 0.7);
         }
         
-        body.rainbow-mode {
+        /* Rainbow Light Theme */
+        body.rainbow-light-mode {
             --container-bg: rgba(255, 255, 255, 0.9);
             --text-color: #000;
             --secondary-text: #555;
@@ -65,6 +66,24 @@
             --cooldown-overlay: rgba(0, 0, 0, 0.5);
         }
 
+        /* Rainbow Dark Theme */
+        body.rainbow-dark-mode {
+            --container-bg: rgba(30, 30, 30, 0.9);
+            --text-color: #e0e0e0;
+            --secondary-text: #b0b0b0;
+            --tertiary-text: #909090;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --stats-border: rgba(255, 255, 255, 0.1);
+            --credit-bg: rgba(30, 30, 30, 0.8);
+            --warning-bg: rgba(58, 28, 28, 0.9);
+            --warning-border: #912923;
+            --warning-text: #ff6b6b;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --rebirth-color: #9575CD;
+            --rebirth-hover: #7E57C2;
+            --cooldown-overlay: rgba(0, 0, 0, 0.7);
+        }
+
         /* Rainbow animation */
         @keyframes rainbowBackground {
             0% { background-position: 0% 50%; }
@@ -72,8 +91,16 @@
             100% { background-position: 0% 50%; }
         }
 
-        body.rainbow-mode {
+        /* Rainbow Light Background */
+        body.rainbow-light-mode {
             background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee, #fbc2eb, #ff9a9e);
+            background-size: 400% 400%;
+            animation: rainbowBackground 10s ease infinite;
+        }
+
+        /* Rainbow Dark Background */
+        body.rainbow-dark-mode {
+            background: linear-gradient(270deg, #673AB7, #5E35B1, #512DA8, #4527A0, #512DA8, #673AB7);
             background-size: 400% 400%;
             animation: rainbowBackground 10s ease infinite;
         }
@@ -444,7 +471,8 @@
             <div id="themeDropdown" class="theme-dropdown">
                 <button id="lightTheme">Light</button>
                 <button id="darkTheme">Dark</button>
-                <button id="rainbowTheme">Rainbow</button>
+                <button id="rainbowLightTheme">Rainbow Light</button>
+                <button id="rainbowDarkTheme">Rainbow Dark</button>
             </div>
         </div>
         
@@ -508,7 +536,8 @@
             const themeDropdown = document.getElementById('themeDropdown');
             const lightThemeButton = document.getElementById('lightTheme');
             const darkThemeButton = document.getElementById('darkTheme');
-            const rainbowThemeButton = document.getElementById('rainbowTheme');
+            const rainbowLightThemeButton = document.getElementById('rainbowLightTheme');
+            const rainbowDarkThemeButton = document.getElementById('rainbowDarkTheme');
             const rebirthButton = document.getElementById('rebirthButton');
             const rebirthLevelElement = document.getElementById('rebirthLevel');
             const rebirthBonusElement = document.getElementById('rebirthBonus');
@@ -565,19 +594,27 @@
                 themeDropdown.classList.remove('show');
             });
             
-            // Rainbow theme button click handler
-            rainbowThemeButton.addEventListener('click', function() {
-                setTheme('rainbow');
+            // Rainbow Light theme button click handler
+            rainbowLightThemeButton.addEventListener('click', function() {
+                setTheme('rainbow-light');
+                themeDropdown.classList.remove('show');
+            });
+            
+            // Rainbow Dark theme button click handler
+            rainbowDarkThemeButton.addEventListener('click', function() {
+                setTheme('rainbow-dark');
                 themeDropdown.classList.remove('show');
             });
             
             // Function to set the theme
             function setTheme(theme) {
-                document.body.classList.remove('dark-mode', 'rainbow-mode');
+                document.body.classList.remove('dark-mode', 'rainbow-light-mode', 'rainbow-dark-mode');
                 if (theme === 'dark') {
                     document.body.classList.add('dark-mode');
-                } else if (theme === 'rainbow') {
-                    document.body.classList.add('rainbow-mode');
+                } else if (theme === 'rainbow-light') {
+                    document.body.classList.add('rainbow-light-mode');
+                } else if (theme === 'rainbow-dark') {
+                    document.body.classList.add('rainbow-dark-mode');
                 }
                 currentTheme = theme;
                 if (cookiesAccepted) {
