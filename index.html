@@ -25,6 +25,9 @@
             --warning-border: #f44336;
             --warning-text: #c62828;
             --shadow-color: rgba(0, 0, 0, 0.1);
+            --rebirth-color: #673AB7;
+            --rebirth-hover: #5E35B1;
+            --cooldown-overlay: rgba(0, 0, 0, 0.5);
         }
         
         body.dark-mode {
@@ -40,6 +43,9 @@
             --warning-border: #912923;
             --warning-text: #ff6b6b;
             --shadow-color: rgba(0, 0, 0, 0.3);
+            --rebirth-color: #9575CD;
+            --rebirth-hover: #7E57C2;
+            --cooldown-overlay: rgba(0, 0, 0, 0.7);
         }
         
         body {
@@ -143,6 +149,23 @@
             font-size: 1rem;
             margin: 0.5rem;
             transition: background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cooldown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--cooldown-overlay);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.1s linear;
         }
         
         .button-container {
@@ -176,6 +199,22 @@
             cursor: not-allowed;
         }
         
+        .rebirth-button {
+            background-color: var(--rebirth-color);
+            color: white;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .rebirth-button:hover {
+            background-color: var(--rebirth-hover);
+        }
+        
+        .rebirth-button:disabled {
+            background-color: #9E9E9E;
+            cursor: not-allowed;
+        }
+        
         .stats {
             margin-top: 1rem;
             padding-top: 1rem;
@@ -188,6 +227,11 @@
         .multiplier {
             font-weight: bold;
             color: #4CAF50;
+        }
+        
+        .rebirth-stat {
+            font-weight: bold;
+            color: var(--rebirth-color);
         }
         
         .enter-button {
@@ -273,6 +317,24 @@
             background-color: #388E3C;
         }
 
+        .rate-limiter {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 0.8rem;
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .rebirth-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: rgba(103, 58, 183, 0.1);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            text-align: left;
+            border: 1px solid var(--rebirth-color);
+        }
+
         @media (max-height: 800px) {
             .game-container {
                 min-height: 350px;
@@ -304,7 +366,7 @@
         <div class="credit-box">Made by Damian B - Meowinc<span class="trademark">™</span></div>
         
         <div class="game-container">
-            <div class="instructions">Press Enter key or click the button below</div>
+            <div class="instructions">Press Enter key or click the button below <span id="rateLimitInfo" class="rate-limiter"></span></div>
             <div class="counter" id="counter">0</div>
             
             <button class="button enter-button" id="enterButton">
@@ -315,14 +377,25 @@
             <div class="stats">
                 <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
                 <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
+                <p>Rebirth level: <span id="rebirthLevel" class="rebirth-stat">0</span> (+<span id="rebirthBonus">0</span>% per click)</p>
                 <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
             </div>
             
             <div class="button-container">
                 <button class="button upgrade-button" id="upgradeButton">
                     Buy Multiplier: 10 points
+                    <div class="cooldown-overlay" id="upgradeCooldown" style="width: 0%"></div>
+                </button>
+                <button class="button rebirth-button" id="rebirthButton" disabled>
+                    Rebirth: 1,000 points
                 </button>
                 <button class="button reset-button" id="resetButton">Reset Game</button>
+            </div>
+            
+            <div class="rebirth-info" id="rebirthInfo" style="display: none;">
+                <p><strong>Rebirth System:</strong> Reset your score and multipliers, but gain a permanent bonus to your score per click!</p>
+                <p>Each rebirth level adds 10% to your base score per click.</p>
+                <p>Cost increases with each rebirth: 1,000 → 10,000 → 100,000 → etc.</p>
             </div>
         </div>
         
@@ -348,6 +421,12 @@
             const cookieConsentElement = document.getElementById('cookieConsent');
             const acceptCookiesButton = document.getElementById('acceptCookies');
             const darkModeToggle = document.getElementById('darkModeToggle');
+            const rebirthButton = document.getElementById('rebirthButton');
+            const rebirthLevelElement = document.getElementById('rebirthLevel');
+            const rebirthBonusElement = document.getElementById('rebirthBonus');
+            const rebirthInfoElement = document.getElementById('rebirthInfo');
+            const rateLimitInfoElement = document.getElementById('rateLimitInfo');
+            const upgradeCooldownElement = document.getElementById('upgradeCooldown');
             
             // Initialize game state with defaults
             let count = 0;
@@ -355,6 +434,27 @@
             let upgradeCost = 10;
             let cookiesAccepted = false;
             let darkMode = false;
+            let rebirthLevel = 0;
+            let rebirthCost = 1000;
+            
+            // Rate limiters
+            let lastClickTime = 0;
+            const clickCooldown = 250; // 0.25 seconds in milliseconds
+            let isClickOnCooldown = false;
+            
+            let lastUpgradeTime = 0;
+            const upgradeCooldown = 10000; // 10 seconds in milliseconds
+            let isUpgradeOnCooldown = false;
+            let upgradeCooldownTimer = null;
+            
+            // Show rebirth info when hovering over the rebirth button
+            rebirthButton.addEventListener('mouseenter', function() {
+                rebirthInfoElement.style.display = 'block';
+            });
+            
+            rebirthButton.addEventListener('mouseleave', function() {
+                rebirthInfoElement.style.display = 'none';
+            });
             
             // Check if cookies were previously accepted
             if (getCookie('cookiesAccepted') === 'true') {
@@ -436,6 +536,8 @@
                 setCookie('clickerCount', count.toString(), 365);
                 setCookie('clickerMultiplier', multiplier.toString(), 365);
                 setCookie('clickerUpgradeCost', upgradeCost.toString(), 365);
+                setCookie('clickerRebirthLevel', rebirthLevel.toString(), 365);
+                setCookie('clickerRebirthCost', rebirthCost.toString(), 365);
                 setCookie('clickerLastSaved', now, 365);
                 
                 saveMessageElement.textContent = `Progress saved (Last: ${now})`;
@@ -446,12 +548,22 @@
                 const savedCount = getCookie('clickerCount');
                 const savedMultiplier = getCookie('clickerMultiplier');
                 const savedUpgradeCost = getCookie('clickerUpgradeCost');
+                const savedRebirthLevel = getCookie('clickerRebirthLevel');
+                const savedRebirthCost = getCookie('clickerRebirthCost');
                 const lastSaved = getCookie('clickerLastSaved');
                 
                 if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
                     count = parseInt(savedCount, 10);
                     multiplier = parseInt(savedMultiplier, 10);
                     upgradeCost = parseInt(savedUpgradeCost, 10);
+                    
+                    if (savedRebirthLevel !== null) {
+                        rebirthLevel = parseInt(savedRebirthLevel, 10);
+                    }
+                    
+                    if (savedRebirthCost !== null) {
+                        rebirthCost = parseInt(savedRebirthCost, 10);
+                    }
                     
                     if (lastSaved) {
                         saveMessageElement.textContent = `Progress loaded (Last saved: ${lastSaved})`;
@@ -509,10 +621,16 @@
                 counterElement.textContent = formatNumber(count);
                 
                 // Disable upgrade button if not enough points
-                upgradeButton.disabled = count < upgradeCost;
+                upgradeButton.disabled = count < upgradeCost || isUpgradeOnCooldown;
+                
+                // Update rebirth button status
+                rebirthButton.disabled = count < rebirthCost;
+                rebirthButton.textContent = `Rebirth: ${formatNumber(rebirthCost)} points`;
                 
                 // Update displays
                 multiplierElement.textContent = formatNumber(multiplier);
+                rebirthLevelElement.textContent = rebirthLevel;
+                rebirthBonusElement.textContent = rebirthLevel * 10;
                 
                 // Format upgrade cost for display
                 upgradeCostElement.textContent = formatNumber(upgradeCost);
@@ -520,15 +638,42 @@
                 // Update the upgrade button text with formatted cost
                 upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
                 
+                // If on cooldown, re-add the cooldown overlay
+                if (isUpgradeOnCooldown) {
+                    upgradeCooldownElement.style.display = 'flex';
+                }
+                
                 // Save the game data after each update if needed
                 if (saveData) {
                     saveGameData();
                 }
             }
             
-            // Function to increment counter
+            // Function to increment counter with rate limiting
             function incrementCounter() {
-                count += multiplier;
+                const now = Date.now();
+                
+                // Check if click is on cooldown
+                if (now - lastClickTime < clickCooldown) {
+                    isClickOnCooldown = true;
+                    const remainingTime = ((clickCooldown - (now - lastClickTime)) / 1000).toFixed(1);
+                    rateLimitInfoElement.textContent = `Wait ${remainingTime}s`;
+                    return;
+                }
+                
+                // Calculate bonus from rebirth levels
+                const rebirthBonus = 1 + (rebirthLevel * 0.1); // Each rebirth adds 10%
+                
+                // Add points with rebirth bonus
+                count += Math.floor(multiplier * rebirthBonus);
+                lastClickTime = now;
+                
+                // Clear the rate limit message
+                setTimeout(() => {
+                    isClickOnCooldown = false;
+                    rateLimitInfoElement.textContent = '';
+                }, clickCooldown);
+                
                 updateCounter();
                 
                 // Add a visual feedback when clicked
@@ -551,6 +696,13 @@
 
             // Upgrade button functionality
             upgradeButton.addEventListener('click', function() {
+                const now = Date.now();
+                
+                // Check if upgrade is on cooldown
+                if (isUpgradeOnCooldown) {
+                    return;
+                }
+                
                 if (count >= upgradeCost) {
                     // Deduct the cost
                     count -= upgradeCost;
@@ -561,16 +713,80 @@
                     // Double the cost for next upgrade
                     upgradeCost *= 2;
                     
+                    // Set upgrade cooldown
+                    isUpgradeOnCooldown = true;
+                    lastUpgradeTime = now;
+                    
+                    // Add cooldown overlay
+                    upgradeCooldownElement.style.display = 'flex';
+                    
+                    // Start the cooldown timer animation
+                    let remainingCooldown = upgradeCooldown;
+                    
+                    upgradeCooldownTimer = setInterval(() => {
+                        remainingCooldown -= 100; // Update every 100ms
+                        
+                        // Calculate width percentage for cooldown overlay
+                        const widthPercentage = (remainingCooldown / upgradeCooldown) * 100;
+                        upgradeCooldownElement.style.width = `${widthPercentage}%`;
+                        
+                        // Show remaining time in the overlay
+                        const secondsLeft = Math.ceil(remainingCooldown / 1000);
+                        upgradeCooldownElement.textContent = `${secondsLeft}s`;
+                        
+                        if (remainingCooldown <= 0) {
+                            clearInterval(upgradeCooldownTimer);
+                            isUpgradeOnCooldown = false;
+                            upgradeCooldownElement.style.width = '0%';
+                            upgradeCooldownElement.style.display = 'none';
+                            updateCounter();
+                        }
+                    }, 100);
+                    
                     updateCounter();
+                }
+            });
+            
+            // Rebirth button functionality
+            rebirthButton.addEventListener('click', function() {
+                if (count >= rebirthCost) {
+                    if (confirm(`Are you sure you want to rebirth? You will lose all your points (${formatNumber(count)}) and multipliers, but gain a permanent +10% bonus per click!`)) {
+                        // Increase rebirth level
+                        rebirthLevel++;
+                        
+                        // Reset count and multiplier
+                        count = 0;
+                        multiplier = 1;
+                        
+                        // Reset upgrade cost
+                        upgradeCost = 10;
+                        
+                        // Increase rebirth cost (10x each time)
+                        rebirthCost *= 10;
+                        
+                        updateCounter();
+                        saveMessageElement.textContent = "Rebirth complete! Your permanent bonus is now +" + (rebirthLevel * 10) + "% per click.";
+                    }
                 }
             });
 
             // Reset button functionality
             resetButton.addEventListener('click', function() {
-                if (confirm("Are you sure you want to reset your game progress?")) {
+                if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including rebirth levels!")) {
                     count = 0;
                     multiplier = 1;
                     upgradeCost = 10;
+                    rebirthLevel = 0;
+                    rebirthCost = 1000;
+                    
+                    // Clear any active cooldowns
+                    if (upgradeCooldownTimer) {
+                        clearInterval(upgradeCooldownTimer);
+                    }
+                    isUpgradeOnCooldown = false;
+                    upgradeCooldownElement.style.width = '0%';
+                    upgradeCooldownElement.style.display = 'none';
+                    
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
                         "Game reset. Progress saved automatically" : 
@@ -598,38 +814,6 @@
             
             // Initial update
             updateCounter(false);
-            
-            // For testing large numbers, uncomment this:
-            /*
-            // Debug buttons for testing different number ranges
-            const testButtons = [
-                { label: "1K", value: 1000 },
-                { label: "1M", value: 1000000 },
-                { label: "1B", value: 1000000000 },
-                { label: "1T", value: 1000000000000 },
-                { label: "1Qd", value: 1000000000000000 },
-                { label: "1Qt", value: 1000000000000000000 }
-            ];
-            
-            const debugDiv = document.createElement('div');
-            debugDiv.style.position = 'absolute';
-            debugDiv.style.left = '10px';
-            debugDiv.style.top = '10px';
-            
-            testButtons.forEach(btn => {
-                const button = document.createElement('button');
-                button.textContent = btn.label;
-                button.className = 'button';
-                button.style.margin = '2px';
-                button.addEventListener('click', () => {
-                    count = btn.value;
-                    updateCounter();
-                });
-                debugDiv.appendChild(button);
-            });
-            
-            document.body.appendChild(debugDiv);
-            */
         });
     </script>
 </body>
