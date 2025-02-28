@@ -5,18 +5,325 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Clicker! - by Damian B (meowinc)</title>
     <style>
-        /* CSS styles */
-        /* ... (unchanged CSS styles) ... */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+            overflow: hidden;
+        }
+        
+        .light-mode {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .dark-mode {
+            background-color: #222;
+            color: #f0f0f0;
+        }
+        
+        @keyframes rainbow-bg {
+            0% { background-color: #ff0000; }
+            16.7% { background-color: #ff8000; }
+            33.3% { background-color: #ffff00; }
+            50% { background-color: #00ff00; }
+            66.7% { background-color: #0000ff; }
+            83.3% { background-color: #8000ff; }
+            100% { background-color: #ff0000; }
+        }
+        
+        .rainbow-mode {
+            animation: rainbow-bg 10s infinite;
+            color: white;
+        }
+        
+        .main-content {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .dark-mode .main-content {
+            background-color: rgba(50, 50, 50, 0.9);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .dark-mode h1 {
+            color: #f0f0f0;
+        }
+        
+        .counter-display {
+            font-size: 3rem;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #0066ff;
+        }
+        
+        .dark-mode .counter-display {
+            color: #4d94ff;
+        }
+        
+        .enter-btn {
+            font-size: 1.5rem;
+            padding: 15px 30px;
+            margin: 20px 0;
+            background-color: #0066ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.3s;
+        }
+        
+        .enter-btn:hover {
+            background-color: #0052cc;
+        }
+        
+        .enter-btn.active {
+            transform: scale(0.95);
+            background-color: #004099;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button:hover {
+            background-color: #555;
+        }
+        
+        button:disabled {
+            background-color: #888;
+            cursor: not-allowed;
+        }
+        
+        .reset-btn {
+            background-color: #ff3333;
+        }
+        
+        .reset-btn:hover {
+            background-color: #cc0000;
+        }
+        
+        .upgrades {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .dark-mode .upgrades {
+            border-color: #555;
+        }
+        
+        .save-message {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 20px;
+        }
+        
+        .dark-mode .save-message {
+            color: #aaa;
+        }
+        
+        .cookie-consent {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .cookie-button {
+            background-color: #0066ff;
+            white-space: nowrap;
+            margin-left: 15px;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            color: #333;
+            font-size: 1.2rem;
+            padding: 5px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .dark-mode .theme-toggle {
+            color: #f0f0f0;
+        }
+        
+        .theme-menu {
+            position: absolute;
+            top: 40px;
+            right: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            display: none;
+            z-index: 100;
+        }
+        
+        .dark-mode .theme-menu {
+            background-color: #333;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        
+        .theme-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 8px 15px;
+            margin-bottom: 5px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .dark-mode .theme-option {
+            background-color: #444;
+            color: #f0f0f0;
+        }
+        
+        .theme-option:last-child {
+            margin-bottom: 0;
+        }
+        
+        .theme-option:hover {
+            background-color: #0066ff;
+            color: white;
+        }
+        
+        .stats {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+            text-align: left;
+        }
+        
+        .dark-mode .stats {
+            color: #bbb;
+            border-color: #555;
+        }
+        
+        .upgrade-container {
+            position: relative;
+        }
+        
+        .upgrade-cooldown {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: rgba(255, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+        
+        .rate-limit-info {
+            color: red;
+            font-size: 0.8rem;
+            height: 20px;
+            margin-top: 5px;
+        }
     </style>
 </head>
-<body>
+<body class="light-mode">
     <div class="main-content">
-        <!-- ... (unchanged HTML structure) ... -->
+        <h1>Enter Clicker!</h1>
+        <button id="themeToggle" class="theme-toggle">🎨</button>
+        <div id="themeMenu" class="theme-menu">
+            <button id="lightMode" class="theme-option">Light Mode</button>
+            <button id="darkMode" class="theme-option">Dark Mode</button>
+            <button id="rainbowMode" class="theme-option">Rainbow Mode</button>
+        </div>
+        
+        <div class="counter-display" id="counter">0</div>
+        <div id="rateLimitInfo" class="rate-limit-info"></div>
+        
+        <button id="enterButton" class="enter-btn">Press ENTER</button>
+        
+        <div class="upgrades">
+            <h3>Upgrades</h3>
+            <div class="upgrade-container">
+                <button id="upgradeButton" disabled>Buy Multiplier: 10 points</button>
+                <div id="upgradeCooldown" class="upgrade-cooldown"></div>
+            </div>
+            <p>Current Multiplier: <span id="multiplier">1</span>x per click</p>
+            <p>Next Upgrade Cost: <span id="upgradeCost">10</span> points</p>
+        </div>
+        
+        <div class="rebirth-container">
+            <h3>Rebirth</h3>
+            <button id="rebirthButton" disabled>Rebirth: 25 points</button>
+            <div id="rebirthInfo" class="stats">
+                <p>Rebirth Level: <span id="rebirthLevel">0</span></p>
+                <p>Permanent Bonus: +<span id="rebirthBonus">0</span>% per click</p>
+                <p>Note: Multiplier upgrades are locked until your first rebirth!</p>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="resetButton" class="reset-btn">Reset Game</button>
+        </div>
+        
+        <div id="saveMessage" class="save-message">Accept cookies to save your progress</div>
     </div>
+    
     <div id="cookieConsent" class="cookie-consent">
         <div class="cookie-text">This site uses cookies to save your game progress. By accepting, you'll never lose your clicks again!</div>
         <button id="acceptCookies" class="cookie-button">Accept Cookies</button>
     </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const counterElement = document.getElementById('counter');
@@ -44,7 +351,7 @@
             let count = 0;
             let multiplier = 1;
             let upgradeCost = 10;
-            let cookiesAccepted = localStorage.getItem('cookiesAccepted') === 'true'; // Use localStorage instead
+            let cookiesAccepted = false;
             let currentTheme = 'light';
             let rebirthLevel = 0;
             let rebirthCost = 25; // First rebirth costs 25 points
@@ -60,14 +367,13 @@
             let isUpgradeOnCooldown = false;
             let upgradeCooldownTimer = null;
 
-            // Hide cookie consent if cookies are already accepted
-            if (cookiesAccepted) {
+            // Check if cookies are already accepted
+            if (document.cookie.indexOf('cookiesAccepted=true') !== -1) {
+                cookiesAccepted = true;
                 cookieConsentElement.style.display = 'none';
                 saveMessageElement.textContent = 'Cookies accepted! Your progress will be saved automatically.';
-            }
-
-            // Load saved game data if cookies are accepted
-            if (cookiesAccepted) {
+                
+                // Load saved game data if cookies are accepted
                 loadGameData();
             }
 
@@ -95,103 +401,106 @@
                 currentTheme = theme;
                 document.body.className = theme + '-mode';
                 if (cookiesAccepted) {
-                    localStorage.setItem('theme', theme);
+                    setCookie('theme', theme, 365);
                 }
             }
 
             // Load saved theme
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                setTheme(savedTheme);
+            const savedThemeMatch = document.cookie.match(/theme=([^;]+)/);
+            if (savedThemeMatch && savedThemeMatch[1]) {
+                setTheme(savedThemeMatch[1]);
             }
 
             // Accept cookies button click handler
             acceptCookiesButton.addEventListener('click', function() {
                 cookiesAccepted = true;
-                localStorage.setItem('cookiesAccepted', 'true');
-                localStorage.setItem('theme', currentTheme);
+                setCookie('cookiesAccepted', 'true', 365);
+                setCookie('theme', currentTheme, 365);
                 cookieConsentElement.style.display = 'none';
                 saveGameData();
                 saveMessageElement.textContent = 'Cookies accepted! Your progress will be saved automatically.';
             });
 
-            // localStorage utility functions (replacing cookie functions)
-            function saveToStorage(name, value) {
-                localStorage.setItem(name, value);
+            // Cookie utility functions
+            function setCookie(name, value, days) {
+                let expires = '';
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = '; expires=' + date.toUTCString();
+                }
+                document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
             }
 
-            function getFromStorage(name) {
-                return localStorage.getItem(name);
+            function getCookie(name) {
+                const nameEQ = name + '=';
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+                }
+                return null;
             }
 
-            // Function to save game data to localStorage
+            // Function to save game data to cookies
             function saveGameData() {
                 if (!cookiesAccepted) return;
 
                 const now = new Date().toLocaleString();
 
-                saveToStorage('clickerCount', count.toString());
-                saveToStorage('clickerMultiplier', multiplier.toString());
-                saveToStorage('clickerUpgradeCost', upgradeCost.toString());
-                saveToStorage('clickerRebirthLevel', rebirthLevel.toString());
-                saveToStorage('clickerRebirthCost', rebirthCost.toString());
-                saveToStorage('clickerLastSaved', now);
+                setCookie('clickerCount', count.toString(), 365);
+                setCookie('clickerMultiplier', multiplier.toString(), 365);
+                setCookie('clickerUpgradeCost', upgradeCost.toString(), 365);
+                setCookie('clickerRebirthLevel', rebirthLevel.toString(), 365);
+                setCookie('clickerRebirthCost', rebirthCost.toString(), 365);
+                setCookie('clickerLastSaved', now, 365);
+                setCookie('clickerMultiplierLocked', isMultiplierLocked.toString(), 365);
 
                 saveMessageElement.textContent = `Progress saved (Last: ${now})`;
-                
-                // Debug message to verify saving
-                console.log("Game data saved:", {
-                    count,
-                    multiplier,
-                    upgradeCost,
-                    rebirthLevel,
-                    rebirthCost,
-                    time: now
-                });
             }
 
-            // Function to load game data from localStorage
+            // Function to load game data from cookies
             function loadGameData() {
-                const savedCount = getFromStorage('clickerCount');
-                const savedMultiplier = getFromStorage('clickerMultiplier');
-                const savedUpgradeCost = getFromStorage('clickerUpgradeCost');
-                const savedRebirthLevel = getFromStorage('clickerRebirthLevel');
-                const savedRebirthCost = getFromStorage('clickerRebirthCost');
-                const lastSaved = getFromStorage('clickerLastSaved');
+                const savedCount = getCookie('clickerCount');
+                const savedMultiplier = getCookie('clickerMultiplier');
+                const savedUpgradeCost = getCookie('clickerUpgradeCost');
+                const savedRebirthLevel = getCookie('clickerRebirthLevel');
+                const savedRebirthCost = getCookie('clickerRebirthCost');
+                const savedMultiplierLocked = getCookie('clickerMultiplierLocked');
+                const lastSaved = getCookie('clickerLastSaved');
 
-                // Debug message to verify loading
-                console.log("Loading game data:", {
-                    savedCount,
-                    savedMultiplier,
-                    savedUpgradeCost,
-                    savedRebirthLevel,
-                    savedRebirthCost,
-                    lastSaved
-                });
-
-                if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
-                    count = parseInt(savedCount, 10);
-                    multiplier = parseInt(savedMultiplier, 10);
-                    upgradeCost = parseInt(savedUpgradeCost, 10);
-
-                    if (savedRebirthLevel !== null) {
-                        rebirthLevel = parseInt(savedRebirthLevel, 10);
-                    }
-
-                    if (savedRebirthCost !== null) {
-                        rebirthCost = parseInt(savedRebirthCost, 10);
-                    }
-
-                    if (lastSaved) {
-                        saveMessageElement.textContent = `Progress loaded (Last saved: ${lastSaved})`;
-                    } else {
-                        saveMessageElement.textContent = 'Progress loaded successfully';
-                    }
+                if (savedCount !== null) {
+                    count = parseInt(savedCount, 10) || 0;
+                }
+                
+                if (savedMultiplier !== null) {
+                    multiplier = parseInt(savedMultiplier, 10) || 1;
+                }
+                
+                if (savedUpgradeCost !== null) {
+                    upgradeCost = parseInt(savedUpgradeCost, 10) || 10;
                 }
 
-                // Update multiplier lock status based on rebirth level
-                if (rebirthLevel > 0) {
-                    isMultiplierLocked = false;
+                if (savedRebirthLevel !== null) {
+                    rebirthLevel = parseInt(savedRebirthLevel, 10) || 0;
+                }
+
+                if (savedRebirthCost !== null) {
+                    rebirthCost = parseInt(savedRebirthCost, 10) || 25;
+                }
+                
+                if (savedMultiplierLocked !== null) {
+                    isMultiplierLocked = savedMultiplierLocked === 'true';
+                } else {
+                    // If no lock state is saved, determine it based on rebirth level
+                    isMultiplierLocked = rebirthLevel === 0;
+                }
+
+                if (lastSaved) {
+                    saveMessageElement.textContent = `Progress loaded (Last saved: ${lastSaved})`;
+                } else {
+                    saveMessageElement.textContent = 'Progress loaded successfully';
                 }
 
                 updateCounter(false);
@@ -410,15 +719,14 @@
                     upgradeCooldownElement.style.width = '0%';
                     upgradeCooldownElement.style.display = 'none';
 
-                    // Also clear localStorage if cookies accepted
+                    updateCounter();
+                    
                     if (cookiesAccepted) {
-                        saveGameData(); // Save the reset state
+                        saveGameData();
+                        saveMessageElement.textContent = "Game reset. Progress saved automatically";
+                    } else {
+                        saveMessageElement.textContent = "Game reset. Accept cookies to save progress";
                     }
-
-                    updateCounter(false);
-                    saveMessageElement.textContent = cookiesAccepted ?
-                        "Game reset. Progress saved automatically" :
-                        "Game reset. Accept cookies to save progress";
                 }
             });
 
@@ -435,7 +743,11 @@
             }, { passive: false });
 
             // Save game data every 30 seconds as a backup
-            setInterval(saveGameData, 30000);
+            setInterval(function() {
+                if (cookiesAccepted) {
+                    saveGameData();
+                }
+            }, 30000);
 
             // Save game data when tab/window is closed
             window.addEventListener('beforeunload', function() {
@@ -443,19 +755,6 @@
                     saveGameData();
                 }
             });
-
-            // Add a manual save button click handler if there's one in your HTML
-            const saveButton = document.getElementById('saveButton');
-            if (saveButton) {
-                saveButton.addEventListener('click', function() {
-                    if (cookiesAccepted) {
-                        saveGameData();
-                        saveMessageElement.textContent = "Game manually saved at " + new Date().toLocaleString();
-                    } else {
-                        saveMessageElement.textContent = "Please accept cookies to save your progress";
-                    }
-                });
-            }
 
             // Initial update
             updateCounter(false);
