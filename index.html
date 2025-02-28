@@ -504,7 +504,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px var(--shadow-color);
             padding: 20px;
-            width: 300px;
+            width: 400px; /* Wider menu */
             z-index: 1001;
             display: none;
         }
@@ -522,6 +522,57 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--text-color);
+        }
+
+        .shop-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .shop-item h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .shop-item p {
+            margin: 10px 0;
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+            text-align: center;
+        }
+
+        .shop-item .buy-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .shop-item .buy-button:hover {
+            background-color: #388E3C;
+        }
+
+        .shop-item .buy-button:disabled {
+            background-color: #9E9E9E;
+            cursor: not-allowed;
         }
 
         .blur-overlay {
@@ -574,18 +625,6 @@
             </div>
             
             <div class="button-container">
-                <button class="button upgrade-button" id="upgradeButton">
-                    Buy Multiplier: 10 points
-                    <div class="cooldown-overlay" id="upgradeCooldown" style="width: 0%"></div>
-                </button>
-                <button class="button rebirth-button" id="rebirthButton" disabled>
-                    Rebirth: 1,000 points
-                </button>
-                <div class="rebirth-info" id="rebirthInfo">
-                    <p><strong>Rebirth System:</strong> Reset your score and multipliers, but gain a permanent bonus to your score per click!</p>
-                    <p>Each rebirth level adds 10% to your base score per click.</p>
-                    <p>Cost increases with each rebirth: 1,000 → 10,000 → 100,000 → etc.</p>
-                </div>
                 <button class="button reset-button" id="resetButton">Reset Game</button>
             </div>
         </div>
@@ -609,7 +648,24 @@
     <div class="shop-menu" id="shopMenu">
         <button class="close-button" id="closeShopMenu">✕</button>
         <h2>Shop</h2>
-        <p>This is the shop menu. Add your items here!</p>
+        
+        <!-- Multiplier Upgrade Item -->
+        <div class="shop-item">
+            <h3>Multiplier Upgrade</h3>
+            <p>Double your points per click!</p>
+            <button class="buy-button" id="upgradeButton">
+                Buy: <span id="upgradeCostDisplay">10</span> points
+            </button>
+        </div>
+        
+        <!-- Rebirth Item -->
+        <div class="shop-item">
+            <h3>Rebirth</h3>
+            <p>Reset your progress for a permanent bonus!</p>
+            <button class="buy-button" id="rebirthButton" disabled>
+                Rebirth: <span id="rebirthCostDisplay">1,000</span> points
+            </button>
+        </div>
     </div>
 
     <!-- Blur Overlay -->
@@ -642,6 +698,8 @@
             const shopMenu = document.getElementById('shopMenu');
             const closeShopMenu = document.getElementById('closeShopMenu');
             const blurOverlay = document.getElementById('blurOverlay');
+            const upgradeCostDisplay = document.getElementById('upgradeCostDisplay');
+            const rebirthCostDisplay = document.getElementById('rebirthCostDisplay');
 
             // Initialize game state with defaults
             let count = 0;
@@ -844,6 +902,10 @@
                 rebirthBonusElement.textContent = rebirthLevel * 10;
                 upgradeCostElement.textContent = formatNumber(upgradeCost);
                 upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
+
+                // Update shop display
+                upgradeCostDisplay.textContent = formatNumber(upgradeCost);
+                rebirthCostDisplay.textContent = formatNumber(rebirthCost);
 
                 if (isUpgradeOnCooldown) {
                     upgradeCooldownElement.style.display = 'flex';
