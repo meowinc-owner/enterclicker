@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Clicker! - by Damian B (meowinc)</title>
     <style>
+        /* Your provided CSS */
         html, body {
             overflow: hidden;
             height: 100%;
@@ -459,6 +460,75 @@
                 margin: 1.5rem auto;
             }
         }
+
+        /* New styles for the shop button and menu */
+        .shop-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .shop-button:hover {
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .shop-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            padding: 20px;
+            width: 300px;
+            z-index: 1001;
+            display: none;
+        }
+
+        .shop-menu.open {
+            display: block;
+        }
+
+        .shop-menu .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .blur-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: none;
+        }
+
+        .blur-overlay.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -521,6 +591,21 @@
         <button id="acceptCookies" class="cookie-button">Accept Cookies</button>
     </div>
 
+    <!-- Shop Button -->
+    <div class="shop-button" id="shopButton">
+        🛒
+    </div>
+
+    <!-- Shop Menu -->
+    <div class="shop-menu" id="shopMenu">
+        <button class="close-button" id="closeShopMenu">✕</button>
+        <h2>Shop</h2>
+        <p>This is the shop menu. Add your items here!</p>
+    </div>
+
+    <!-- Blur Overlay -->
+    <div class="blur-overlay" id="blurOverlay"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const counterElement = document.getElementById('counter');
@@ -544,7 +629,11 @@
             const rebirthInfoElement = document.getElementById('rebirthInfo');
             const rateLimitInfoElement = document.getElementById('rateLimitInfo');
             const upgradeCooldownElement = document.getElementById('upgradeCooldown');
-            
+            const shopButton = document.getElementById('shopButton');
+            const shopMenu = document.getElementById('shopMenu');
+            const closeShopMenu = document.getElementById('closeShopMenu');
+            const blurOverlay = document.getElementById('blurOverlay');
+
             // Initialize game state with defaults
             let count = 0;
             let multiplier = 1;
@@ -553,59 +642,59 @@
             let currentTheme = 'light';
             let rebirthLevel = 0;
             let rebirthCost = 1000;
-            
+
             // Rate limiters
             let lastClickTime = 0;
             const clickCooldown = 250; // 0.25 seconds in milliseconds
             let isClickOnCooldown = false;
-            
+
             let lastUpgradeTime = 0;
             const upgradeCooldown = 10000; // 10 seconds in milliseconds
             let isUpgradeOnCooldown = false;
             let upgradeCooldownTimer = null;
-            
+
             // Check if cookies were previously accepted
             if (getCookie('cookiesAccepted') === 'true') {
                 cookiesAccepted = true;
                 cookieConsentElement.style.display = 'none';
                 loadGameData();
             }
-            
+
             // Check if theme was previously set
             const savedTheme = getCookie('theme');
             if (savedTheme) {
                 setTheme(savedTheme);
             }
-            
+
             // Theme button click handler
             themeButton.addEventListener('click', function() {
                 themeDropdown.classList.toggle('show');
             });
-            
+
             // Light theme button click handler
             lightThemeButton.addEventListener('click', function() {
                 setTheme('light');
                 themeDropdown.classList.remove('show');
             });
-            
+
             // Dark theme button click handler
             darkThemeButton.addEventListener('click', function() {
                 setTheme('dark');
                 themeDropdown.classList.remove('show');
             });
-            
+
             // Rainbow Light theme button click handler
             rainbowLightThemeButton.addEventListener('click', function() {
                 setTheme('rainbow-light');
                 themeDropdown.classList.remove('show');
             });
-            
+
             // Rainbow Dark theme button click handler
             rainbowDarkThemeButton.addEventListener('click', function() {
                 setTheme('rainbow-dark');
                 themeDropdown.classList.remove('show');
             });
-            
+
             // Function to set the theme
             function setTheme(theme) {
                 document.body.classList.remove('dark-mode', 'rainbow-light-mode', 'rainbow-dark-mode');
@@ -621,7 +710,7 @@
                     setCookie('theme', theme, 365);
                 }
             }
-            
+
             // Accept cookies button click handler
             acceptCookiesButton.addEventListener('click', function() {
                 cookiesAccepted = true;
@@ -631,7 +720,7 @@
                 saveGameData();
                 saveMessageElement.textContent = 'Cookies accepted! Your progress will be saved automatically.';
             });
-            
+
             // Cookie utility functions
             function setCookie(name, value, days) {
                 let expires = '';
@@ -642,7 +731,7 @@
                 }
                 document.cookie = name + '=' + (value || '') + expires + '; path=/';
             }
-            
+
             function getCookie(name) {
                 const nameEQ = name + '=';
                 const ca = document.cookie.split(';');
@@ -653,23 +742,23 @@
                 }
                 return null;
             }
-            
+
             // Function to save game data to cookies
             function saveGameData() {
                 if (!cookiesAccepted) return;
-                
+
                 const now = new Date().toLocaleString();
-                
+
                 setCookie('clickerCount', count.toString(), 365);
                 setCookie('clickerMultiplier', multiplier.toString(), 365);
                 setCookie('clickerUpgradeCost', upgradeCost.toString(), 365);
                 setCookie('clickerRebirthLevel', rebirthLevel.toString(), 365);
                 setCookie('clickerRebirthCost', rebirthCost.toString(), 365);
                 setCookie('clickerLastSaved', now, 365);
-                
+
                 saveMessageElement.textContent = `Progress saved (Last: ${now})`;
             }
-            
+
             // Function to load game data from cookies
             function loadGameData() {
                 const savedCount = getCookie('clickerCount');
@@ -678,132 +767,106 @@
                 const savedRebirthLevel = getCookie('clickerRebirthLevel');
                 const savedRebirthCost = getCookie('clickerRebirthCost');
                 const lastSaved = getCookie('clickerLastSaved');
-                
+
                 if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
                     count = parseInt(savedCount, 10);
                     multiplier = parseInt(savedMultiplier, 10);
                     upgradeCost = parseInt(savedUpgradeCost, 10);
-                    
+
                     if (savedRebirthLevel !== null) {
                         rebirthLevel = parseInt(savedRebirthLevel, 10);
                     }
-                    
+
                     if (savedRebirthCost !== null) {
                         rebirthCost = parseInt(savedRebirthCost, 10);
                     }
-                    
+
                     if (lastSaved) {
                         saveMessageElement.textContent = `Progress loaded (Last saved: ${lastSaved})`;
                     } else {
                         saveMessageElement.textContent = 'Progress loaded successfully';
                     }
                 }
-                
+
                 updateCounter(false);
             }
 
             // Function to format large numbers with suffixes
             function formatNumber(num) {
-                // Define value thresholds and corresponding suffixes
                 const thresholds = [
                     { value: 1, suffix: '' },
-                    { value: 1e3, suffix: 'k' },      // thousand
-                    { value: 1e6, suffix: 'M' },      // million
-                    { value: 1e9, suffix: 'B' },      // billion
-                    { value: 1e12, suffix: 'T' },     // trillion
-                    { value: 1e15, suffix: 'Qd' },    // quadrillion
-                    { value: 1e18, suffix: 'Qt' },    // quintillion
-                    { value: 1e21, suffix: 'Sx' },    // sextillion
-                    { value: 1e24, suffix: 'Sp' },    // septillion
-                    { value: 1e27, suffix: 'Oc' },    // octillion
-                    { value: 1e30, suffix: 'No' },    // nonillion
-                    { value: 1e33, suffix: 'Dc' }     // decillion
+                    { value: 1e3, suffix: 'k' },
+                    { value: 1e6, suffix: 'M' },
+                    { value: 1e9, suffix: 'B' },
+                    { value: 1e12, suffix: 'T' },
+                    { value: 1e15, suffix: 'Qd' },
+                    { value: 1e18, suffix: 'Qt' },
+                    { value: 1e21, suffix: 'Sx' },
+                    { value: 1e24, suffix: 'Sp' },
+                    { value: 1e27, suffix: 'Oc' },
+                    { value: 1e30, suffix: 'No' },
+                    { value: 1e33, suffix: 'Dc' }
                 ];
 
-                // Find the appropriate threshold
                 let i = thresholds.length - 1;
                 while (i > 0 && num < thresholds[i].value) {
                     i--;
                 }
 
-                // Get the threshold and suffix
                 const { value, suffix } = thresholds[i];
 
-                // Format the number
                 if (value === 1) {
-                    // Numbers less than 1,000 are displayed as is
                     return num.toString();
                 } else if (num < value * 10) {
-                    // Numbers just above thresholds get 1 decimal place (e.g., 1.2k, 1.5M)
                     return (num / value).toFixed(1) + suffix;
                 } else {
-                    // Larger numbers get no decimal places (e.g., 12k, 150M)
                     return Math.floor(num / value) + suffix;
                 }
             }
 
             // Function to update the counter display
             function updateCounter(saveData = true) {
-                // Use the formatted number for display
                 counterElement.textContent = formatNumber(count);
-                
-                // Disable upgrade button if not enough points
                 upgradeButton.disabled = count < upgradeCost || isUpgradeOnCooldown;
-                
-                // Update rebirth button status
                 rebirthButton.disabled = count < rebirthCost;
                 rebirthButton.textContent = `Rebirth: ${formatNumber(rebirthCost)} points`;
-                
-                // Update displays
                 multiplierElement.textContent = formatNumber(multiplier);
                 rebirthLevelElement.textContent = rebirthLevel;
                 rebirthBonusElement.textContent = rebirthLevel * 10;
-                
-                // Format upgrade cost for display
                 upgradeCostElement.textContent = formatNumber(upgradeCost);
-                
-                // Update the upgrade button text with formatted cost
                 upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
-                
-                // If on cooldown, re-add the cooldown overlay
+
                 if (isUpgradeOnCooldown) {
                     upgradeCooldownElement.style.display = 'flex';
                 }
-                
-                // Save the game data after each update if needed
+
                 if (saveData) {
                     saveGameData();
                 }
             }
-            
+
             // Function to increment counter with rate limiting
             function incrementCounter() {
                 const now = Date.now();
-                
-                // Check if click is on cooldown
+
                 if (now - lastClickTime < clickCooldown) {
                     isClickOnCooldown = true;
                     const remainingTime = ((clickCooldown - (now - lastClickTime)) / 1000).toFixed(1);
                     rateLimitInfoElement.textContent = `Wait ${remainingTime}s`;
                     return;
                 }
-                
-                // Calculate bonus from rebirth levels
-                const rebirthBonus = 1 + (rebirthLevel * 0.1); // Each rebirth adds 10%
-                
-                // Add points with rebirth bonus
+
+                const rebirthBonus = 1 + (rebirthLevel * 0.1);
                 count += Math.floor(multiplier * rebirthBonus);
                 lastClickTime = now;
-                
-                // Clear the rate limit message
+
                 setTimeout(() => {
                     isClickOnCooldown = false;
                     rateLimitInfoElement.textContent = '';
                 }, clickCooldown);
-                
+
                 updateCounter();
-                
-                // Add a visual feedback when clicked
+
                 enterButton.classList.add('active');
                 setTimeout(() => {
                     enterButton.classList.remove('active');
@@ -812,55 +875,39 @@
 
             // Listen for keydown events
             document.addEventListener('keydown', function(event) {
-                // Check if the Enter key was pressed
                 if (event.key === 'Enter') {
                     incrementCounter();
                 }
             });
-            
+
             // Enter button click
             enterButton.addEventListener('click', incrementCounter);
 
             // Upgrade button functionality
             upgradeButton.addEventListener('click', function() {
                 const now = Date.now();
-                
-                // Check if upgrade is on cooldown
+
                 if (isUpgradeOnCooldown) {
                     return;
                 }
-                
+
                 if (count >= upgradeCost) {
-                    // Deduct the cost
                     count -= upgradeCost;
-                    
-                    // Double the multiplier
                     multiplier *= 2;
-                    
-                    // Double the cost for next upgrade
                     upgradeCost *= 2;
-                    
-                    // Set upgrade cooldown
                     isUpgradeOnCooldown = true;
                     lastUpgradeTime = now;
-                    
-                    // Add cooldown overlay
                     upgradeCooldownElement.style.display = 'flex';
-                    
-                    // Start the cooldown timer animation
+
                     let remainingCooldown = upgradeCooldown;
-                    
+
                     upgradeCooldownTimer = setInterval(() => {
-                        remainingCooldown -= 100; // Update every 100ms
-                        
-                        // Calculate width percentage for cooldown overlay
+                        remainingCooldown -= 100;
                         const widthPercentage = (remainingCooldown / upgradeCooldown) * 100;
                         upgradeCooldownElement.style.width = `${widthPercentage}%`;
-                        
-                        // Show remaining time in the overlay
                         const secondsLeft = Math.ceil(remainingCooldown / 1000);
                         upgradeCooldownElement.textContent = `${secondsLeft}s`;
-                        
+
                         if (remainingCooldown <= 0) {
                             clearInterval(upgradeCooldownTimer);
                             isUpgradeOnCooldown = false;
@@ -869,28 +916,20 @@
                             updateCounter();
                         }
                     }, 100);
-                    
+
                     updateCounter();
                 }
             });
-            
+
             // Rebirth button functionality
             rebirthButton.addEventListener('click', function() {
                 if (count >= rebirthCost) {
                     if (confirm(`Are you sure you want to rebirth? You will lose all your points (${formatNumber(count)}) and multipliers, but gain a permanent +10% bonus per click!`)) {
-                        // Increase rebirth level
                         rebirthLevel++;
-                        
-                        // Reset count and multiplier
                         count = 0;
                         multiplier = 1;
-                        
-                        // Reset upgrade cost
                         upgradeCost = 10;
-                        
-                        // Increase rebirth cost (10x each time)
                         rebirthCost *= 10;
-                        
                         updateCounter();
                         saveMessageElement.textContent = "Rebirth complete! Your permanent bonus is now +" + (rebirthLevel * 10) + "% per click.";
                     }
@@ -905,42 +944,57 @@
                     upgradeCost = 10;
                     rebirthLevel = 0;
                     rebirthCost = 1000;
-                    
-                    // Clear any active cooldowns
+
                     if (upgradeCooldownTimer) {
                         clearInterval(upgradeCooldownTimer);
                     }
                     isUpgradeOnCooldown = false;
                     upgradeCooldownElement.style.width = '0%';
                     upgradeCooldownElement.style.display = 'none';
-                    
+
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
                         "Game reset. Progress saved automatically" : 
                         "Game reset. Accept cookies to save progress";
                 }
             });
-            
+
             // Prevent scrolling
             document.body.addEventListener('wheel', function(e) {
                 e.preventDefault();
             }, { passive: false });
-            
+
             // Prevent touchmove scrolling on mobile
             document.body.addEventListener('touchmove', function(e) {
                 if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
                     e.preventDefault();
                 }
             }, { passive: false });
-            
+
             // Save game data every 30 seconds as a backup
             setInterval(saveGameData, 30000);
-            
+
             // Save game data when tab/window is closed
             window.addEventListener('beforeunload', saveGameData);
-            
+
             // Initial update
             updateCounter(false);
+
+            // Shop button and menu functionality
+            shopButton.addEventListener('click', function() {
+                shopMenu.classList.add('open');
+                blurOverlay.classList.add('active');
+            });
+
+            closeShopMenu.addEventListener('click', function() {
+                shopMenu.classList.remove('open');
+                blurOverlay.classList.remove('active');
+            });
+
+            blurOverlay.addEventListener('click', function() {
+                shopMenu.classList.remove('open');
+                blurOverlay.classList.remove('active');
+            });
         });
     </script>
 </body>
