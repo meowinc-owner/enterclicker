@@ -326,22 +326,22 @@
         }
 
         .rebirth-info {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: rgba(103, 58, 183, 0.1);
-            border-radius: 5px;
-            font-size: 0.9rem;
-            text-align: left;
-            border: 1px solid var(--rebirth-color);
-            position: absolute;
-            bottom: 120px;
-            right: 20px;
-            width: 250px;
-            z-index: 10;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
-        }
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--container-bg); /* Solid background that matches theme */
+    border-radius: 5px;
+    font-size: 0.9rem;
+    text-align: left;
+    border: 2px solid var(--text-color); /* Border color changes with theme */
+    position: absolute;
+    bottom: 120px;
+    right: 20px;
+    width: 250px;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
 
         .rebirth-button:hover + .rebirth-info {
             opacity: 1;
