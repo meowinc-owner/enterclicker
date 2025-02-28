@@ -463,38 +463,61 @@
                 updateCounter(false);
             }
 
-            // Function to format numbers with k notation
+            // Function to format large numbers with suffixes
             function formatNumber(num) {
-                if (num < 1000) {
-                    // If less than 1000, show the whole number
+                // Define value thresholds and corresponding suffixes
+                const thresholds = [
+                    { value: 1, suffix: '' },
+                    { value: 1e3, suffix: 'k' },      // thousand
+                    { value: 1e6, suffix: 'M' },      // million
+                    { value: 1e9, suffix: 'B' },      // billion
+                    { value: 1e12, suffix: 'T' },     // trillion
+                    { value: 1e15, suffix: 'Qd' },    // quadrillion
+                    { value: 1e18, suffix: 'Qt' },    // quintillion
+                    { value: 1e21, suffix: 'Sx' },    // sextillion
+                    { value: 1e24, suffix: 'Sp' },    // septillion
+                    { value: 1e27, suffix: 'Oc' },    // octillion
+                    { value: 1e30, suffix: 'No' },    // nonillion
+                    { value: 1e33, suffix: 'Dc' }     // decillion
+                ];
+
+                // Find the appropriate threshold
+                let i = thresholds.length - 1;
+                while (i > 0 && num < thresholds[i].value) {
+                    i--;
+                }
+
+                // Get the threshold and suffix
+                const { value, suffix } = thresholds[i];
+
+                // Format the number
+                if (value === 1) {
+                    // Numbers less than 1,000 are displayed as is
                     return num.toString();
-                } else if (num < 10000) {
-                    // Between 1,000 and 9,999, show with one decimal (e.g., 1.2k)
-                    return (num / 1000).toFixed(1) + 'k';
-                } else if (num < 1000000) {
-                    // Between 10,000 and 999,999, show whole number with k (e.g., 10k, 100k)
-                    return Math.floor(num / 1000) + 'k';
+                } else if (num < value * 10) {
+                    // Numbers just above thresholds get 1 decimal place (e.g., 1.2k, 1.5M)
+                    return (num / value).toFixed(1) + suffix;
                 } else {
-                    // 1,000,000 or more, show with M notation
-                    return (num / 1000000).toFixed(1) + 'M';
+                    // Larger numbers get no decimal places (e.g., 12k, 150M)
+                    return Math.floor(num / value) + suffix;
                 }
             }
 
             // Function to update the counter display
             function updateCounter(saveData = true) {
-                // Use the new formatNumber function for display
+                // Use the formatted number for display
                 counterElement.textContent = formatNumber(count);
                 
                 // Disable upgrade button if not enough points
                 upgradeButton.disabled = count < upgradeCost;
                 
                 // Update displays
-                multiplierElement.textContent = multiplier;
+                multiplierElement.textContent = formatNumber(multiplier);
                 
-                // Format upgrade cost for display if needed
+                // Format upgrade cost for display
                 upgradeCostElement.textContent = formatNumber(upgradeCost);
                 
-                // Update the upgrade button text
+                // Update the upgrade button text with formatted cost
                 upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
                 
                 // Save the game data after each update if needed
@@ -575,6 +598,38 @@
             
             // Initial update
             updateCounter(false);
+            
+            // For testing large numbers, uncomment this:
+            /*
+            // Debug buttons for testing different number ranges
+            const testButtons = [
+                { label: "1K", value: 1000 },
+                { label: "1M", value: 1000000 },
+                { label: "1B", value: 1000000000 },
+                { label: "1T", value: 1000000000000 },
+                { label: "1Qd", value: 1000000000000000 },
+                { label: "1Qt", value: 1000000000000000000 }
+            ];
+            
+            const debugDiv = document.createElement('div');
+            debugDiv.style.position = 'absolute';
+            debugDiv.style.left = '10px';
+            debugDiv.style.top = '10px';
+            
+            testButtons.forEach(btn => {
+                const button = document.createElement('button');
+                button.textContent = btn.label;
+                button.className = 'button';
+                button.style.margin = '2px';
+                button.addEventListener('click', () => {
+                    count = btn.value;
+                    updateCounter();
+                });
+                debugDiv.appendChild(button);
+            });
+            
+            document.body.appendChild(debugDiv);
+            */
         });
     </script>
 </body>
