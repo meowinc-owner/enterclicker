@@ -630,7 +630,7 @@
         </div>
         
         <div class="warning-box">
-            No autoclickers or blacklisted from the website!
+            No autoclickers or you'll be blacklisted from the website!
         </div>
     </div>
     
@@ -664,6 +664,15 @@
             <p>Reset your progress for a permanent bonus!</p>
             <button class="buy-button" id="rebirthButton" disabled>
                 Rebirth: <span id="rebirthCostDisplay">1,000</span> points
+            </button>
+        </div>
+
+        <!-- Auto Clicker Upgrade Item -->
+        <div class="shop-item">
+            <h3>Auto Clicker</h3>
+            <p>Automatically clicks for you every second!</p>
+            <button class="buy-button" id="autoClickerButton" disabled>
+                Buy: <span id="autoClickerCostDisplay">10,000</span> points
             </button>
         </div>
     </div>
@@ -700,6 +709,8 @@
             const blurOverlay = document.getElementById('blurOverlay');
             const upgradeCostDisplay = document.getElementById('upgradeCostDisplay');
             const rebirthCostDisplay = document.getElementById('rebirthCostDisplay');
+            const autoClickerButton = document.getElementById('autoClickerButton');
+            const autoClickerCostDisplay = document.getElementById('autoClickerCostDisplay');
 
             // Initialize game state with defaults
             let count = 0;
@@ -709,6 +720,8 @@
             let currentTheme = 'light';
             let rebirthLevel = 0;
             let rebirthCost = 1000;
+            let autoClickerCost = 10000;
+            let autoClickerEnabled = false;
 
             // Rate limiters
             let lastClickTime = 0;
@@ -816,6 +829,8 @@
                 setCookie('clickerUpgradeCost', upgradeCost.toString(), 365);
                 setCookie('clickerRebirthLevel', rebirthLevel.toString(), 365);
                 setCookie('clickerRebirthCost', rebirthCost.toString(), 365);
+                setCookie('clickerAutoClickerCost', autoClickerCost.toString(), 365);
+                setCookie('clickerAutoClickerEnabled', autoClickerEnabled.toString(), 365);
                 setCookie('clickerLastSaved', now, 365);
 
                 saveMessageElement.textContent = `Progress saved (Last: ${now})`;
@@ -828,6 +843,8 @@
                 const savedUpgradeCost = getCookie('clickerUpgradeCost');
                 const savedRebirthLevel = getCookie('clickerRebirthLevel');
                 const savedRebirthCost = getCookie('clickerRebirthCost');
+                const savedAutoClickerCost = getCookie('clickerAutoClickerCost');
+                const savedAutoClickerEnabled = getCookie('clickerAutoClickerEnabled');
                 const lastSaved = getCookie('clickerLastSaved');
 
                 if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
@@ -841,6 +858,14 @@
 
                     if (savedRebirthCost !== null) {
                         rebirthCost = parseInt(savedRebirthCost, 10);
+                    }
+
+                    if (savedAutoClickerCost !== null) {
+                        autoClickerCost = parseInt(savedAutoClickerCost, 10);
+                    }
+
+                    if (savedAutoClickerEnabled !== null) {
+                        autoClickerEnabled = savedAutoClickerEnabled === 'true';
                     }
 
                     if (lastSaved) {
@@ -890,17 +915,20 @@
             function updateCounter(saveData = true) {
                 counterElement.textContent = formatNumber(count);
                 upgradeButton.disabled = count < upgradeCost;
-                rebirthButton.disabled = count < rebirthCost;
+                rebirthButton.disabled = count < rebirthCost || rebirthLevel < 1;
+                autoClickerButton.disabled = count < autoClickerCost || rebirthLevel < 1;
                 rebirthButton.textContent = `Rebirth: ${formatNumber(rebirthCost)} points`;
                 multiplierElement.textContent = formatNumber(multiplier);
                 rebirthLevelElement.textContent = rebirthLevel;
                 rebirthBonusElement.textContent = rebirthLevel * 10;
                 upgradeCostElement.textContent = formatNumber(upgradeCost);
                 upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
+                autoClickerButton.textContent = `Buy Auto Clicker: ${formatNumber(autoClickerCost)} points`;
 
                 // Update shop display
                 upgradeCostDisplay.textContent = formatNumber(upgradeCost);
                 rebirthCostDisplay.textContent = formatNumber(rebirthCost);
+                autoClickerCostDisplay.textContent = formatNumber(autoClickerCost);
 
                 if (saveData) {
                     saveGameData();
@@ -964,11 +992,29 @@
                         multiplier = 1;
                         upgradeCost = 10;
                         rebirthCost *= 10;
+                        autoClickerCost *= 10;
                         updateCounter();
                         saveMessageElement.textContent = "Rebirth complete! Your permanent bonus is now +" + (rebirthLevel * 10) + "% per click.";
                     }
                 }
             });
+
+            // Auto Clicker button functionality
+            autoClickerButton.addEventListener('click', function() {
+                if (count >= autoClickerCost) {
+                    count -= autoClickerCost;
+                    autoClickerEnabled = true;
+                    updateCounter();
+                    startAutoClicker();
+                }
+            });
+
+            // Function to start the auto clicker
+            function startAutoClicker() {
+                if (autoClickerEnabled) {
+                    setInterval(incrementCounter, 1000); // Clicks every second
+                }
+            }
 
             // Reset button functionality
             resetButton.addEventListener('click', function() {
@@ -978,6 +1024,8 @@
                     upgradeCost = 10;
                     rebirthLevel = 0;
                     rebirthCost = 1000;
+                    autoClickerCost = 10000;
+                    autoClickerEnabled = false;
 
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
