@@ -5,325 +5,422 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Clicker! - by Damian B (meowinc)</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
+        html, body {
+            overflow: hidden;
+            height: 100%;
             margin: 0;
             padding: 0;
+        }
+        
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: white;
+            --text-color: #333;
+            --secondary-text: #666;
+            --tertiary-text: #757575;
+            --border-color: #e0e0e0;
+            --stats-border: #eee;
+            --credit-bg: #f9f9f9;
+            --warning-bg: #ffebee;
+            --warning-border: #f44336;
+            --warning-text: #c62828;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --rebirth-color: #673AB7;
+            --rebirth-hover: #5E35B1;
+            --cooldown-overlay: rgba(0, 0, 0, 0.5);
+        }
+        
+        body.dark-mode {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --secondary-text: #b0b0b0;
+            --tertiary-text: #909090;
+            --border-color: #333;
+            --stats-border: #333;
+            --credit-bg: #2a2a2a;
+            --warning-bg: #3a1c1c;
+            --warning-border: #912923;
+            --warning-text: #ff6b6b;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --rebirth-color: #9575CD;
+            --rebirth-hover: #7E57C2;
+            --cooldown-overlay: rgba(0, 0, 0, 0.7);
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            transition: background-color 0.3s, color 0.3s;
-            overflow: hidden;
-        }
-        
-        .light-mode {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        
-        .dark-mode {
-            background-color: #222;
-            color: #f0f0f0;
-        }
-        
-        @keyframes rainbow-bg {
-            0% { background-color: #ff0000; }
-            16.7% { background-color: #ff8000; }
-            33.3% { background-color: #ffff00; }
-            50% { background-color: #00ff00; }
-            66.7% { background-color: #0000ff; }
-            83.3% { background-color: #8000ff; }
-            100% { background-color: #ff0000; }
-        }
-        
-        .rainbow-mode {
-            animation: rainbow-bg 10s infinite;
-            color: white;
+            background-color: var(--bg-color);
+            flex-direction: column;
+            position: relative;
+            color: var(--text-color);
+            transition: background-color 0.3s ease;
         }
         
         .main-content {
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            background-color: rgba(255, 255, 255, 0.9);
-            max-width: 800px;
-            width: 90%;
-            position: relative;
-        }
-        
-        .dark-mode .main-content {
-            background-color: rgba(50, 50, 50, 0.9);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        }
-        
-        h1 {
-            margin-top: 0;
-            color: #333;
-        }
-        
-        .dark-mode h1 {
-            color: #f0f0f0;
-        }
-        
-        .counter-display {
-            font-size: 3rem;
-            margin: 20px 0;
-            font-weight: bold;
-            color: #0066ff;
-        }
-        
-        .dark-mode .counter-display {
-            color: #4d94ff;
-        }
-        
-        .enter-btn {
-            font-size: 1.5rem;
-            padding: 15px 30px;
-            margin: 20px 0;
-            background-color: #0066ff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.1s, background-color 0.3s;
-        }
-        
-        .enter-btn:hover {
-            background-color: #0052cc;
-        }
-        
-        .enter-btn.active {
-            transform: scale(0.95);
-            background-color: #004099;
-        }
-        
-        .controls {
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            margin-top: 20px;
-            gap: 10px;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            padding-bottom: 70px; /* Space for cookie banner */
         }
         
-        button {
-            padding: 10px 15px;
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 5px;
+        .dark-mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 8px 15px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+        
+        .dark-mode-toggle .icon {
+            margin-right: 5px;
+            font-size: 1rem;
+        }
+        
+        .credit-box {
+            font-size: 0.75rem;
+            color: var(--tertiary-text);
+            background-color: var(--credit-bg);
+            padding: 3px 6px;
+            border-radius: 3px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .trademark {
+            font-size: 0.6rem;
+            vertical-align: super;
+        }
+        
+        .game-container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            background-color: var(--container-bg);
+            box-shadow: 0 4px 8px var(--shadow-color);
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            min-height: 400px;
+            transition: all 0.3s ease;
+        }
+        
+        .counter {
+            font-size: 5rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin: 1rem 0;
+            transition: color 0.3s ease;
+        }
+        
+        .instructions {
+            color: var(--secondary-text);
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem;
+            transition: background-color 0.3s ease;
             position: relative;
             overflow: hidden;
         }
         
-        button:hover {
-            background-color: #555;
+        .cooldown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--cooldown-overlay);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.1s linear;
         }
         
-        button:disabled {
-            background-color: #888;
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .reset-button {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .reset-button:hover {
+            background-color: #d32f2f;
+        }
+        
+        .upgrade-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .upgrade-button:hover {
+            background-color: #388E3C;
+        }
+        
+        .upgrade-button:disabled {
+            background-color: #9E9E9E;
             cursor: not-allowed;
         }
         
-        .reset-btn {
-            background-color: #ff3333;
+        .rebirth-button {
+            background-color: var(--rebirth-color);
+            color: white;
+            font-weight: bold;
+            margin-top: 10px;
         }
         
-        .reset-btn:hover {
-            background-color: #cc0000;
+        .rebirth-button:hover {
+            background-color: var(--rebirth-hover);
         }
         
-        .upgrades {
+        .rebirth-button:disabled {
+            background-color: #9E9E9E;
+            cursor: not-allowed;
+        }
+        
+        .stats {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--stats-border);
+            text-align: left;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        
+        .multiplier {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .rebirth-stat {
+            font-weight: bold;
+            color: var(--rebirth-color);
+        }
+        
+        .enter-button {
+            background-color: #2196F3;
+            color: white;
+            font-size: 1.5rem;
+            padding: 1rem 2rem;
+            margin: 2rem auto;
+            display: block;
+            transition: transform 0.1s, background-color 0.3s ease;
+        }
+        
+        .enter-button:hover {
+            background-color: #1976D2;
+        }
+        
+        .enter-button:active {
+            transform: scale(0.95);
+        }
+        
+        .enter-button span {
+            font-size: 0.8rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+        
+        .warning-box {
             margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
+            background-color: var(--warning-bg);
+            border: 2px solid var(--warning-border);
             border-radius: 5px;
-        }
-        
-        .dark-mode .upgrades {
-            border-color: #555;
+            padding: 10px 15px;
+            color: var(--warning-text);
+            font-weight: bold;
+            width: 600px;
+            text-align: center;
+            transition: all 0.3s ease;
         }
         
         .save-message {
             font-size: 0.8rem;
-            color: #888;
-            margin-top: 20px;
-        }
-        
-        .dark-mode .save-message {
-            color: #aaa;
+            color: var(--tertiary-text);
+            margin-top: 5px;
+            font-style: italic;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 300px;
+            transition: color 0.3s ease;
         }
         
         .cookie-consent {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background-color: rgba(0, 0, 0, 0.8);
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(51, 51, 51, 0.9);
             color: white;
+            text-align: center;
             padding: 15px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .cookie-text {
+            margin-right: 20px;
         }
         
         .cookie-button {
-            background-color: #0066ff;
-            white-space: nowrap;
-            margin-left: 15px;
-        }
-        
-        .theme-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: transparent;
-            color: #333;
-            font-size: 1.2rem;
-            padding: 5px;
-            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
             border: none;
-        }
-        
-        .dark-mode .theme-toggle {
-            color: #f0f0f0;
-        }
-        
-        .theme-menu {
-            position: absolute;
-            top: 40px;
-            right: 10px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-            display: none;
-            z-index: 100;
-        }
-        
-        .dark-mode .theme-menu {
-            background-color: #333;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        }
-        
-        .theme-option {
-            display: block;
-            width: 100%;
-            text-align: left;
-            padding: 8px 15px;
-            margin-bottom: 5px;
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        
-        .dark-mode .theme-option {
-            background-color: #444;
-            color: #f0f0f0;
-        }
-        
-        .theme-option:last-child {
-            margin-bottom: 0;
-        }
-        
-        .theme-option:hover {
-            background-color: #0066ff;
-            color: white;
-        }
-        
-        .stats {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #666;
-            padding: 10px;
-            border: 1px dashed #ccc;
-            border-radius: 5px;
-            text-align: left;
-        }
-        
-        .dark-mode .stats {
-            color: #bbb;
-            border-color: #555;
-        }
-        
-        .upgrade-container {
-            position: relative;
-        }
-        
-        .upgrade-cooldown {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background-color: rgba(255, 0, 0, 0.3);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
             font-weight: bold;
-            font-size: 0.9rem;
-            overflow: hidden;
-            border-radius: 5px;
         }
         
-        .rate-limit-info {
-            color: red;
+        .cookie-button:hover {
+            background-color: #388E3C;
+        }
+
+        .rate-limiter {
+            display: inline-block;
+            margin-left: 10px;
             font-size: 0.8rem;
-            height: 20px;
-            margin-top: 5px;
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .rebirth-info {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--container-bg); /* Solid background that matches theme */
+    border-radius: 5px;
+    font-size: 0.9rem;
+    text-align: left;
+    border: 2px solid var(--text-color); /* Border color changes with theme */
+    position: absolute;
+    bottom: 120px;
+    right: 20px;
+    width: 250px;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+        .rebirth-button:hover + .rebirth-info {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-height: 800px) {
+            .game-container {
+                min-height: 350px;
+                padding: 1.5rem;
+            }
+            
+            .warning-box {
+                margin-top: 10px;
+            }
+            
+            .counter {
+                font-size: 4rem;
+                margin: 0.5rem 0;
+            }
+            
+            .enter-button {
+                margin: 1.5rem auto;
+            }
         }
     </style>
 </head>
-<body class="light-mode">
+<body>
     <div class="main-content">
-        <h1>Enter Clicker!</h1>
-        <button id="themeToggle" class="theme-toggle">🎨</button>
-        <div id="themeMenu" class="theme-menu">
-            <button id="lightMode" class="theme-option">Light Mode</button>
-            <button id="darkMode" class="theme-option">Dark Mode</button>
-            <button id="rainbowMode" class="theme-option">Rainbow Mode</button>
-        </div>
+        <button id="darkModeToggle" class="dark-mode-toggle">
+            <span class="icon">🌙</span>
+            <span class="text">Dark Mode</span>
+        </button>
         
-        <div class="counter-display" id="counter">0</div>
-        <div id="rateLimitInfo" class="rate-limit-info"></div>
+        <div class="credit-box">Made by Damian B - Meowinc<span class="trademark">™</span></div>
         
-        <button id="enterButton" class="enter-btn">Press ENTER</button>
-        
-        <div class="upgrades">
-            <h3>Upgrades</h3>
-            <div class="upgrade-container">
-                <button id="upgradeButton" disabled>Buy Multiplier: 10 points</button>
-                <div id="upgradeCooldown" class="upgrade-cooldown"></div>
+        <div class="game-container">
+            <div class="instructions">Press Enter key or click the button below <span id="rateLimitInfo" class="rate-limiter"></span></div>
+            <div class="counter" id="counter">0</div>
+            
+            <button class="button enter-button" id="enterButton">
+                CLICK
+                <span>or press Enter key</span>
+            </button>
+            
+            <div class="stats">
+                <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
+                <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
+                <p>Rebirth level: <span id="rebirthLevel" class="rebirth-stat">0</span> (+<span id="rebirthBonus">0</span>% per click)</p>
+                <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
             </div>
-            <p>Current Multiplier: <span id="multiplier">1</span>x per click</p>
-            <p>Next Upgrade Cost: <span id="upgradeCost">10</span> points</p>
-        </div>
-        
-        <div class="rebirth-container">
-            <h3>Rebirth</h3>
-            <button id="rebirthButton" disabled>Rebirth: 25 points</button>
-            <div id="rebirthInfo" class="stats">
-                <p>Rebirth Level: <span id="rebirthLevel">0</span></p>
-                <p>Permanent Bonus: +<span id="rebirthBonus">0</span>% per click</p>
-                <p>Note: Multiplier upgrades are locked until your first rebirth!</p>
+            
+            <div class="button-container">
+                <button class="button upgrade-button" id="upgradeButton">
+                    Buy Multiplier: 10 points
+                    <div class="cooldown-overlay" id="upgradeCooldown" style="width: 0%"></div>
+                </button>
+                <button class="button rebirth-button" id="rebirthButton" disabled>
+                    Rebirth: 1,000 points
+                </button>
+                <div class="rebirth-info" id="rebirthInfo">
+                    <p><strong>Rebirth System:</strong> Reset your score and multipliers, but gain a permanent bonus to your score per click!</p>
+                    <p>Each rebirth level adds 10% to your base score per click.</p>
+                    <p>Cost increases with each rebirth: 1,000 → 10,000 → 100,000 → etc.</p>
+                </div>
+                <button class="button reset-button" id="resetButton">Reset Game</button>
             </div>
         </div>
         
-        <div class="controls">
-            <button id="resetButton" class="reset-btn">Reset Game</button>
+        <div class="warning-box">
+            No autoclickers or blacklisted from the website!
         </div>
-        
-        <div id="saveMessage" class="save-message">Accept cookies to save your progress</div>
     </div>
     
     <div id="cookieConsent" class="cookie-consent">
         <div class="cookie-text">This site uses cookies to save your game progress. By accepting, you'll never lose your clicks again!</div>
         <button id="acceptCookies" class="cookie-button">Accept Cookies</button>
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const counterElement = document.getElementById('counter');
@@ -335,92 +432,82 @@
             const saveMessageElement = document.getElementById('saveMessage');
             const cookieConsentElement = document.getElementById('cookieConsent');
             const acceptCookiesButton = document.getElementById('acceptCookies');
-            const themeToggle = document.getElementById('themeToggle');
-            const themeMenu = document.getElementById('themeMenu');
-            const lightModeButton = document.getElementById('lightMode');
-            const darkModeButton = document.getElementById('darkMode');
-            const rainbowModeButton = document.getElementById('rainbowMode');
+            const darkModeToggle = document.getElementById('darkModeToggle');
             const rebirthButton = document.getElementById('rebirthButton');
             const rebirthLevelElement = document.getElementById('rebirthLevel');
             const rebirthBonusElement = document.getElementById('rebirthBonus');
             const rebirthInfoElement = document.getElementById('rebirthInfo');
             const rateLimitInfoElement = document.getElementById('rateLimitInfo');
             const upgradeCooldownElement = document.getElementById('upgradeCooldown');
-
+            
             // Initialize game state with defaults
             let count = 0;
             let multiplier = 1;
             let upgradeCost = 10;
             let cookiesAccepted = false;
-            let currentTheme = 'light';
+            let darkMode = false;
             let rebirthLevel = 0;
-            let rebirthCost = 25; // First rebirth costs 25 points
-            let isMultiplierLocked = true; // Multiplier is locked until first rebirth
-
+            let rebirthCost = 1000;
+            
             // Rate limiters
             let lastClickTime = 0;
             const clickCooldown = 250; // 0.25 seconds in milliseconds
             let isClickOnCooldown = false;
-
+            
             let lastUpgradeTime = 0;
             const upgradeCooldown = 10000; // 10 seconds in milliseconds
             let isUpgradeOnCooldown = false;
             let upgradeCooldownTimer = null;
-
-            // Check if cookies are already accepted
-            if (document.cookie.indexOf('cookiesAccepted=true') !== -1) {
+            
+            // Check if cookies were previously accepted
+            if (getCookie('cookiesAccepted') === 'true') {
                 cookiesAccepted = true;
                 cookieConsentElement.style.display = 'none';
-                saveMessageElement.textContent = 'Cookies accepted! Your progress will be saved automatically.';
-                
-                // Load saved game data if cookies are accepted
                 loadGameData();
             }
-
-            // Theme toggle functionality
-            themeToggle.addEventListener('click', function() {
-                themeMenu.style.display = themeMenu.style.display === 'block' ? 'none' : 'block';
-            });
-
-            lightModeButton.addEventListener('click', function() {
-                setTheme('light');
-                themeMenu.style.display = 'none';
-            });
-
-            darkModeButton.addEventListener('click', function() {
-                setTheme('dark');
-                themeMenu.style.display = 'none';
-            });
-
-            rainbowModeButton.addEventListener('click', function() {
-                setTheme('rainbow');
-                themeMenu.style.display = 'none';
-            });
-
-            function setTheme(theme) {
-                currentTheme = theme;
-                document.body.className = theme + '-mode';
-                if (cookiesAccepted) {
-                    setCookie('theme', theme, 365);
+            
+            // Check if dark mode was previously set
+            if (getCookie('darkMode') === 'true') {
+                enableDarkMode();
+            }
+            
+            // Dark mode toggle
+            darkModeToggle.addEventListener('click', function() {
+                if (document.body.classList.contains('dark-mode')) {
+                    disableDarkMode();
+                } else {
+                    enableDarkMode();
                 }
+                
+                if (cookiesAccepted) {
+                    setCookie('darkMode', darkMode.toString(), 365);
+                }
+            });
+            
+            function enableDarkMode() {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.querySelector('.icon').textContent = '☀️';
+                darkModeToggle.querySelector('.text').textContent = 'Light Mode';
+                darkMode = true;
             }
-
-            // Load saved theme
-            const savedThemeMatch = document.cookie.match(/theme=([^;]+)/);
-            if (savedThemeMatch && savedThemeMatch[1]) {
-                setTheme(savedThemeMatch[1]);
+            
+            function disableDarkMode() {
+                document.body.classList.remove('dark-mode');
+                darkModeToggle.querySelector('.icon').textContent = '🌙';
+                darkModeToggle.querySelector('.text').textContent = 'Dark Mode';
+                darkMode = false;
             }
-
+            
             // Accept cookies button click handler
             acceptCookiesButton.addEventListener('click', function() {
                 cookiesAccepted = true;
-                setCookie('cookiesAccepted', 'true', 365);
-                setCookie('theme', currentTheme, 365);
+                setCookie('cookiesAccepted', 'true', 365); // Cookie lasts for 1 year
+                setCookie('darkMode', darkMode.toString(), 365); // Also save dark mode preference
                 cookieConsentElement.style.display = 'none';
                 saveGameData();
                 saveMessageElement.textContent = 'Cookies accepted! Your progress will be saved automatically.';
             });
-
+            
             // Cookie utility functions
             function setCookie(name, value, days) {
                 let expires = '';
@@ -429,37 +516,36 @@
                     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
                     expires = '; expires=' + date.toUTCString();
                 }
-                document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
+                document.cookie = name + '=' + (value || '') + expires + '; path=/';
             }
-
+            
             function getCookie(name) {
                 const nameEQ = name + '=';
                 const ca = document.cookie.split(';');
                 for (let i = 0; i < ca.length; i++) {
                     let c = ca[i];
                     while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                    if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
                 }
                 return null;
             }
-
+            
             // Function to save game data to cookies
             function saveGameData() {
                 if (!cookiesAccepted) return;
-
+                
                 const now = new Date().toLocaleString();
-
+                
                 setCookie('clickerCount', count.toString(), 365);
                 setCookie('clickerMultiplier', multiplier.toString(), 365);
                 setCookie('clickerUpgradeCost', upgradeCost.toString(), 365);
                 setCookie('clickerRebirthLevel', rebirthLevel.toString(), 365);
                 setCookie('clickerRebirthCost', rebirthCost.toString(), 365);
                 setCookie('clickerLastSaved', now, 365);
-                setCookie('clickerMultiplierLocked', isMultiplierLocked.toString(), 365);
-
+                
                 saveMessageElement.textContent = `Progress saved (Last: ${now})`;
             }
-
+            
             // Function to load game data from cookies
             function loadGameData() {
                 const savedCount = getCookie('clickerCount');
@@ -467,115 +553,109 @@
                 const savedUpgradeCost = getCookie('clickerUpgradeCost');
                 const savedRebirthLevel = getCookie('clickerRebirthLevel');
                 const savedRebirthCost = getCookie('clickerRebirthCost');
-                const savedMultiplierLocked = getCookie('clickerMultiplierLocked');
                 const lastSaved = getCookie('clickerLastSaved');
-
-                if (savedCount !== null) {
-                    count = parseInt(savedCount, 10) || 0;
+                
+                if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
+                    count = parseInt(savedCount, 10);
+                    multiplier = parseInt(savedMultiplier, 10);
+                    upgradeCost = parseInt(savedUpgradeCost, 10);
+                    
+                    if (savedRebirthLevel !== null) {
+                        rebirthLevel = parseInt(savedRebirthLevel, 10);
+                    }
+                    
+                    if (savedRebirthCost !== null) {
+                        rebirthCost = parseInt(savedRebirthCost, 10);
+                    }
+                    
+                    if (lastSaved) {
+                        saveMessageElement.textContent = `Progress loaded (Last saved: ${lastSaved})`;
+                    } else {
+                        saveMessageElement.textContent = 'Progress loaded successfully';
+                    }
                 }
                 
-                if (savedMultiplier !== null) {
-                    multiplier = parseInt(savedMultiplier, 10) || 1;
-                }
-                
-                if (savedUpgradeCost !== null) {
-                    upgradeCost = parseInt(savedUpgradeCost, 10) || 10;
-                }
-
-                if (savedRebirthLevel !== null) {
-                    rebirthLevel = parseInt(savedRebirthLevel, 10) || 0;
-                }
-
-                if (savedRebirthCost !== null) {
-                    rebirthCost = parseInt(savedRebirthCost, 10) || 25;
-                }
-                
-                if (savedMultiplierLocked !== null) {
-                    isMultiplierLocked = savedMultiplierLocked === 'true';
-                } else {
-                    // If no lock state is saved, determine it based on rebirth level
-                    isMultiplierLocked = rebirthLevel === 0;
-                }
-
-                if (lastSaved) {
-                    saveMessageElement.textContent = `Progress loaded (Last saved: ${lastSaved})`;
-                } else {
-                    saveMessageElement.textContent = 'Progress loaded successfully';
-                }
-
                 updateCounter(false);
             }
 
             // Function to format large numbers with suffixes
             function formatNumber(num) {
+                // Define value thresholds and corresponding suffixes
                 const thresholds = [
                     { value: 1, suffix: '' },
-                    { value: 1e3, suffix: 'k' },
-                    { value: 1e6, suffix: 'M' },
-                    { value: 1e9, suffix: 'B' },
-                    { value: 1e12, suffix: 'T' },
-                    { value: 1e15, suffix: 'Qd' },
-                    { value: 1e18, suffix: 'Qt' },
-                    { value: 1e21, suffix: 'Sx' },
-                    { value: 1e24, suffix: 'Sp' },
-                    { value: 1e27, suffix: 'Oc' },
-                    { value: 1e30, suffix: 'No' },
-                    { value: 1e33, suffix: 'Dc' }
+                    { value: 1e3, suffix: 'k' },      // thousand
+                    { value: 1e6, suffix: 'M' },      // million
+                    { value: 1e9, suffix: 'B' },      // billion
+                    { value: 1e12, suffix: 'T' },     // trillion
+                    { value: 1e15, suffix: 'Qd' },    // quadrillion
+                    { value: 1e18, suffix: 'Qt' },    // quintillion
+                    { value: 1e21, suffix: 'Sx' },    // sextillion
+                    { value: 1e24, suffix: 'Sp' },    // septillion
+                    { value: 1e27, suffix: 'Oc' },    // octillion
+                    { value: 1e30, suffix: 'No' },    // nonillion
+                    { value: 1e33, suffix: 'Dc' }     // decillion
                 ];
 
+                // Find the appropriate threshold
                 let i = thresholds.length - 1;
                 while (i > 0 && num < thresholds[i].value) {
                     i--;
                 }
 
+                // Get the threshold and suffix
                 const { value, suffix } = thresholds[i];
 
+                // Format the number
                 if (value === 1) {
+                    // Numbers less than 1,000 are displayed as is
                     return num.toString();
                 } else if (num < value * 10) {
+                    // Numbers just above thresholds get 1 decimal place (e.g., 1.2k, 1.5M)
                     return (num / value).toFixed(1) + suffix;
                 } else {
+                    // Larger numbers get no decimal places (e.g., 12k, 150M)
                     return Math.floor(num / value) + suffix;
                 }
             }
 
             // Function to update the counter display
             function updateCounter(saveData = true) {
+                // Use the formatted number for display
                 counterElement.textContent = formatNumber(count);
-
-                // Disable upgrade button if not enough points or multiplier is locked
-                upgradeButton.disabled = count < upgradeCost || isUpgradeOnCooldown || isMultiplierLocked;
-
+                
+                // Disable upgrade button if not enough points
+                upgradeButton.disabled = count < upgradeCost || isUpgradeOnCooldown;
+                
                 // Update rebirth button status
                 rebirthButton.disabled = count < rebirthCost;
                 rebirthButton.textContent = `Rebirth: ${formatNumber(rebirthCost)} points`;
-
+                
                 // Update displays
                 multiplierElement.textContent = formatNumber(multiplier);
                 rebirthLevelElement.textContent = rebirthLevel;
                 rebirthBonusElement.textContent = rebirthLevel * 10;
-
+                
                 // Format upgrade cost for display
                 upgradeCostElement.textContent = formatNumber(upgradeCost);
-
+                
                 // Update the upgrade button text with formatted cost
                 upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
-
+                
                 // If on cooldown, re-add the cooldown overlay
                 if (isUpgradeOnCooldown) {
                     upgradeCooldownElement.style.display = 'flex';
                 }
-
+                
                 // Save the game data after each update if needed
-                if (saveData && cookiesAccepted) {
+                if (saveData) {
                     saveGameData();
                 }
             }
-
+            
             // Function to increment counter with rate limiting
             function incrementCounter() {
                 const now = Date.now();
-
+                
                 // Check if click is on cooldown
                 if (now - lastClickTime < clickCooldown) {
                     isClickOnCooldown = true;
@@ -583,22 +663,22 @@
                     rateLimitInfoElement.textContent = `Wait ${remainingTime}s`;
                     return;
                 }
-
+                
                 // Calculate bonus from rebirth levels
                 const rebirthBonus = 1 + (rebirthLevel * 0.1); // Each rebirth adds 10%
-
+                
                 // Add points with rebirth bonus
                 count += Math.floor(multiplier * rebirthBonus);
                 lastClickTime = now;
-
+                
                 // Clear the rate limit message
                 setTimeout(() => {
                     isClickOnCooldown = false;
                     rateLimitInfoElement.textContent = '';
                 }, clickCooldown);
-
+                
                 updateCounter();
-
+                
                 // Add a visual feedback when clicked
                 enterButton.classList.add('active');
                 setTimeout(() => {
@@ -608,54 +688,55 @@
 
             // Listen for keydown events
             document.addEventListener('keydown', function(event) {
+                // Check if the Enter key was pressed
                 if (event.key === 'Enter') {
                     incrementCounter();
                 }
             });
-
+            
             // Enter button click
             enterButton.addEventListener('click', incrementCounter);
 
             // Upgrade button functionality
             upgradeButton.addEventListener('click', function() {
                 const now = Date.now();
-
+                
                 // Check if upgrade is on cooldown
                 if (isUpgradeOnCooldown) {
                     return;
                 }
-
+                
                 if (count >= upgradeCost) {
                     // Deduct the cost
                     count -= upgradeCost;
-
+                    
                     // Double the multiplier
                     multiplier *= 2;
-
+                    
                     // Double the cost for next upgrade
                     upgradeCost *= 2;
-
+                    
                     // Set upgrade cooldown
                     isUpgradeOnCooldown = true;
                     lastUpgradeTime = now;
-
+                    
                     // Add cooldown overlay
                     upgradeCooldownElement.style.display = 'flex';
-
+                    
                     // Start the cooldown timer animation
                     let remainingCooldown = upgradeCooldown;
-
+                    
                     upgradeCooldownTimer = setInterval(() => {
                         remainingCooldown -= 100; // Update every 100ms
-
+                        
                         // Calculate width percentage for cooldown overlay
                         const widthPercentage = (remainingCooldown / upgradeCooldown) * 100;
                         upgradeCooldownElement.style.width = `${widthPercentage}%`;
-
+                        
                         // Show remaining time in the overlay
                         const secondsLeft = Math.ceil(remainingCooldown / 1000);
                         upgradeCooldownElement.textContent = `${secondsLeft}s`;
-
+                        
                         if (remainingCooldown <= 0) {
                             clearInterval(upgradeCooldownTimer);
                             isUpgradeOnCooldown = false;
@@ -664,37 +745,28 @@
                             updateCounter();
                         }
                     }, 100);
-
+                    
                     updateCounter();
                 }
             });
-
+            
             // Rebirth button functionality
             rebirthButton.addEventListener('click', function() {
                 if (count >= rebirthCost) {
                     if (confirm(`Are you sure you want to rebirth? You will lose all your points (${formatNumber(count)}) and multipliers, but gain a permanent +10% bonus per click!`)) {
                         // Increase rebirth level
                         rebirthLevel++;
-
+                        
                         // Reset count and multiplier
                         count = 0;
                         multiplier = 1;
-
+                        
                         // Reset upgrade cost
                         upgradeCost = 10;
-
-                        // Unlock the multiplier after the first rebirth
-                        if (isMultiplierLocked) {
-                            isMultiplierLocked = false;
-                        }
-
-                        // Increase rebirth cost (10x each time after the first rebirth)
-                        if (rebirthLevel === 1) {
-                            rebirthCost = 1000; // After first rebirth, cost becomes 1,000
-                        } else {
-                            rebirthCost *= 10; // Follow original rules (10x increase)
-                        }
-
+                        
+                        // Increase rebirth cost (10x each time)
+                        rebirthCost *= 10;
+                        
                         updateCounter();
                         saveMessageElement.textContent = "Rebirth complete! Your permanent bonus is now +" + (rebirthLevel * 10) + "% per click.";
                     }
@@ -708,9 +780,8 @@
                     multiplier = 1;
                     upgradeCost = 10;
                     rebirthLevel = 0;
-                    rebirthCost = 25; // Reset to initial rebirth cost
-                    isMultiplierLocked = true; // Re-lock the multiplier
-
+                    rebirthCost = 1000;
+                    
                     // Clear any active cooldowns
                     if (upgradeCooldownTimer) {
                         clearInterval(upgradeCooldownTimer);
@@ -718,44 +789,32 @@
                     isUpgradeOnCooldown = false;
                     upgradeCooldownElement.style.width = '0%';
                     upgradeCooldownElement.style.display = 'none';
-
-                    updateCounter();
                     
-                    if (cookiesAccepted) {
-                        saveGameData();
-                        saveMessageElement.textContent = "Game reset. Progress saved automatically";
-                    } else {
-                        saveMessageElement.textContent = "Game reset. Accept cookies to save progress";
-                    }
+                    updateCounter();
+                    saveMessageElement.textContent = cookiesAccepted ? 
+                        "Game reset. Progress saved automatically" : 
+                        "Game reset. Accept cookies to save progress";
                 }
             });
-
+            
             // Prevent scrolling
             document.body.addEventListener('wheel', function(e) {
                 e.preventDefault();
             }, { passive: false });
-
+            
             // Prevent touchmove scrolling on mobile
             document.body.addEventListener('touchmove', function(e) {
                 if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
                     e.preventDefault();
                 }
             }, { passive: false });
-
+            
             // Save game data every 30 seconds as a backup
-            setInterval(function() {
-                if (cookiesAccepted) {
-                    saveGameData();
-                }
-            }, 30000);
-
+            setInterval(saveGameData, 30000);
+            
             // Save game data when tab/window is closed
-            window.addEventListener('beforeunload', function() {
-                if (cookiesAccepted) {
-                    saveGameData();
-                }
-            });
-
+            window.addEventListener('beforeunload', saveGameData);
+            
             // Initial update
             updateCounter(false);
         });
