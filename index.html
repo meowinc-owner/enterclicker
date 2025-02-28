@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Clicker! - by Damian B (meowinc)</title>
     <style>
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
         :root {
             --bg-color: #f5f5f5;
             --container-bg: white;
@@ -40,14 +47,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
             background-color: var(--bg-color);
             flex-direction: column;
             position: relative;
-            padding-bottom: 70px; /* Space for cookie banner */
             color: var(--text-color);
             transition: background-color 0.3s ease;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            padding-bottom: 70px; /* Space for cookie banner */
         }
         
         .dark-mode-toggle {
@@ -257,41 +272,63 @@
         .cookie-button:hover {
             background-color: #388E3C;
         }
+
+        @media (max-height: 800px) {
+            .game-container {
+                min-height: 350px;
+                padding: 1.5rem;
+            }
+            
+            .warning-box {
+                margin-top: 10px;
+            }
+            
+            .counter {
+                font-size: 4rem;
+                margin: 0.5rem 0;
+            }
+            
+            .enter-button {
+                margin: 1.5rem auto;
+            }
+        }
     </style>
 </head>
 <body>
-    <button id="darkModeToggle" class="dark-mode-toggle">
-        <span class="icon">🌙</span>
-        <span class="text">Dark Mode</span>
-    </button>
-    
-    <div class="credit-box">Made by Damian B - Meowinc<span class="trademark">™</span></div>
-    
-    <div class="game-container">
-        <div class="instructions">Press Enter key or click the button below</div>
-        <div class="counter" id="counter">0</div>
-        
-        <button class="button enter-button" id="enterButton">
-            CLICK
-            <span>or press Enter key</span>
+    <div class="main-content">
+        <button id="darkModeToggle" class="dark-mode-toggle">
+            <span class="icon">🌙</span>
+            <span class="text">Dark Mode</span>
         </button>
         
-        <div class="stats">
-            <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
-            <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
-            <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
+        <div class="credit-box">Made by Damian B - Meowinc<span class="trademark">™</span></div>
+        
+        <div class="game-container">
+            <div class="instructions">Press Enter key or click the button below</div>
+            <div class="counter" id="counter">0</div>
+            
+            <button class="button enter-button" id="enterButton">
+                CLICK
+                <span>or press Enter key</span>
+            </button>
+            
+            <div class="stats">
+                <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
+                <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
+                <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
+            </div>
+            
+            <div class="button-container">
+                <button class="button upgrade-button" id="upgradeButton">
+                    Buy Multiplier: 10 points
+                </button>
+                <button class="button reset-button" id="resetButton">Reset Game</button>
+            </div>
         </div>
         
-        <div class="button-container">
-            <button class="button upgrade-button" id="upgradeButton">
-                Buy Multiplier: 10 points
-            </button>
-            <button class="button reset-button" id="resetButton">Reset Game</button>
+        <div class="warning-box">
+            No autoclickers or blacklisted from the website!
         </div>
-    </div>
-    
-    <div class="warning-box">
-        No autoclickers or blacklisted from the website!
     </div>
     
     <div id="cookieConsent" class="cookie-consent">
@@ -497,6 +534,18 @@
                         "Game reset. Accept cookies to save progress";
                 }
             });
+            
+            // Prevent scrolling
+            document.body.addEventListener('wheel', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            // Prevent touchmove scrolling on mobile
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                }
+            }, { passive: false });
             
             // Save game data every 30 seconds as a backup
             setInterval(saveGameData, 30000);
