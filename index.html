@@ -123,6 +123,12 @@
             width: 500px;
             text-align: center;
         }
+        .save-message {
+            font-size: 0.8rem;
+            color: #757575;
+            margin-top: 5px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -140,6 +146,7 @@
         <div class="stats">
             <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
             <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
+            <p class="save-message" id="saveMessage">Progress is saved automatically</p>
         </div>
         
         <div class="button-container">
@@ -162,10 +169,43 @@
             const enterButton = document.getElementById('enterButton');
             const multiplierElement = document.getElementById('multiplier');
             const upgradeCostElement = document.getElementById('upgradeCost');
+            const saveMessageElement = document.getElementById('saveMessage');
             
+            // Initialize game state with saved values or defaults
             let count = 0;
             let multiplier = 1;
             let upgradeCost = 10;
+            
+            // Load saved game data
+            loadGameData();
+            
+            // Function to save game data to localStorage
+            function saveGameData() {
+                const gameData = {
+                    count: count,
+                    multiplier: multiplier,
+                    upgradeCost: upgradeCost,
+                    lastSaved: new Date().toLocaleString()
+                };
+                
+                localStorage.setItem('enterClickerSave', JSON.stringify(gameData));
+                saveMessageElement.textContent = `Progress saved automatically (Last: ${gameData.lastSaved})`;
+            }
+            
+            // Function to load game data from localStorage
+            function loadGameData() {
+                const savedData = localStorage.getItem('enterClickerSave');
+                
+                if (savedData) {
+                    const gameData = JSON.parse(savedData);
+                    count = gameData.count;
+                    multiplier = gameData.multiplier;
+                    upgradeCost = gameData.upgradeCost;
+                    saveMessageElement.textContent = `Progress loaded (Last saved: ${gameData.lastSaved})`;
+                }
+                
+                updateCounter();
+            }
 
             // Function to update the counter display
             function updateCounter() {
@@ -180,6 +220,9 @@
                 
                 // Update the upgrade button text
                 upgradeButton.textContent = `Buy Multiplier: ${upgradeCost} points`;
+                
+                // Save the game data after each update
+                saveGameData();
             }
             
             // Function to increment counter
@@ -223,11 +266,17 @@
 
             // Reset button functionality
             resetButton.addEventListener('click', function() {
-                count = 0;
-                multiplier = 1;
-                upgradeCost = 10;
-                updateCounter();
+                if (confirm("Are you sure you want to reset your game progress?")) {
+                    count = 0;
+                    multiplier = 1;
+                    upgradeCost = 10;
+                    updateCounter();
+                    saveMessageElement.textContent = "Game reset. Progress saved automatically";
+                }
             });
+            
+            // Save game data when tab/window is closed
+            window.addEventListener('beforeunload', saveGameData);
             
             // Initial update
             updateCounter();
