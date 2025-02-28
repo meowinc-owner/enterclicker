@@ -48,16 +48,46 @@
             --cooldown-overlay: rgba(0, 0, 0, 0.7);
         }
         
+        body.rainbow-mode {
+            --container-bg: rgba(255, 255, 255, 0.9);
+            --text-color: #000;
+            --secondary-text: #555;
+            --tertiary-text: #777;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --stats-border: rgba(0, 0, 0, 0.1);
+            --credit-bg: rgba(255, 255, 255, 0.8);
+            --warning-bg: rgba(255, 235, 238, 0.9);
+            --warning-border: #f44336;
+            --warning-text: #c62828;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --rebirth-color: #673AB7;
+            --rebirth-hover: #5E35B1;
+            --cooldown-overlay: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Rainbow animation */
+        @keyframes rainbowBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body.rainbow-mode {
+            background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee, #fbc2eb, #ff9a9e);
+            background-size: 400% 400%;
+            animation: rainbowBackground 10s ease infinite;
+        }
+        
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: var(--bg-color);
+            background: var(--bg-color);
             flex-direction: column;
             position: relative;
             color: var(--text-color);
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .main-content {
@@ -71,11 +101,14 @@
             padding-bottom: 70px; /* Space for cookie banner */
         }
         
-        .dark-mode-toggle {
+        .theme-menu {
             position: absolute;
             top: 15px;
             right: 15px;
             z-index: 100;
+        }
+        
+        .theme-button {
             background-color: var(--container-bg);
             color: var(--text-color);
             border: 1px solid var(--border-color);
@@ -89,13 +122,45 @@
             transition: all 0.3s ease;
         }
         
-        .dark-mode-toggle:hover {
+        .theme-button:hover {
             box-shadow: 0 4px 8px var(--shadow-color);
         }
         
-        .dark-mode-toggle .icon {
+        .theme-button .icon {
             margin-right: 5px;
             font-size: 1rem;
+        }
+        
+        .theme-dropdown {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            overflow: hidden;
+            z-index: 100;
+        }
+        
+        .theme-dropdown.show {
+            display: block;
+        }
+        
+        .theme-dropdown button {
+            width: 100%;
+            padding: 8px 15px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .theme-dropdown button:hover {
+            background-color: var(--stats-border);
         }
         
         .credit-box {
@@ -326,22 +391,22 @@
         }
 
         .rebirth-info {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: var(--container-bg); /* Solid background that matches theme */
-    border-radius: 5px;
-    font-size: 0.9rem;
-    text-align: left;
-    border: 2px solid var(--text-color); /* Border color changes with theme */
-    position: absolute;
-    bottom: 120px;
-    right: 20px;
-    width: 250px;
-    z-index: 10;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-}
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--container-bg); /* Solid background that matches theme */
+            border-radius: 5px;
+            font-size: 0.9rem;
+            text-align: left;
+            border: 2px solid var(--text-color); /* Border color changes with theme */
+            position: absolute;
+            bottom: 120px;
+            right: 20px;
+            width: 250px;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
 
         .rebirth-button:hover + .rebirth-info {
             opacity: 1;
@@ -371,10 +436,17 @@
 </head>
 <body>
     <div class="main-content">
-        <button id="darkModeToggle" class="dark-mode-toggle">
-            <span class="icon">🌙</span>
-            <span class="text">Dark Mode</span>
-        </button>
+        <div class="theme-menu">
+            <button id="themeButton" class="theme-button">
+                <span class="icon">🎨</span>
+                <span class="text">Theme</span>
+            </button>
+            <div id="themeDropdown" class="theme-dropdown">
+                <button id="lightTheme">Light</button>
+                <button id="darkTheme">Dark</button>
+                <button id="rainbowTheme">Rainbow</button>
+            </div>
+        </div>
         
         <div class="credit-box">Made by Damian B - Meowinc<span class="trademark">™</span></div>
         
@@ -432,7 +504,11 @@
             const saveMessageElement = document.getElementById('saveMessage');
             const cookieConsentElement = document.getElementById('cookieConsent');
             const acceptCookiesButton = document.getElementById('acceptCookies');
-            const darkModeToggle = document.getElementById('darkModeToggle');
+            const themeButton = document.getElementById('themeButton');
+            const themeDropdown = document.getElementById('themeDropdown');
+            const lightThemeButton = document.getElementById('lightTheme');
+            const darkThemeButton = document.getElementById('darkTheme');
+            const rainbowThemeButton = document.getElementById('rainbowTheme');
             const rebirthButton = document.getElementById('rebirthButton');
             const rebirthLevelElement = document.getElementById('rebirthLevel');
             const rebirthBonusElement = document.getElementById('rebirthBonus');
@@ -445,7 +521,7 @@
             let multiplier = 1;
             let upgradeCost = 10;
             let cookiesAccepted = false;
-            let darkMode = false;
+            let currentTheme = 'light';
             let rebirthLevel = 0;
             let rebirthCost = 1000;
             
@@ -466,43 +542,54 @@
                 loadGameData();
             }
             
-            // Check if dark mode was previously set
-            if (getCookie('darkMode') === 'true') {
-                enableDarkMode();
+            // Check if theme was previously set
+            const savedTheme = getCookie('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
             }
             
-            // Dark mode toggle
-            darkModeToggle.addEventListener('click', function() {
-                if (document.body.classList.contains('dark-mode')) {
-                    disableDarkMode();
-                } else {
-                    enableDarkMode();
-                }
-                
-                if (cookiesAccepted) {
-                    setCookie('darkMode', darkMode.toString(), 365);
-                }
+            // Theme button click handler
+            themeButton.addEventListener('click', function() {
+                themeDropdown.classList.toggle('show');
             });
             
-            function enableDarkMode() {
-                document.body.classList.add('dark-mode');
-                darkModeToggle.querySelector('.icon').textContent = '☀️';
-                darkModeToggle.querySelector('.text').textContent = 'Light Mode';
-                darkMode = true;
-            }
+            // Light theme button click handler
+            lightThemeButton.addEventListener('click', function() {
+                setTheme('light');
+                themeDropdown.classList.remove('show');
+            });
             
-            function disableDarkMode() {
-                document.body.classList.remove('dark-mode');
-                darkModeToggle.querySelector('.icon').textContent = '🌙';
-                darkModeToggle.querySelector('.text').textContent = 'Dark Mode';
-                darkMode = false;
+            // Dark theme button click handler
+            darkThemeButton.addEventListener('click', function() {
+                setTheme('dark');
+                themeDropdown.classList.remove('show');
+            });
+            
+            // Rainbow theme button click handler
+            rainbowThemeButton.addEventListener('click', function() {
+                setTheme('rainbow');
+                themeDropdown.classList.remove('show');
+            });
+            
+            // Function to set the theme
+            function setTheme(theme) {
+                document.body.classList.remove('dark-mode', 'rainbow-mode');
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                } else if (theme === 'rainbow') {
+                    document.body.classList.add('rainbow-mode');
+                }
+                currentTheme = theme;
+                if (cookiesAccepted) {
+                    setCookie('theme', theme, 365);
+                }
             }
             
             // Accept cookies button click handler
             acceptCookiesButton.addEventListener('click', function() {
                 cookiesAccepted = true;
                 setCookie('cookiesAccepted', 'true', 365); // Cookie lasts for 1 year
-                setCookie('darkMode', darkMode.toString(), 365); // Also save dark mode preference
+                setCookie('theme', currentTheme, 365); // Also save theme preference
                 cookieConsentElement.style.display = 'none';
                 saveGameData();
                 saveMessageElement.textContent = 'Cookies accepted! Your progress will be saved automatically.';
