@@ -625,8 +625,8 @@
             right: 20px;
             width: 20px;
             height: 20px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0);
+            border: 1px solid rgba(255, 255, 255, 0);
             border-radius: 50%;
             cursor: pointer;
             z-index: 1000;
@@ -659,8 +659,8 @@
 
         .admin-panel .close-button {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 8px;
+            right: -185px;
             background: none;
             border: none;
             font-size: 1.5rem;
@@ -695,6 +695,29 @@
 
         .admin-panel button:hover {
             background-color: #388E3C;
+        }
+
+        /* Rate Limiter Buttons */
+        .rate-limiter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .rate-limiter-buttons .buy-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .rate-limiter-buttons .disable-button {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .rate-limiter-buttons button:disabled {
+            background-color: #9E9E9E;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -803,7 +826,10 @@
         <button id="setScoreButton">Set Score</button>
         <input type="number" id="setRebirthsInput" placeholder="Set Rebirths">
         <button id="setRebirthsButton">Set Rebirths</button>
-        <button id="toggleRateLimiter">Toggle Rate Limiter</button>
+        <div class="rate-limiter-buttons">
+            <button id="enableRateLimiter" class="buy-button">Enable Rate Limiter</button>
+            <button id="disableRateLimiter" class="disable-button">Disable Rate Limiter</button>
+        </div>
     </div>
 
     <script>
@@ -845,7 +871,8 @@
             const setScoreButton = document.getElementById('setScoreButton');
             const setRebirthsInput = document.getElementById('setRebirthsInput');
             const setRebirthsButton = document.getElementById('setRebirthsButton');
-            const toggleRateLimiter = document.getElementById('toggleRateLimiter');
+            const enableRateLimiter = document.getElementById('enableRateLimiter');
+            const disableRateLimiter = document.getElementById('disableRateLimiter');
 
             // Initialize game state with defaults
             let count = 0;
@@ -861,7 +888,7 @@
             // Rate limiters
             let lastClickTime = 0;
             const clickCooldown = 200; // 0.2 seconds in milliseconds
-            let isClickOnCooldown = false;
+            let isClickOnCooldown = true; // Rate limiter enabled by default
 
             // Check if cookies were previously accepted
             if (getCookie('cookiesAccepted') === 'true') {
@@ -1070,8 +1097,7 @@
             function incrementCounter() {
                 const now = Date.now();
 
-                if (now - lastClickTime < clickCooldown) {
-                    isClickOnCooldown = true;
+                if (isClickOnCooldown && now - lastClickTime < clickCooldown) {
                     const remainingTime = ((clickCooldown - (now - lastClickTime)) / 1000).toFixed(1);
                     rateLimitInfoElement.textContent = `Wait ${remainingTime}s`;
                     return;
@@ -1082,7 +1108,6 @@
                 lastClickTime = now;
 
                 setTimeout(() => {
-                    isClickOnCooldown = false;
                     rateLimitInfoElement.textContent = '';
                 }, clickCooldown);
 
@@ -1254,11 +1279,25 @@
                 }
             });
 
-            // Toggle rate limiter button click handler
-            toggleRateLimiter.addEventListener('click', function() {
-                isClickOnCooldown = !isClickOnCooldown;
-                rateLimitInfoElement.textContent = isClickOnCooldown ? 'Rate Limiter Disabled' : '';
+            // Enable Rate Limiter button click handler
+            enableRateLimiter.addEventListener('click', function() {
+                isClickOnCooldown = true;
+                rateLimitInfoElement.textContent = 'Rate Limiter Enabled';
+                enableRateLimiter.disabled = true;
+                disableRateLimiter.disabled = false;
             });
+
+            // Disable Rate Limiter button click handler
+            disableRateLimiter.addEventListener('click', function() {
+                isClickOnCooldown = false;
+                rateLimitInfoElement.textContent = 'Rate Limiter Disabled';
+                enableRateLimiter.disabled = false;
+                disableRateLimiter.disabled = true;
+            });
+
+            // Initialize rate limiter buttons
+            enableRateLimiter.disabled = true;
+            disableRateLimiter.disabled = false;
         });
     </script>
 </body>
