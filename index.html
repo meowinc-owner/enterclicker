@@ -1036,36 +1036,125 @@
 
             // Function to format large numbers with suffixes
             function formatNumber(num) {
-                const thresholds = [
-                    { value: 1, suffix: '' },
-                    { value: 1e3, suffix: 'k' },
-                    { value: 1e6, suffix: 'M' },
-                    { value: 1e9, suffix: 'B' },
-                    { value: 1e12, suffix: 'T' },
-                    { value: 1e15, suffix: 'Qd' },
-                    { value: 1e18, suffix: 'Qt' },
-                    { value: 1e21, suffix: 'Sx' },
-                    { value: 1e24, suffix: 'Sp' },
-                    { value: 1e27, suffix: 'Oc' },
-                    { value: 1e30, suffix: 'No' },
-                    { value: 1e33, suffix: 'Dc' }
-                ];
+    const thresholds = [
+        { value: 1, suffix: '' },
+        { value: 1e3, suffix: 'k' },
+        { value: 1e6, suffix: 'M' },
+        { value: 1e9, suffix: 'B' },
+        { value: 1e12, suffix: 'T' },
+        { value: 1e15, suffix: 'Qd' },
+        { value: 1e18, suffix: 'Qt' },
+        { value: 1e21, suffix: 'Sx' },
+        { value: 1e24, suffix: 'Sp' },
+        { value: 1e27, suffix: 'Oc' },
+        { value: 1e30, suffix: 'No' },
+        { value: 1e33, suffix: 'Dc' },
+        { value: 1e36, suffix: 'Ud' },
+        { value: 1e39, suffix: 'Dd' },
+        { value: 1e42, suffix: 'Td' },
+        { value: 1e45, suffix: 'Qad' },
+        { value: 1e48, suffix: 'Qid' },
+        { value: 1e51, suffix: 'Sxd' },
+        { value: 1e54, suffix: 'Spd' },
+        { value: 1e57, suffix: 'Od' },
+        { value: 1e60, suffix: 'Nd' },
+        { value: 1e63, suffix: 'Vg' },
+        { value: 1e66, suffix: 'Uvg' },
+        { value: 1e69, suffix: 'Dvg' },
+        { value: 1e72, suffix: 'Tvg' },
+        { value: 1e75, suffix: 'Qavg' },
+        { value: 1e78, suffix: 'Qivg' },
+        { value: 1e81, suffix: 'Sxvg' },
+        { value: 1e84, suffix: 'Spvg' },
+        { value: 1e87, suffix: 'Ovg' },
+        { value: 1e90, suffix: 'Nvg' },
+        { value: 1e93, suffix: 'Tg' },
+        { value: 1e96, suffix: 'Utg' },
+        { value: 1e99, suffix: 'Dtg' },
+        { value: 1e102, suffix: 'Ttg' },
+        { value: 1e105, suffix: 'Qatg' },
+        { value: 1e108, suffix: 'Qitg' },
+        { value: 1e111, suffix: 'Sxtg' },
+        { value: 1e114, suffix: 'Sptg' },
+        { value: 1e117, suffix: 'Otg' },
+        { value: 1e120, suffix: 'Ntg' },
+        { value: 1e123, suffix: 'Qag' },
+        { value: 1e126, suffix: 'Uqag' },
+        { value: 1e129, suffix: 'Dqag' },
+        { value: 1e132, suffix: 'Tqag' },
+        { value: 1e135, suffix: 'Qaqag' },
+        { value: 1e138, suffix: 'Qiqag' },
+        { value: 1e141, suffix: 'Sxqag' },
+        { value: 1e144, suffix: 'Spqag' },
+        { value: 1e147, suffix: 'Oqag' },
+        { value: 1e150, suffix: 'Nqag' },
+        { value: 1e153, suffix: 'Qig' },
+        { value: 1e156, suffix: 'Uqig' },
+        { value: 1e159, suffix: 'Dqig' },
+        { value: 1e162, suffix: 'Tqig' },
+        { value: 1e165, suffix: 'Qaqig' },
+        { value: 1e168, suffix: 'Qiqig' },
+        { value: 1e171, suffix: 'Sxqig' },
+        { value: 1e174, suffix: 'Spqig' },
+        { value: 1e177, suffix: 'Oqig' },
+        { value: 1e180, suffix: 'Nqig' },
+        { value: 1e183, suffix: 'Sxg' },
+        { value: 1e186, suffix: 'Usxg' },
+        { value: 1e189, suffix: 'Dsxg' },
+        { value: 1e192, suffix: 'Tsxg' },
+        { value: 1e195, suffix: 'Qasxg' },
+        { value: 1e198, suffix: 'Qisxg' },
+        { value: 1e201, suffix: 'Sxsxg' },
+        { value: 1e204, suffix: 'Spsxg' },
+        { value: 1e207, suffix: 'Osxg' },
+        { value: 1e210, suffix: 'Nsxg' },
+        { value: 1e213, suffix: 'Spg' },
+        { value: 1e216, suffix: 'Uspg' },
+        { value: 1e219, suffix: 'Dspg' },
+        { value: 1e222, suffix: 'Tspg' },
+        { value: 1e225, suffix: 'Qaspg' },
+        { value: 1e228, suffix: 'Qispg' },
+        { value: 1e231, suffix: 'Sxspg' },
+        { value: 1e234, suffix: 'Spspg' },
+        { value: 1e237, suffix: 'Ospg' },
+        { value: 1e240, suffix: 'Nspg' },
+        { value: 1e243, suffix: 'Og' },
+        { value: 1e246, suffix: 'Uog' },
+        { value: 1e249, suffix: 'Dog' },
+        { value: 1e252, suffix: 'Tog' },
+        { value: 1e255, suffix: 'Qaog' },
+        { value: 1e258, suffix: 'Qiog' },
+        { value: 1e261, suffix: 'Sxog' },
+        { value: 1e264, suffix: 'Spog' },
+        { value: 1e267, suffix: 'Oog' },
+        { value: 1e270, suffix: 'Nog' },
+        { value: 1e273, suffix: 'Ng' },
+        { value: 1e276, suffix: 'Ung' },
+        { value: 1e279, suffix: 'Dng' },
+        { value: 1e282, suffix: 'Tng' },
+        { value: 1e285, suffix: 'Qang' },
+        { value: 1e288, suffix: 'Qing' },
+        { value: 1e291, suffix: 'Sxng' },
+        { value: 1e294, suffix: 'Spng' },
+        { value: 1e297, suffix: 'Ong' },
+        { value: 1e300, suffix: 'Nng' }
+    ];
 
-                let i = thresholds.length - 1;
-                while (i > 0 && num < thresholds[i].value) {
-                    i--;
-                }
+    let i = thresholds.length - 1;
+    while (i > 0 && num < thresholds[i].value) {
+        i--;
+    }
 
-                const { value, suffix } = thresholds[i];
+    const { value, suffix } = thresholds[i];
 
-                if (value === 1) {
-                    return num.toString();
-                } else if (num < value * 10) {
-                    return (num / value).toFixed(1) + suffix;
-                } else {
-                    return Math.floor(num / value) + suffix;
-                }
-            }
+    if (value === 1) {
+        return num.toString();
+    } else if (num < value * 10) {
+        return (num / value).toFixed(1) + suffix;
+    } else {
+        return Math.floor(num / value) + suffix;
+    }
+}
 
             // Function to update the counter display
             function updateCounter(saveData = true) {
