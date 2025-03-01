@@ -504,13 +504,16 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px var(--shadow-color);
             padding: 20px;
-            width: 400px; /* Wider menu */
+            width: 800px; /* Wider menu */
             z-index: 1001;
             display: none;
+            flex-direction: row; /* Horizontal layout */
+            flex-wrap: wrap; /* Wrap items if they don't fit */
+            justify-content: space-around; /* Space items evenly */
         }
 
         .shop-menu.open {
-            display: block;
+            display: flex;
         }
 
         .shop-menu .close-button {
@@ -532,9 +535,11 @@
             border: 1px solid var(--border-color);
             border-radius: 15px;
             padding: 15px;
-            margin: 10px 0;
+            margin: 10px;
             box-shadow: 0 2px 4px var(--shadow-color);
             transition: all 0.3s ease;
+            width: 200px; /* Fixed width for each item */
+            position: relative; /* Added for cooldown overlay */
         }
 
         .shop-item:hover {
@@ -870,6 +875,18 @@
                 </button>
             </div>
         </div>
+
+        <!-- Time Warp Item (Hidden until 2 rebirths) -->
+        <div class="shop-item" id="timeWarpItem" style="display: none;">
+            <h3>Time Warp</h3>
+            <p>Temporarily quintuple your points for 5 seconds! (10-minute cooldown)</p>
+            <button class="buy-button" id="timeWarpButton">
+                Activate Time Warp
+            </button>
+            <div class="cooldown-overlay" id="timeWarpCooldownOverlay" style="display: none;">
+                <span id="timeWarpCooldownText"></span>
+            </div>
+        </div>
     </div>
 
     <!-- Blur Overlay -->
@@ -929,6 +946,10 @@
             const autoClickerButton = document.getElementById('autoClickerButton');
             const disableAutoClickerButton = document.getElementById('disableAutoClickerButton');
             const autoClickerItem = document.getElementById('autoClickerItem');
+            const timeWarpItem = document.getElementById('timeWarpItem');
+            const timeWarpButton = document.getElementById('timeWarpButton');
+            const timeWarpCooldownOverlay = document.getElementById('timeWarpCooldownOverlay');
+            const timeWarpCooldownText = document.getElementById('timeWarpCooldownText');
             const adminPanelIcon = document.getElementById('adminPanelIcon');
             const adminPanel = document.getElementById('adminPanel');
             const closeAdminPanel = document.getElementById('closeAdminPanel');
@@ -956,6 +977,9 @@
             let rebirthCost = 1000;
             let autoClickerEnabled = false;
             let autoClickerInterval = null;
+            let timeWarpActive = false;
+            let timeWarpCooldown = false;
+            let timeWarpCooldownEnd = 0;
 
             // Rate limiters
             let lastClickTime = 0;
@@ -1252,6 +1276,13 @@
                     autoClickerItem.style.display = 'none';
                 }
 
+                // Show/hide Time Warp item based on rebirth level
+                if (rebirthLevel >= 2) {
+                    timeWarpItem.style.display = 'block';
+                } else {
+                    timeWarpItem.style.display = 'none';
+                }
+
                 if (saveData) {
                     saveGameData();
                 }
@@ -1268,7 +1299,8 @@
                 }
 
                 const rebirthBonus = 1 + (rebirthLevel * 0.1);
-                count += Math.floor(multiplier * rebirthBonus);
+                const timeWarpBonus = timeWarpActive ? 5 : 1;
+                count += Math.floor(multiplier * rebirthBonus * timeWarpBonus);
                 lastClickTime = now;
 
                 setTimeout(() => {
@@ -1339,6 +1371,43 @@
                 if (autoClickerEnabled) {
                     autoClickerInterval = setInterval(incrementCounter, clickCooldown); // Clicks every 0.2 seconds
                 }
+            }
+
+            // Time Warp button functionality
+            timeWarpButton.addEventListener('click', function() {
+                if (!timeWarpCooldown) {
+                    timeWarpActive = true;
+                    timeWarpCooldown = true;
+                    timeWarpCooldownEnd = Date.now() + 600000; // 10 minutes cooldown
+
+                    setTimeout(() => {
+                        timeWarpActive = false;
+                    }, 5000); // 5 seconds duration
+
+                    setTimeout(() => {
+                        timeWarpCooldown = false;
+                        timeWarpCooldownOverlay.style.display = 'none';
+                    }, 600000); // 10 minutes cooldown
+
+                    timeWarpCooldownOverlay.style.display = 'flex';
+                    timeWarpCooldownText.textContent = '10:00';
+                    startTimeWarpCooldownTimer();
+                }
+            });
+
+            // Function to start the Time Warp cooldown timer
+            function startTimeWarpCooldownTimer() {
+                const interval = setInterval(() => {
+                    const remainingTime = Math.ceil((timeWarpCooldownEnd - Date.now()) / 1000);
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        timeWarpCooldownOverlay.style.display = 'none';
+                    } else {
+                        const minutes = Math.floor(remainingTime / 60);
+                        const seconds = remainingTime % 60;
+                        timeWarpCooldownText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
             }
 
             // Reset button functionality
