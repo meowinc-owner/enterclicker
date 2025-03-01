@@ -698,7 +698,7 @@
         <!-- Auto Clicker Upgrade Item (Hidden until 1 rebirth) -->
         <div class="shop-item" id="autoClickerItem" style="display: none;">
             <h3>Auto Clicker</h3>
-            <p>Automatically clicks for you every second!</p>
+            <p>Automatically clicks for you every 0.2 seconds!</p>
             <div class="auto-clicker-buttons">
                 <button class="buy-button" id="autoClickerButton">
                     Enable Auto Clicker
@@ -759,7 +759,7 @@
 
             // Rate limiters
             let lastClickTime = 0;
-            const clickCooldown = 250; // 0.25 seconds in milliseconds
+            const clickCooldown = 200; // 0.2 seconds in milliseconds
             let isClickOnCooldown = false;
 
             // Check if cookies were previously accepted
@@ -1047,7 +1047,7 @@
             // Function to start the auto clicker
             function startAutoClicker() {
                 if (autoClickerEnabled) {
-                    autoClickerInterval = setInterval(incrementCounter, 1000); // Clicks every second
+                    autoClickerInterval = setInterval(incrementCounter, clickCooldown); // Clicks every 0.2 seconds
                 }
             }
 
