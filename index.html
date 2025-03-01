@@ -886,6 +886,11 @@
         <button id="setScoreButton">Set Score</button>
         <input type="number" id="setRebirthsInput" placeholder="Set Rebirths">
         <button id="setRebirthsButton">Set Rebirths</button>
+        <input type="number" id="setMultiplierInput" placeholder="Set Multiplier">
+        <button id="setMultiplierButton">Set Multiplier</button>
+        <button id="enableAutoClicker">Enable Auto Clicker</button>
+        <button id="disableAutoClicker">Disable Auto Clicker</button>
+        <button id="resetGame">Reset Game</button>
         <div class="rate-limiter-buttons">
             <button id="enableRateLimiter" class="buy-button">Enable Rate Limiter</button>
             <button id="disableRateLimiter" class="disable-button">Disable Rate Limiter</button>
@@ -931,6 +936,11 @@
             const setScoreButton = document.getElementById('setScoreButton');
             const setRebirthsInput = document.getElementById('setRebirthsInput');
             const setRebirthsButton = document.getElementById('setRebirthsButton');
+            const setMultiplierInput = document.getElementById('setMultiplierInput');
+            const setMultiplierButton = document.getElementById('setMultiplierButton');
+            const enableAutoClicker = document.getElementById('enableAutoClicker');
+            const disableAutoClicker = document.getElementById('disableAutoClicker');
+            const resetGame = document.getElementById('resetGame');
             const enableRateLimiter = document.getElementById('enableRateLimiter');
             const disableRateLimiter = document.getElementById('disableRateLimiter');
             const welcomeOverlay = document.getElementById('welcomeOverlay');
@@ -1430,6 +1440,47 @@
                 if (!isNaN(newRebirths)) {
                     rebirthLevel = newRebirths;
                     updateCounter();
+                }
+            });
+
+            // Set multiplier button click handler
+            setMultiplierButton.addEventListener('click', function() {
+                const newMultiplier = parseInt(setMultiplierInput.value, 10);
+                if (!isNaN(newMultiplier)) {
+                    multiplier = newMultiplier;
+                    updateCounter();
+                }
+            });
+
+            // Enable Auto Clicker button click handler
+            enableAutoClicker.addEventListener('click', function() {
+                autoClickerEnabled = true;
+                updateCounter();
+                startAutoClicker();
+            });
+
+            // Disable Auto Clicker button click handler
+            disableAutoClicker.addEventListener('click', function() {
+                autoClickerEnabled = false;
+                clearInterval(autoClickerInterval);
+                updateCounter();
+            });
+
+            // Reset Game button click handler
+            resetGame.addEventListener('click', function() {
+                if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including rebirth levels!")) {
+                    count = 0;
+                    multiplier = 1;
+                    upgradeCost = 10;
+                    rebirthLevel = 0;
+                    rebirthCost = 1000;
+                    autoClickerEnabled = false;
+                    clearInterval(autoClickerInterval);
+
+                    updateCounter();
+                    saveMessageElement.textContent = cookiesAccepted ? 
+                        "Game reset. Progress saved automatically" : 
+                        "Game reset. Accept cookies to save progress";
                 }
             });
 
