@@ -617,6 +617,85 @@
             gap: 10px; /* Space between buttons */
             margin-top: 20px; /* Space above the buttons */
         }
+
+        /* Admin Panel Styles */
+        .admin-panel-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            opacity: 0.1;
+            transition: opacity 0.3s ease;
+        }
+
+        .admin-panel-icon:hover {
+            opacity: 1;
+        }
+
+        .admin-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            padding: 20px;
+            width: 400px;
+            z-index: 1001;
+            display: none;
+        }
+
+        .admin-panel.open {
+            display: block;
+        }
+
+        .admin-panel .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .admin-panel h2 {
+            margin-top: 0;
+        }
+
+        .admin-panel input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--container-bg);
+            color: var(--text-color);
+        }
+
+        .admin-panel button {
+            width: 100%;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .admin-panel button:hover {
+            background-color: #388E3C;
+        }
     </style>
 </head>
 <body>
@@ -713,6 +792,20 @@
     <!-- Blur Overlay -->
     <div class="blur-overlay" id="blurOverlay"></div>
 
+    <!-- Admin Panel Icon -->
+    <div class="admin-panel-icon" id="adminPanelIcon"></div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <button class="close-button" id="closeAdminPanel">✕</button>
+        <h2>Admin Panel</h2>
+        <input type="number" id="setScoreInput" placeholder="Set Score">
+        <button id="setScoreButton">Set Score</button>
+        <input type="number" id="setRebirthsInput" placeholder="Set Rebirths">
+        <button id="setRebirthsButton">Set Rebirths</button>
+        <button id="toggleRateLimiter">Toggle Rate Limiter</button>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const counterElement = document.getElementById('counter');
@@ -745,6 +838,14 @@
             const autoClickerButton = document.getElementById('autoClickerButton');
             const disableAutoClickerButton = document.getElementById('disableAutoClickerButton');
             const autoClickerItem = document.getElementById('autoClickerItem');
+            const adminPanelIcon = document.getElementById('adminPanelIcon');
+            const adminPanel = document.getElementById('adminPanel');
+            const closeAdminPanel = document.getElementById('closeAdminPanel');
+            const setScoreInput = document.getElementById('setScoreInput');
+            const setScoreButton = document.getElementById('setScoreButton');
+            const setRebirthsInput = document.getElementById('setRebirthsInput');
+            const setRebirthsButton = document.getElementById('setRebirthsButton');
+            const toggleRateLimiter = document.getElementById('toggleRateLimiter');
 
             // Initialize game state with defaults
             let count = 0;
@@ -920,96 +1021,7 @@
                     { value: 1e24, suffix: 'Sp' },
                     { value: 1e27, suffix: 'Oc' },
                     { value: 1e30, suffix: 'No' },
-                    { value: 1e33, suffix: 'Dc' },
-                    { value: 1e36, suffix: 'Ud' },
-                    { value: 1e39, suffix: 'Dd' },
-                    { value: 1e42, suffix: 'Td' },
-                    { value: 1e45, suffix: 'Qad' },
-                    { value: 1e48, suffix: 'Qid' },
-                    { value: 1e51, suffix: 'Sxd' },
-                    { value: 1e54, suffix: 'Spd' },
-                    { value: 1e57, suffix: 'Ocd' },
-                    { value: 1e60, suffix: 'Nod' },
-                    { value: 1e63, suffix: 'Vg' },
-                    { value: 1e66, suffix: 'Uvg' },
-                    { value: 1e69, suffix: 'Dvg' },
-                    { value: 1e72, suffix: 'Tvg' },
-                    { value: 1e75, suffix: 'Qavg' },
-                    { value: 1e78, suffix: 'Qivg' },
-                    { value: 1e81, suffix: 'Sxvg' },
-                    { value: 1e84, suffix: 'Spvg' },
-                    { value: 1e87, suffix: 'Ocvg' },
-                    { value: 1e90, suffix: 'Novg' },
-                    { value: 1e93, suffix: 'Tg' },
-                    { value: 1e96, suffix: 'Utg' },
-                    { value: 1e99, suffix: 'Dtg' },
-                    { value: 1e102, suffix: 'Ttg' },
-                    { value: 1e105, suffix: 'Qatg' },
-                    { value: 1e108, suffix: 'Qitg' },
-                    { value: 1e111, suffix: 'Sxtg' },
-                    { value: 1e114, suffix: 'Sptg' },
-                    { value: 1e117, suffix: 'Octg' },
-                    { value: 1e120, suffix: 'Notg' },
-                    { value: 1e123, suffix: 'Qag' },
-                    { value: 1e126, suffix: 'Uqag' },
-                    { value: 1e129, suffix: 'Dqag' },
-                    { value: 1e132, suffix: 'Tqag' },
-                    { value: 1e135, suffix: 'Qaqag' },
-                    { value: 1e138, suffix: 'Qiqag' },
-                    { value: 1e141, suffix: 'Sxqag' },
-                    { value: 1e144, suffix: 'Spqag' },
-                    { value: 1e147, suffix: 'Ocqag' },
-                    { value: 1e150, suffix: 'Noqag' },
-                    { value: 1e153, suffix: 'Qig' },
-                    { value: 1e156, suffix: 'Uqig' },
-                    { value: 1e159, suffix: 'Dqig' },
-                    { value: 1e162, suffix: 'Tqig' },
-                    { value: 1e165, suffix: 'Qaqig' },
-                    { value: 1e168, suffix: 'Qiqig' },
-                    { value: 1e171, suffix: 'Sxqig' },
-                    { value: 1e174, suffix: 'Spqig' },
-                    { value: 1e177, suffix: 'Ocqig' },
-                    { value: 1e180, suffix: 'Noqig' },
-                    { value: 1e183, suffix: 'Sxg' },
-                    { value: 1e186, suffix: 'Usxg' },
-                    { value: 1e189, suffix: 'Dsxg' },
-                    { value: 1e192, suffix: 'Tsxg' },
-                    { value: 1e195, suffix: 'Qasxg' },
-                    { value: 1e198, suffix: 'Qisxg' },
-                    { value: 1e201, suffix: 'Sxsxg' },
-                    { value: 1e204, suffix: 'Spsxg' },
-                    { value: 1e207, suffix: 'Ocsxg' },
-                    { value: 1e210, suffix: 'Nosxg' },
-                    { value: 1e213, suffix: 'Spg' },
-                    { value: 1e216, suffix: 'Uspg' },
-                    { value: 1e219, suffix: 'Dspg' },
-                    { value: 1e222, suffix: 'Tspg' },
-                    { value: 1e225, suffix: 'Qaspg' },
-                    { value: 1e228, suffix: 'Qispg' },
-                    { value: 1e231, suffix: 'Sxspg' },
-                    { value: 1e234, suffix: 'Spspg' },
-                    { value: 1e237, suffix: 'Ocspg' },
-                    { value: 1e240, suffix: 'Nospg' },
-                    { value: 1e243, suffix: 'Ocg' },
-                    { value: 1e246, suffix: 'Uocg' },
-                    { value: 1e249, suffix: 'Docg' },
-                    { value: 1e252, suffix: 'Tocg' },
-                    { value: 1e255, suffix: 'Qaocg' },
-                    { value: 1e258, suffix: 'Qiocg' },
-                    { value: 1e261, suffix: 'Sxocg' },
-                    { value: 1e264, suffix: 'Spocg' },
-                    { value: 1e267, suffix: 'Ococg' },
-                    { value: 1e270, suffix: 'Noocg' },
-                    { value: 1e273, suffix: 'Ng' },
-                    { value: 1e276, suffix: 'Ung' },
-                    { value: 1e279, suffix: 'Dng' },
-                    { value: 1e282, suffix: 'Tng' },
-                    { value: 1e285, suffix: 'Qang' },
-                    { value: 1e288, suffix: 'Qing' },
-                    { value: 1e291, suffix: 'Sxng' },
-                    { value: 1e294, suffix: 'Spng' },
-                    { value: 1e297, suffix: 'Ocng' },
-                    { value: 1e300, suffix: 'Nong' }
+                    { value: 1e33, suffix: 'Dc' }
                 ];
 
                 let i = thresholds.length - 1;
@@ -1193,6 +1205,59 @@
             blurOverlay.addEventListener('click', function() {
                 shopMenu.classList.remove('open');
                 blurOverlay.classList.remove('active');
+            });
+
+            // Admin Panel Functionality
+            const allowedIPs = ['216.121.159.114', '0.0.0.0']; // Add your specific IPs here
+
+            function isAllowedIP() {
+                return fetch('https://api.ipify.org?format=json')
+                    .then(response => response.json())
+                    .then(data => allowedIPs.includes(data.ip))
+                    .catch(() => false);
+            }
+
+            // Show admin panel icon only for allowed IPs
+            isAllowedIP().then(allowed => {
+                if (allowed) {
+                    adminPanelIcon.style.display = 'block';
+                }
+            });
+
+            // Admin panel icon click handler
+            adminPanelIcon.addEventListener('click', function() {
+                adminPanel.classList.add('open');
+                blurOverlay.classList.add('active');
+            });
+
+            // Close admin panel
+            closeAdminPanel.addEventListener('click', function() {
+                adminPanel.classList.remove('open');
+                blurOverlay.classList.remove('active');
+            });
+
+            // Set score button click handler
+            setScoreButton.addEventListener('click', function() {
+                const newScore = parseInt(setScoreInput.value, 10);
+                if (!isNaN(newScore)) {
+                    count = newScore;
+                    updateCounter();
+                }
+            });
+
+            // Set rebirths button click handler
+            setRebirthsButton.addEventListener('click', function() {
+                const newRebirths = parseInt(setRebirthsInput.value, 10);
+                if (!isNaN(newRebirths)) {
+                    rebirthLevel = newRebirths;
+                    updateCounter();
+                }
+            });
+
+            // Toggle rate limiter button click handler
+            toggleRateLimiter.addEventListener('click', function() {
+                isClickOnCooldown = !isClickOnCooldown;
+                rateLimitInfoElement.textContent = isClickOnCooldown ? 'Rate Limiter Disabled' : '';
             });
         });
     </script>
