@@ -987,6 +987,7 @@
             let timeWarpCooldownEnd = 0;
             let upgradeCooldownActive = false;
             let upgradeCooldownEnd = 0;
+            let isShopOpen = false; // Track if the shop menu is open
 
             // Rate limiters
             let lastClickTime = 0;
@@ -1297,6 +1298,8 @@
 
             // Function to increment counter with rate limiting
             function incrementCounter() {
+                if (isShopOpen) return; // Disable clicking while in the shop menu
+
                 const now = Date.now();
 
                 if (isClickOnCooldown && now - lastClickTime < clickCooldown) {
@@ -1324,7 +1327,7 @@
 
             // Listen for keydown events
             document.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
+                if (event.key === 'Enter' && !isShopOpen) { // Disable Enter key while in the shop menu
                     incrementCounter();
                 }
             });
@@ -1392,7 +1395,7 @@
 
             // Function to start the auto clicker
             function startAutoClicker() {
-                if (autoClickerEnabled) {
+                if (autoClickerEnabled && !isShopOpen) { // Only start if the shop menu is closed
                     autoClickerInterval = setInterval(incrementCounter, clickCooldown); // Clicks every 0.2 seconds
                 }
             }
@@ -1475,24 +1478,48 @@
 
             // Shop button and menu functionality
             shopButton.addEventListener('click', function() {
+                isShopOpen = true; // Set shop menu as open
                 shopMenu.classList.add('open');
                 blurOverlay.classList.add('active');
+
+                // Pause auto-clicker when entering the shop
+                if (autoClickerEnabled) {
+                    clearInterval(autoClickerInterval);
+                }
 
                 // Automatically close the shop menu after 10 seconds
                 setTimeout(() => {
                     shopMenu.classList.remove('open');
                     blurOverlay.classList.remove('active');
+                    isShopOpen = false; // Set shop menu as closed
+
+                    // Resume auto-clicker when exiting the shop
+                    if (autoClickerEnabled) {
+                        startAutoClicker();
+                    }
                 }, 10000); // 10 seconds
             });
 
             closeShopMenu.addEventListener('click', function() {
                 shopMenu.classList.remove('open');
                 blurOverlay.classList.remove('active');
+                isShopOpen = false; // Set shop menu as closed
+
+                // Resume auto-clicker when exiting the shop
+                if (autoClickerEnabled) {
+                    startAutoClicker();
+                }
             });
 
             blurOverlay.addEventListener('click', function() {
                 shopMenu.classList.remove('open');
                 blurOverlay.classList.remove('active');
+                isShopOpen = false; // Set shop menu as closed
+
+                // Resume auto-clicker when exiting the shop
+                if (autoClickerEnabled) {
+                    startAutoClicker();
+                }
             });
 
             // Admin Panel Functionality
