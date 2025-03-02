@@ -851,6 +851,9 @@
             <button class="buy-button" id="upgradeButton">
                 Buy: <span id="upgradeCostDisplay">10</span> points
             </button>
+            <div class="cooldown-overlay" id="upgradeCooldownOverlay" style="display: none;">
+                <span id="upgradeCooldownText"></span>
+            </div>
         </div>
         
         <!-- Rebirth Item -->
@@ -966,6 +969,8 @@
             const disableRateLimiter = document.getElementById('disableRateLimiter');
             const welcomeOverlay = document.getElementById('welcomeOverlay');
             const playButton = document.getElementById('playButton');
+            const upgradeCooldownOverlay = document.getElementById('upgradeCooldownOverlay');
+            const upgradeCooldownText = document.getElementById('upgradeCooldownText');
 
             // Initialize game state with defaults
             let count = 0;
@@ -980,6 +985,8 @@
             let timeWarpActive = false;
             let timeWarpCooldown = false;
             let timeWarpCooldownEnd = 0;
+            let upgradeCooldownActive = false;
+            let upgradeCooldownEnd = 0;
 
             // Rate limiters
             let lastClickTime = 0;
@@ -1258,7 +1265,7 @@
             // Function to update the counter display
             function updateCounter(saveData = true) {
                 counterElement.textContent = formatNumber(count);
-                upgradeButton.disabled = count < upgradeCost;
+                upgradeButton.disabled = count < upgradeCost || upgradeCooldownActive;
                 rebirthButton.disabled = count < rebirthCost;
                 autoClickerButton.disabled = autoClickerEnabled;
                 disableAutoClickerButton.disabled = !autoClickerEnabled;
@@ -1325,12 +1332,29 @@
             // Enter button click
             enterButton.addEventListener('click', incrementCounter);
 
-            // Upgrade button functionality
+            // Upgrade button functionality with cooldown
             upgradeButton.addEventListener('click', function() {
-                if (count >= upgradeCost) {
+                if (count >= upgradeCost && !upgradeCooldownActive) {
                     count -= upgradeCost;
                     multiplier *= 2;
                     upgradeCost *= 2;
+                    upgradeCooldownActive = true;
+                    upgradeCooldownEnd = Date.now() + 5000; // 5 seconds cooldown
+
+                    upgradeCooldownOverlay.style.display = 'flex';
+                    upgradeCooldownText.textContent = '5.0';
+
+                    const interval = setInterval(() => {
+                        const remainingTime = ((upgradeCooldownEnd - Date.now()) / 1000).toFixed(1);
+                        if (remainingTime <= 0) {
+                            clearInterval(interval);
+                            upgradeCooldownOverlay.style.display = 'none';
+                            upgradeCooldownActive = false;
+                        } else {
+                            upgradeCooldownText.textContent = remainingTime;
+                        }
+                    }, 100);
+
                     updateCounter();
                 }
             });
