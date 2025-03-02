@@ -1477,6 +1477,12 @@
             shopButton.addEventListener('click', function() {
                 shopMenu.classList.add('open');
                 blurOverlay.classList.add('active');
+
+                // Automatically close the shop menu after 10 seconds
+                setTimeout(() => {
+                    shopMenu.classList.remove('open');
+                    blurOverlay.classList.remove('active');
+                }, 10000); // 10 seconds
             });
 
             closeShopMenu.addEventListener('click', function() {
