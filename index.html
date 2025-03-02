@@ -783,6 +783,34 @@
         .welcome-content .play-button:hover {
             background-color: #1976D2;
         }
+
+        /* Quantum Garden Styles */
+        .quantum-garden-item {
+            display: none; /* Hidden by default */
+        }
+
+        .quantum-garden-item.show {
+            display: block; /* Show when unlocked */
+        }
+
+        .quantum-garden-item .buy-button {
+            background-color: #9C27B0; /* Purple color for uniqueness */
+        }
+
+        .quantum-garden-item .buy-button:hover {
+            background-color: #7B1FA2; /* Darker purple on hover */
+        }
+
+        .quantum-garden-item .buy-button:disabled {
+            background-color: #9E9E9E;
+            cursor: not-allowed;
+        }
+
+        .quantum-garden-item .garden-status {
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -910,6 +938,16 @@
                 <span id="quantumLeapCooldownText"></span>
             </div>
         </div>
+
+        <!-- Quantum Garden Item (Hidden until 4 rebirths) -->
+        <div class="shop-item quantum-garden-item" id="quantumGardenItem">
+            <h3>Quantum Garden</h3>
+            <p>Grow quantum plants that generate points automatically!</p>
+            <button class="buy-button" id="quantumGardenButton">
+                Plant Garden
+            </button>
+            <div class="garden-status" id="gardenStatus">Garden not planted yet.</div>
+        </div>
     </div>
 
     <!-- Blur Overlay -->
@@ -977,6 +1015,9 @@
             const quantumLeapButton = document.getElementById('quantumLeapButton');
             const quantumLeapCooldownOverlay = document.getElementById('quantumLeapCooldownOverlay');
             const quantumLeapCooldownText = document.getElementById('quantumLeapCooldownText');
+            const quantumGardenItem = document.getElementById('quantumGardenItem');
+            const quantumGardenButton = document.getElementById('quantumGardenButton');
+            const gardenStatus = document.getElementById('gardenStatus');
             const adminPanelIcon = document.getElementById('adminPanelIcon');
             const adminPanel = document.getElementById('adminPanel');
             const closeAdminPanel = document.getElementById('closeAdminPanel');
@@ -1014,6 +1055,8 @@
             let upgradeCooldownActive = false;
             let upgradeCooldownEnd = 0;
             let isShopOpen = false; // Track if the shop menu is open
+            let quantumGardenPlanted = false; // Track if the quantum garden is planted
+            let quantumGardenInterval = null; // Interval for quantum garden growth
 
             // Rate limiters
             let lastClickTime = 0;
@@ -1123,6 +1166,7 @@
                 setCookie('clickerRebirthCost', rebirthCost.toString(), 365);
                 setCookie('clickerAutoClickerEnabled', autoClickerEnabled.toString(), 365);
                 setCookie('quantumLeapCooldownEnd', quantumLeapCooldownEnd.toString(), 365);
+                setCookie('quantumGardenPlanted', quantumGardenPlanted.toString(), 365);
                 setCookie('clickerLastSaved', now, 365);
 
                 saveMessageElement.textContent = `Progress saved (Last: ${now})`;
@@ -1137,6 +1181,7 @@
                 const savedRebirthCost = getCookie('clickerRebirthCost');
                 const savedAutoClickerEnabled = getCookie('clickerAutoClickerEnabled');
                 const savedQuantumLeapCooldownEnd = getCookie('quantumLeapCooldownEnd');
+                const savedQuantumGardenPlanted = getCookie('quantumGardenPlanted');
                 const lastSaved = getCookie('clickerLastSaved');
 
                 if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
@@ -1161,6 +1206,13 @@
                         if (quantumLeapCooldownEnd > Date.now()) {
                             quantumLeapCooldown = true;
                             startQuantumLeapCooldownTimer();
+                        }
+                    }
+
+                    if (savedQuantumGardenPlanted !== null) {
+                        quantumGardenPlanted = savedQuantumGardenPlanted === 'true';
+                        if (quantumGardenPlanted) {
+                            startQuantumGarden();
                         }
                     }
 
@@ -1332,6 +1384,13 @@
                     quantumLeapItem.style.display = 'block';
                 } else {
                     quantumLeapItem.style.display = 'none';
+                }
+
+                // Show/hide Quantum Garden item based on rebirth level
+                if (rebirthLevel >= 4) {
+                    quantumGardenItem.style.display = 'block';
+                } else {
+                    quantumGardenItem.style.display = 'none';
                 }
 
                 if (saveData) {
@@ -1511,6 +1570,27 @@
                 }, 1000);
             }
 
+            // Quantum Garden button functionality
+            quantumGardenButton.addEventListener('click', function() {
+                if (!quantumGardenPlanted) {
+                    quantumGardenPlanted = true;
+                    startQuantumGarden();
+                    gardenStatus.textContent = 'Quantum Garden planted! Generating points...';
+                    updateCounter();
+                }
+            });
+
+            // Function to start the Quantum Garden
+            function startQuantumGarden() {
+                if (quantumGardenPlanted) {
+                    quantumGardenInterval = setInterval(() => {
+                        const gardenPoints = Math.floor(multiplier * rebirthLevel * 10); // Points generated based on multiplier and rebirth level
+                        count += gardenPoints;
+                        updateCounter();
+                    }, 5000); // Generate points every 5 seconds
+                }
+            }
+
             // Reset button functionality
             resetButton.addEventListener('click', function() {
                 if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including rebirth levels!")) {
@@ -1521,7 +1601,8 @@
                     rebirthCost = 1000;
                     autoClickerEnabled = false;
                     clearInterval(autoClickerInterval);
-
+                    quantumGardenPlanted = false;
+                    clearInterval(quantumGardenInterval);
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
                         "Game reset. Progress saved automatically" : 
@@ -1676,7 +1757,8 @@
                     rebirthCost = 1000;
                     autoClickerEnabled = false;
                     clearInterval(autoClickerInterval);
-
+                    quantumGardenPlanted = false;
+                    clearInterval(quantumGardenInterval);
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
                         "Game reset. Progress saved automatically" : 
