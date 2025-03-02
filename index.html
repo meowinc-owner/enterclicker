@@ -890,6 +890,18 @@
                 <span id="timeWarpCooldownText"></span>
             </div>
         </div>
+
+        <!-- Quantum Leap Item (Hidden until 3 rebirths) -->
+        <div class="shop-item" id="quantumLeapItem" style="display: none;">
+            <h3>Quantum Leap</h3>
+            <p>Instantly gain 1,000,000 points! (30-minute cooldown)</p>
+            <button class="buy-button" id="quantumLeapButton">
+                Activate Quantum Leap
+            </button>
+            <div class="cooldown-overlay" id="quantumLeapCooldownOverlay" style="display: none;">
+                <span id="quantumLeapCooldownText"></span>
+            </div>
+        </div>
     </div>
 
     <!-- Blur Overlay -->
@@ -953,6 +965,10 @@
             const timeWarpButton = document.getElementById('timeWarpButton');
             const timeWarpCooldownOverlay = document.getElementById('timeWarpCooldownOverlay');
             const timeWarpCooldownText = document.getElementById('timeWarpCooldownText');
+            const quantumLeapItem = document.getElementById('quantumLeapItem');
+            const quantumLeapButton = document.getElementById('quantumLeapButton');
+            const quantumLeapCooldownOverlay = document.getElementById('quantumLeapCooldownOverlay');
+            const quantumLeapCooldownText = document.getElementById('quantumLeapCooldownText');
             const adminPanelIcon = document.getElementById('adminPanelIcon');
             const adminPanel = document.getElementById('adminPanel');
             const closeAdminPanel = document.getElementById('closeAdminPanel');
@@ -985,6 +1001,8 @@
             let timeWarpActive = false;
             let timeWarpCooldown = false;
             let timeWarpCooldownEnd = 0;
+            let quantumLeapCooldown = false;
+            let quantumLeapCooldownEnd = 0;
             let upgradeCooldownActive = false;
             let upgradeCooldownEnd = 0;
             let isShopOpen = false; // Track if the shop menu is open
@@ -1096,6 +1114,7 @@
                 setCookie('clickerRebirthLevel', rebirthLevel.toString(), 365);
                 setCookie('clickerRebirthCost', rebirthCost.toString(), 365);
                 setCookie('clickerAutoClickerEnabled', autoClickerEnabled.toString(), 365);
+                setCookie('quantumLeapCooldownEnd', quantumLeapCooldownEnd.toString(), 365);
                 setCookie('clickerLastSaved', now, 365);
 
                 saveMessageElement.textContent = `Progress saved (Last: ${now})`;
@@ -1109,6 +1128,7 @@
                 const savedRebirthLevel = getCookie('clickerRebirthLevel');
                 const savedRebirthCost = getCookie('clickerRebirthCost');
                 const savedAutoClickerEnabled = getCookie('clickerAutoClickerEnabled');
+                const savedQuantumLeapCooldownEnd = getCookie('quantumLeapCooldownEnd');
                 const lastSaved = getCookie('clickerLastSaved');
 
                 if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
@@ -1126,6 +1146,14 @@
 
                     if (savedAutoClickerEnabled !== null) {
                         autoClickerEnabled = savedAutoClickerEnabled === 'true';
+                    }
+
+                    if (savedQuantumLeapCooldownEnd !== null) {
+                        quantumLeapCooldownEnd = parseInt(savedQuantumLeapCooldownEnd, 10);
+                        if (quantumLeapCooldownEnd > Date.now()) {
+                            quantumLeapCooldown = true;
+                            startQuantumLeapCooldownTimer();
+                        }
                     }
 
                     if (lastSaved) {
@@ -1291,6 +1319,13 @@
                     timeWarpItem.style.display = 'none';
                 }
 
+                // Show/hide Quantum Leap item based on rebirth level
+                if (rebirthLevel >= 3) {
+                    quantumLeapItem.style.display = 'block';
+                } else {
+                    quantumLeapItem.style.display = 'none';
+                }
+
                 if (saveData) {
                     saveGameData();
                 }
@@ -1433,6 +1468,37 @@
                         const minutes = Math.floor(remainingTime / 60);
                         const seconds = remainingTime % 60;
                         timeWarpCooldownText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+            }
+
+            // Quantum Leap button functionality
+            quantumLeapButton.addEventListener('click', function() {
+                if (!quantumLeapCooldown) {
+                    count += 1000000; // Add 1,000,000 points
+                    quantumLeapCooldown = true;
+                    quantumLeapCooldownEnd = Date.now() + 1800000; // 30-minute cooldown
+
+                    quantumLeapCooldownOverlay.style.display = 'flex';
+                    quantumLeapCooldownText.textContent = '30:00';
+                    startQuantumLeapCooldownTimer();
+
+                    updateCounter();
+                }
+            });
+
+            // Function to start the Quantum Leap cooldown timer
+            function startQuantumLeapCooldownTimer() {
+                const interval = setInterval(() => {
+                    const remainingTime = Math.ceil((quantumLeapCooldownEnd - Date.now()) / 1000);
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        quantumLeapCooldownOverlay.style.display = 'none';
+                        quantumLeapCooldown = false;
+                    } else {
+                        const minutes = Math.floor(remainingTime / 60);
+                        const seconds = remainingTime % 60;
+                        quantumLeapCooldownText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
                     }
                 }, 1000);
             }
