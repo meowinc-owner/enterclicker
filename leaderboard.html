@@ -77,6 +77,9 @@
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        
+        // Expose db to the global scope for debugging
+        window.db = db;
 
         // Fetch and display the leaderboard
         const leaderboardList = document.getElementById('leaderboardList');
