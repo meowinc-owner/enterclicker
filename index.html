@@ -1858,7 +1858,13 @@ console.log("Firebase initialized:", app); // Debugging
 
             // Leaderboard Button Click Handler
             leaderboardButton.addEventListener('click', function() {
-                window.location.href = 'https://meowinc-owner.github.io/enterclicker/leaderboard';
+                try {
+                    // Attempt to redirect to the leaderboard page
+                    window.location.href = 'https://meowinc-owner.github.io/enterclicker/leaderboard';
+                } catch (error) {
+                    console.error('Error redirecting to leaderboard:', error);
+                    alert('Failed to redirect to the leaderboard. Please check the URL or try again later.');
+                }
             });
         });
     </script>
