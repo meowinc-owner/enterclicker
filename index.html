@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Clicker! - by Damian B (meowinc)</title>
     <link rel="icon" type="image/x-icon" href="https://meowinc-owner.github.io/enterclicker/favicon.ico">
+
+    <!-- Firebase App (required for Firebase services) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDRZjJpvd9TvP7aNaXnHvAKwbycn-O1VW4",
+    authDomain: "enterclickerleaderboard.firebaseapp.com",
+    projectId: "enterclickerleaderboard",
+    storageBucket: "enterclickerleaderboard.firebasestorage.app",
+    messagingSenderId: "339564023566",
+    appId: "1:339564023566:web:bacf4857486349c240515f",
+    measurementId: "G-VZ3YBCEKYW"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Expose Firebase variables to the global scope for debugging
+  window.firebaseApp = app;
+  window.firebaseDb = db;
+
+  console.log("Firebase initialized:", app); // Debugging
+</script>
+
+    
     <style>
         /* Disable text selection */
         body {
