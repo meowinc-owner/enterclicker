@@ -24,6 +24,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             max-width: 500px;
             width: 90%;
+            position: relative; /* For positioning the back button */
         }
 
         .leaderboard-container h1 {
@@ -50,10 +51,32 @@
         .leaderboard-list li span {
             font-weight: bold;
         }
+
+        /* Back Button Styles */
+        .back-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #1976D2;
+        }
     </style>
 </head>
 <body>
     <div class="leaderboard-container">
+        <!-- Back Button -->
+        <button class="back-button" id="backButton">Back to Game</button>
+
         <h1>Top 10 Players</h1>
         <ul class="leaderboard-list" id="leaderboardList">
             <!-- Leaderboard entries will be dynamically added here -->
@@ -104,6 +127,12 @@
         }
 
         fetchLeaderboard();
+
+        // Back Button Functionality
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', function() {
+            window.location.href = 'https://meowinc-owner.github.io/enterclicker/';
+        });
     </script>
 </body>
 </html>
