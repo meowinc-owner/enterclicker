@@ -4,26 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Clicker! - by Damian B (meowinc)</title>
-
     <link rel="icon" type="image/x-icon" href="https://meowinc-owner.github.io/enterclicker/favicon.ico">
-    
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-    <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyDRZjJpvd9TvP7aNaXnHvAKwbycn-O1VW4",
-          authDomain: "enterclickerleaderboard.firebaseapp.com",
-          projectId: "enterclickerleaderboard",
-          storageBucket: "enterclickerleaderboard.firebasestorage.app",
-          messagingSenderId: "339564023566",
-          appId: "1:339564023566:web:bacf4857486349c240515f",
-          measurementId: "G-VZ3YBCEKYW"
-        };
-
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-</script>
-    
     <style>
         /* Disable text selection */
         body {
@@ -831,10 +812,51 @@
             color: var(--secondary-text);
             margin-top: 10px;
         }
+
+        /* Leaderboard Button Styles */
+        .leaderboard-button {
+            position: absolute;
+            top: 15px;
+            right: 120px; /* Adjust based on theme button position */
+            z-index: 100;
+        }
+
+        .leaderboard-button .theme-button {
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-button .theme-button:hover {
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .leaderboard-button .icon {
+            margin-right: 5px;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
+    <!-- Welcome Screen Overlay -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-content">
+            <h1>Welcome back to Enter Clicker!</h1>
+            <p>Click your way to infinity and beyond! Press the button below to return to how you were last.</p>
+            <button class="play-button" id="playButton">Play</button>
+        </div>
+    </div>
+
     <div class="main-content">
+        <!-- Theme Button -->
         <div class="theme-menu">
             <button id="themeButton" class="theme-button">
                 <span class="icon">🎨</span>
@@ -846,16 +868,17 @@
                 <button id="rainbowLightTheme">Rainbow Light</button>
                 <button id="rainbowDarkTheme">Moonlight</button>
             </div>
+        </div>
+
+        <!-- Leaderboard Button -->
+        <div class="leaderboard-button">
             <button id="leaderboardButton" class="theme-button">
-    <span class="icon">🏆</span>
-    <span class="text">Leaderboard</span>
-</button>
+                <span class="icon">🏆</span>
+                <span class="text">Leaderboard</span>
+            </button>
         </div>
         
         <div class="credit-box">Made by Damian B - Meowinc<span class="trademark">™</span></div>
-
-        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
         
         <div class="game-container">
             <div class="instructions">Press Enter key or click the button below <span id="rateLimitInfo" class="rate-limiter"></span></div>
@@ -1054,6 +1077,7 @@
             const playButton = document.getElementById('playButton');
             const upgradeCooldownOverlay = document.getElementById('upgradeCooldownOverlay');
             const upgradeCooldownText = document.getElementById('upgradeCooldownText');
+            const leaderboardButton = document.getElementById('leaderboardButton');
 
             // Initialize game state with defaults
             let count = 0;
@@ -1807,6 +1831,11 @@
             // Welcome Screen Play Button Click Handler
             playButton.addEventListener('click', function() {
                 welcomeOverlay.style.display = 'none';
+            });
+
+            // Leaderboard Button Click Handler
+            leaderboardButton.addEventListener('click', function() {
+                window.location.href = 'https://meowinc-owner.github.io/enterclicker/leaderboard.html';
             });
         });
     </script>
