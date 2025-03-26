@@ -599,6 +599,8 @@
             flex-direction: row; /* Horizontal layout */
             flex-wrap: wrap; /* Wrap items if they don't fit */
             justify-content: space-around; /* Space items evenly */
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .shop-menu.open {
@@ -886,6 +888,104 @@
             background-color: #9E9E9E;
             cursor: not-allowed;
         }
+
+        /* New shop item styles */
+        .cosmic-item .buy-button {
+            background-color: #2196F3; /* Blue for cosmic items */
+        }
+
+        .cosmic-item .buy-button:hover {
+            background-color: #0b7dda;
+        }
+
+        .time-item .buy-button {
+            background-color: #FF9800; /* Orange for time items */
+        }
+
+        .time-item .buy-button:hover {
+            background-color: #e68a00;
+        }
+
+        .dimensional-item .buy-button {
+            background-color: #4CAF50; /* Green for dimensional items */
+        }
+
+        .dimensional-item .buy-button:hover {
+            background-color: #3e8e41;
+        }
+
+        .reality-item .buy-button {
+            background-color: #F44336; /* Red for reality items */
+        }
+
+        .reality-item .buy-button:hover {
+            background-color: #da190b;
+        }
+
+        .quantum-item .buy-button {
+            background-color: #9C27B0; /* Purple for quantum items */
+        }
+
+        .quantum-item .buy-button:hover {
+            background-color: #7b1fa2;
+        }
+
+        .infinity-item .buy-button {
+            background-color: #00BCD4; /* Cyan for infinity items */
+        }
+
+        .infinity-item .buy-button:hover {
+            background-color: #0097a7;
+        }
+
+        .void-item .buy-button {
+            background-color: #607D8B; /* Blue grey for void items */
+        }
+
+        .void-item .buy-button:hover {
+            background-color: #455a64;
+        }
+
+        .celestial-item .buy-button {
+            background-color: #FFEB3B; /* Yellow for celestial items */
+            color: #333;
+        }
+
+        .celestial-item .buy-button:hover {
+            background-color: #fdd835;
+        }
+
+        .eternity-item .buy-button {
+            background-color: #795548; /* Brown for eternity items */
+        }
+
+        .eternity-item .buy-button:hover {
+            background-color: #5d4037;
+        }
+
+        .omnipotent-item .buy-button {
+            background: linear-gradient(45deg, #FF0000, #FF7F00, #FFFF00, #00FF00, #0000FF, #4B0082, #9400D3);
+            background-size: 400% 400%;
+            animation: rainbowBackground 5s ease infinite;
+            color: white;
+        }
+
+        .omnipotent-item .buy-button:hover {
+            animation: rainbowBackground 2s ease infinite;
+        }
+
+        .shop-item .item-requirement {
+            font-size: 0.8rem;
+            color: var(--secondary-text);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .shop-item .item-status {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            color: var(--secondary-text);
+        }
     </style>
 </head>
 <body>
@@ -1015,6 +1115,122 @@
             </button>
             <div class="garden-status" id="gardenStatus">Garden not planted yet.</div>
         </div>
+
+        <!-- Cosmic Harvester (5 rebirths) -->
+        <div class="shop-item cosmic-item" id="cosmicHarvesterItem" style="display: none;">
+            <h3>Cosmic Harvester</h3>
+            <p>Harvest cosmic energy for massive point boosts!</p>
+            <p class="item-requirement">Requires 5 rebirths</p>
+            <button class="buy-button" id="cosmicHarvesterButton">
+                Activate Harvester
+            </button>
+            <div class="cooldown-overlay" id="cosmicHarvesterCooldownOverlay" style="display: none;">
+                <span id="cosmicHarvesterCooldownText"></span>
+            </div>
+            <div class="item-status" id="cosmicHarvesterStatus">Not active</div>
+        </div>
+
+        <!-- Time Fracture (6 rebirths) -->
+        <div class="shop-item time-item" id="timeFractureItem" style="display: none;">
+            <h3>Time Fracture</h3>
+            <p>Slow down time to click faster than ever before!</p>
+            <p class="item-requirement">Requires 6 rebirths</p>
+            <button class="buy-button" id="timeFractureButton">
+                Fracture Time
+            </button>
+            <div class="cooldown-overlay" id="timeFractureCooldownOverlay" style="display: none;">
+                <span id="timeFractureCooldownText"></span>
+            </div>
+            <div class="item-status" id="timeFractureStatus">Time is normal</div>
+        </div>
+
+        <!-- Dimensional Portal (7 rebirths) -->
+        <div class="shop-item dimensional-item" id="dimensionalPortalItem" style="display: none;">
+            <h3>Dimensional Portal</h3>
+            <p>Open a portal to another dimension with unique bonuses!</p>
+            <p class="item-requirement">Requires 7 rebirths</p>
+            <button class="buy-button" id="dimensionalPortalButton">
+                Open Portal
+            </button>
+            <div class="item-status" id="dimensionalPortalStatus">Portal closed</div>
+        </div>
+
+        <!-- Reality Warper (8 rebirths) -->
+        <div class="shop-item reality-item" id="realityWarperItem" style="display: none;">
+            <h3>Reality Warper</h3>
+            <p>Bend reality to your will for exponential gains!</p>
+            <p class="item-requirement">Requires 8 rebirths</p>
+            <button class="buy-button" id="realityWarperButton">
+                Warp Reality
+            </button>
+            <div class="item-status" id="realityWarperStatus">Reality stable</div>
+        </div>
+
+        <!-- Quantum Singularity (9 rebirths) -->
+        <div class="shop-item quantum-item" id="quantumSingularityItem" style="display: none;">
+            <h3>Quantum Singularity</h3>
+            <p>Create a singularity that generates points from nothingness!</p>
+            <p class="item-requirement">Requires 9 rebirths</p>
+            <button class="buy-button" id="quantumSingularityButton">
+                Create Singularity
+            </button>
+            <div class="item-status" id="quantumSingularityStatus">No singularity</div>
+        </div>
+
+        <!-- Infinity Engine (10 rebirths) -->
+        <div class="shop-item infinity-item" id="infinityEngineItem" style="display: none;">
+            <h3>Infinity Engine</h3>
+            <p>Harness infinite energy for unlimited potential!</p>
+            <p class="item-requirement">Requires 10 rebirths</p>
+            <button class="buy-button" id="infinityEngineButton">
+                Activate Engine
+            </button>
+            <div class="item-status" id="infinityEngineStatus">Engine offline</div>
+        </div>
+
+        <!-- Void Extractor (11 rebirths) -->
+        <div class="shop-item void-item" id="voidExtractorItem" style="display: none;">
+            <h3>Void Extractor</h3>
+            <p>Extract points from the void between dimensions!</p>
+            <p class="item-requirement">Requires 11 rebirths</p>
+            <button class="buy-button" id="voidExtractorButton">
+                Extract Void Energy
+            </button>
+            <div class="item-status" id="voidExtractorStatus">Not extracting</div>
+        </div>
+
+        <!-- Celestial Forge (12 rebirths) -->
+        <div class="shop-item celestial-item" id="celestialForgeItem" style="display: none;">
+            <h3>Celestial Forge</h3>
+            <p>Forge celestial artifacts that boost all your abilities!</p>
+            <p class="item-requirement">Requires 12 rebirths</p>
+            <button class="buy-button" id="celestialForgeButton">
+                Activate Forge
+            </button>
+            <div class="item-status" id="celestialForgeStatus">Forge inactive</div>
+        </div>
+
+        <!-- Eternity Core (13 rebirths) -->
+        <div class="shop-item eternity-item" id="eternityCoreItem" style="display: none;">
+            <h3>Eternity Core</h3>
+            <p>Tap into the power of eternity itself!</p>
+            <p class="item-requirement">Requires 13 rebirths</p>
+            <button class="buy-button" id="eternityCoreButton">
+                Power Core
+            </button>
+            <div class="item-status" id="eternityCoreStatus">Core dormant</div>
+        </div>
+
+        <!-- Omnipotent Ascension (14 rebirths) -->
+        <div class="shop-item omnipotent-item" id="omnipotentAscensionItem" style="display: none;">
+            <h3>Omnipotent Ascension</h3>
+            <p>Ascend to near-omnipotence with ultimate power!</p>
+            <p class="item-requirement">Requires 14 rebirths</p>
+            <button class="buy-button" id="omnipotentAscensionButton">
+                Ascend Now
+            </button>
+            <div class="item-status" id="omnipotentAscensionStatus">Mortal form</div>
+        </div>
     </div>
 
     <!-- Blur Overlay -->
@@ -1139,6 +1355,51 @@
             const upgradeCooldownOverlay = document.getElementById('upgradeCooldownOverlay');
             const upgradeCooldownText = document.getElementById('upgradeCooldownText');
 
+            // New shop item elements
+            const cosmicHarvesterItem = document.getElementById('cosmicHarvesterItem');
+            const cosmicHarvesterButton = document.getElementById('cosmicHarvesterButton');
+            const cosmicHarvesterCooldownOverlay = document.getElementById('cosmicHarvesterCooldownOverlay');
+            const cosmicHarvesterCooldownText = document.getElementById('cosmicHarvesterCooldownText');
+            const cosmicHarvesterStatus = document.getElementById('cosmicHarvesterStatus');
+            
+            const timeFractureItem = document.getElementById('timeFractureItem');
+            const timeFractureButton = document.getElementById('timeFractureButton');
+            const timeFractureCooldownOverlay = document.getElementById('timeFractureCooldownOverlay');
+            const timeFractureCooldownText = document.getElementById('timeFractureCooldownText');
+            const timeFractureStatus = document.getElementById('timeFractureStatus');
+            
+            const dimensionalPortalItem = document.getElementById('dimensionalPortalItem');
+            const dimensionalPortalButton = document.getElementById('dimensionalPortalButton');
+            const dimensionalPortalStatus = document.getElementById('dimensionalPortalStatus');
+            
+            const realityWarperItem = document.getElementById('realityWarperItem');
+            const realityWarperButton = document.getElementById('realityWarperButton');
+            const realityWarperStatus = document.getElementById('realityWarperStatus');
+            
+            const quantumSingularityItem = document.getElementById('quantumSingularityItem');
+            const quantumSingularityButton = document.getElementById('quantumSingularityButton');
+            const quantumSingularityStatus = document.getElementById('quantumSingularityStatus');
+            
+            const infinityEngineItem = document.getElementById('infinityEngineItem');
+            const infinityEngineButton = document.getElementById('infinityEngineButton');
+            const infinityEngineStatus = document.getElementById('infinityEngineStatus');
+            
+            const voidExtractorItem = document.getElementById('voidExtractorItem');
+            const voidExtractorButton = document.getElementById('voidExtractorButton');
+            const voidExtractorStatus = document.getElementById('voidExtractorStatus');
+            
+            const celestialForgeItem = document.getElementById('celestialForgeItem');
+            const celestialForgeButton = document.getElementById('celestialForgeButton');
+            const celestialForgeStatus = document.getElementById('celestialForgeStatus');
+            
+            const eternityCoreItem = document.getElementById('eternityCoreItem');
+            const eternityCoreButton = document.getElementById('eternityCoreButton');
+            const eternityCoreStatus = document.getElementById('eternityCoreStatus');
+            
+            const omnipotentAscensionItem = document.getElementById('omnipotentAscensionItem');
+            const omnipotentAscensionButton = document.getElementById('omnipotentAscensionButton');
+            const omnipotentAscensionStatus = document.getElementById('omnipotentAscensionStatus');
+
             // Initialize game state with defaults
             let count = 0;
             let multiplier = 1;
@@ -1159,6 +1420,22 @@
             let isShopOpen = false;
             let quantumGardenPlanted = false;
             let quantumGardenInterval = null;
+
+            // New shop item states
+            let cosmicHarvesterActive = false;
+            let cosmicHarvesterCooldown = false;
+            let cosmicHarvesterCooldownEnd = 0;
+            let timeFractureActive = false;
+            let timeFractureCooldown = false;
+            let timeFractureCooldownEnd = 0;
+            let dimensionalPortalOpen = false;
+            let realityWarped = false;
+            let quantumSingularityCreated = false;
+            let infinityEngineActive = false;
+            let voidExtractorActive = false;
+            let celestialForgeActive = false;
+            let eternityCoreActive = false;
+            let omnipotentAscensionAchieved = false;
 
             // Rate limiters
             let lastClickTime = 0;
@@ -1271,6 +1548,20 @@
                 setCookie('quantumGardenPlanted', quantumGardenPlanted.toString(), 365);
                 setCookie('clickerLastSaved', now, 365);
 
+                // Save new shop item states
+                setCookie('cosmicHarvesterActive', cosmicHarvesterActive.toString(), 365);
+                setCookie('cosmicHarvesterCooldownEnd', cosmicHarvesterCooldownEnd.toString(), 365);
+                setCookie('timeFractureActive', timeFractureActive.toString(), 365);
+                setCookie('timeFractureCooldownEnd', timeFractureCooldownEnd.toString(), 365);
+                setCookie('dimensionalPortalOpen', dimensionalPortalOpen.toString(), 365);
+                setCookie('realityWarped', realityWarped.toString(), 365);
+                setCookie('quantumSingularityCreated', quantumSingularityCreated.toString(), 365);
+                setCookie('infinityEngineActive', infinityEngineActive.toString(), 365);
+                setCookie('voidExtractorActive', voidExtractorActive.toString(), 365);
+                setCookie('celestialForgeActive', celestialForgeActive.toString(), 365);
+                setCookie('eternityCoreActive', eternityCoreActive.toString(), 365);
+                setCookie('omnipotentAscensionAchieved', omnipotentAscensionAchieved.toString(), 365);
+
                 saveMessageElement.textContent = `Progress saved (Last: ${now})`;
             }
 
@@ -1285,6 +1576,20 @@
                 const savedQuantumLeapCooldownEnd = getCookie('quantumLeapCooldownEnd');
                 const savedQuantumGardenPlanted = getCookie('quantumGardenPlanted');
                 const lastSaved = getCookie('clickerLastSaved');
+
+                // Load new shop item states
+                const savedCosmicHarvesterActive = getCookie('cosmicHarvesterActive');
+                const savedCosmicHarvesterCooldownEnd = getCookie('cosmicHarvesterCooldownEnd');
+                const savedTimeFractureActive = getCookie('timeFractureActive');
+                const savedTimeFractureCooldownEnd = getCookie('timeFractureCooldownEnd');
+                const savedDimensionalPortalOpen = getCookie('dimensionalPortalOpen');
+                const savedRealityWarped = getCookie('realityWarped');
+                const savedQuantumSingularityCreated = getCookie('quantumSingularityCreated');
+                const savedInfinityEngineActive = getCookie('infinityEngineActive');
+                const savedVoidExtractorActive = getCookie('voidExtractorActive');
+                const savedCelestialForgeActive = getCookie('celestialForgeActive');
+                const savedEternityCoreActive = getCookie('eternityCoreActive');
+                const savedOmnipotentAscensionAchieved = getCookie('omnipotentAscensionAchieved');
 
                 if (savedCount !== null && savedMultiplier !== null && savedUpgradeCost !== null) {
                     count = parseInt(savedCount, 10);
@@ -1316,6 +1621,84 @@
                         if (quantumGardenPlanted) {
                             startQuantumGarden();
                         }
+                    }
+
+                    // Load new shop item states
+                    if (savedCosmicHarvesterActive !== null) {
+                        cosmicHarvesterActive = savedCosmicHarvesterActive === 'true';
+                        if (cosmicHarvesterActive) {
+                            startCosmicHarvester();
+                        }
+                    }
+
+                    if (savedCosmicHarvesterCooldownEnd !== null) {
+                        cosmicHarvesterCooldownEnd = parseInt(savedCosmicHarvesterCooldownEnd, 10);
+                        if (cosmicHarvesterCooldownEnd > Date.now()) {
+                            cosmicHarvesterCooldown = true;
+                            startCosmicHarvesterCooldownTimer();
+                        }
+                    }
+
+                    if (savedTimeFractureActive !== null) {
+                        timeFractureActive = savedTimeFractureActive === 'true';
+                        if (timeFractureActive) {
+                            startTimeFracture();
+                        }
+                    }
+
+                    if (savedTimeFractureCooldownEnd !== null) {
+                        timeFractureCooldownEnd = parseInt(savedTimeFractureCooldownEnd, 10);
+                        if (timeFractureCooldownEnd > Date.now()) {
+                            timeFractureCooldown = true;
+                            startTimeFractureCooldownTimer();
+                        }
+                    }
+
+                    if (savedDimensionalPortalOpen !== null) {
+                        dimensionalPortalOpen = savedDimensionalPortalOpen === 'true';
+                    }
+
+                    if (savedRealityWarped !== null) {
+                        realityWarped = savedRealityWarped === 'true';
+                    }
+
+                    if (savedQuantumSingularityCreated !== null) {
+                        quantumSingularityCreated = savedQuantumSingularityCreated === 'true';
+                        if (quantumSingularityCreated) {
+                            startQuantumSingularity();
+                        }
+                    }
+
+                    if (savedInfinityEngineActive !== null) {
+                        infinityEngineActive = savedInfinityEngineActive === 'true';
+                        if (infinityEngineActive) {
+                            startInfinityEngine();
+                        }
+                    }
+
+                    if (savedVoidExtractorActive !== null) {
+                        voidExtractorActive = savedVoidExtractorActive === 'true';
+                        if (voidExtractorActive) {
+                            startVoidExtractor();
+                        }
+                    }
+
+                    if (savedCelestialForgeActive !== null) {
+                        celestialForgeActive = savedCelestialForgeActive === 'true';
+                        if (celestialForgeActive) {
+                            startCelestialForge();
+                        }
+                    }
+
+                    if (savedEternityCoreActive !== null) {
+                        eternityCoreActive = savedEternityCoreActive === 'true';
+                        if (eternityCoreActive) {
+                            startEternityCore();
+                        }
+                    }
+
+                    if (savedOmnipotentAscensionAchieved !== null) {
+                        omnipotentAscensionAchieved = savedOmnipotentAscensionAchieved === 'true';
                     }
 
                     if (lastSaved) {
@@ -1495,6 +1878,88 @@
                     quantumGardenItem.style.display = 'none';
                 }
 
+                // Show/hide Cosmic Harvester item based on rebirth level
+                if (rebirthLevel >= 5) {
+                    cosmicHarvesterItem.style.display = 'block';
+                } else {
+                    cosmicHarvesterItem.style.display = 'none';
+                }
+
+                // Show/hide Time Fracture item based on rebirth level
+                if (rebirthLevel >= 6) {
+                    timeFractureItem.style.display = 'block';
+                } else {
+                    timeFractureItem.style.display = 'none';
+                }
+
+                // Show/hide Dimensional Portal item based on rebirth level
+                if (rebirthLevel >= 7) {
+                    dimensionalPortalItem.style.display = 'block';
+                } else {
+                    dimensionalPortalItem.style.display = 'none';
+                }
+
+                // Show/hide Reality Warper item based on rebirth level
+                if (rebirthLevel >= 8) {
+                    realityWarperItem.style.display = 'block';
+                } else {
+                    realityWarperItem.style.display = 'none';
+                }
+
+                // Show/hide Quantum Singularity item based on rebirth level
+                if (rebirthLevel >= 9) {
+                    quantumSingularityItem.style.display = 'block';
+                } else {
+                    quantumSingularityItem.style.display = 'none';
+                }
+
+                // Show/hide Infinity Engine item based on rebirth level
+                if (rebirthLevel >= 10) {
+                    infinityEngineItem.style.display = 'block';
+                } else {
+                    infinityEngineItem.style.display = 'none';
+                }
+
+                // Show/hide Void Extractor item based on rebirth level
+                if (rebirthLevel >= 11) {
+                    voidExtractorItem.style.display = 'block';
+                } else {
+                    voidExtractorItem.style.display = 'none';
+                }
+
+                // Show/hide Celestial Forge item based on rebirth level
+                if (rebirthLevel >= 12) {
+                    celestialForgeItem.style.display = 'block';
+                } else {
+                    celestialForgeItem.style.display = 'none';
+                }
+
+                // Show/hide Eternity Core item based on rebirth level
+                if (rebirthLevel >= 13) {
+                    eternityCoreItem.style.display = 'block';
+                } else {
+                    eternityCoreItem.style.display = 'none';
+                }
+
+                // Show/hide Omnipotent Ascension item based on rebirth level
+                if (rebirthLevel >= 14) {
+                    omnipotentAscensionItem.style.display = 'block';
+                } else {
+                    omnipotentAscensionItem.style.display = 'none';
+                }
+
+                // Update status displays
+                cosmicHarvesterStatus.textContent = cosmicHarvesterActive ? "Harvesting cosmic energy!" : "Not active";
+                timeFractureStatus.textContent = timeFractureActive ? "Time is fractured!" : "Time is normal";
+                dimensionalPortalStatus.textContent = dimensionalPortalOpen ? "Portal open to another dimension!" : "Portal closed";
+                realityWarperStatus.textContent = realityWarped ? "Reality is warped!" : "Reality stable";
+                quantumSingularityStatus.textContent = quantumSingularityCreated ? "Singularity active!" : "No singularity";
+                infinityEngineStatus.textContent = infinityEngineActive ? "Engine online!" : "Engine offline";
+                voidExtractorStatus.textContent = voidExtractorActive ? "Extracting void energy!" : "Not extracting";
+                celestialForgeStatus.textContent = celestialForgeActive ? "Forge active!" : "Forge inactive";
+                eternityCoreStatus.textContent = eternityCoreActive ? "Core powered!" : "Core dormant";
+                omnipotentAscensionStatus.textContent = omnipotentAscensionAchieved ? "OMNIPOTENT!" : "Mortal form";
+
                 if (saveData) {
                     saveGameData();
                 }
@@ -1531,9 +1996,24 @@
                     return;
                 }
 
+                // Calculate base points
                 const rebirthBonus = 1 + (rebirthLevel * 0.1);
                 const timeWarpBonus = timeWarpActive ? 5 : 1;
-                count += Math.floor(multiplier * rebirthBonus * timeWarpBonus);
+                let points = Math.floor(multiplier * rebirthBonus * timeWarpBonus);
+
+                // Apply bonuses from new shop items
+                if (cosmicHarvesterActive) points *= 2;
+                if (timeFractureActive) points *= 3;
+                if (dimensionalPortalOpen) points *= 1.5;
+                if (realityWarped) points *= 4;
+                if (quantumSingularityCreated) points *= 2;
+                if (infinityEngineActive) points *= 5;
+                if (voidExtractorActive) points *= 1.5;
+                if (celestialForgeActive) points *= 2;
+                if (eternityCoreActive) points *= 3;
+                if (omnipotentAscensionAchieved) points *= 10;
+
+                count += Math.floor(points);
                 lastClickTime = now;
 
                 setTimeout(() => {
@@ -1712,6 +2192,277 @@
                 }
             }
 
+            // Cosmic Harvester button functionality
+            cosmicHarvesterButton.addEventListener('click', function() {
+                if (!cosmicHarvesterActive && !cosmicHarvesterCooldown) {
+                    cosmicHarvesterActive = true;
+                    cosmicHarvesterCooldown = true;
+                    cosmicHarvesterCooldownEnd = Date.now() + 300000; // 5 minutes
+
+                    setTimeout(() => {
+                        cosmicHarvesterActive = false;
+                    }, 30000); // 30 seconds active
+
+                    setTimeout(() => {
+                        cosmicHarvesterCooldown = false;
+                        cosmicHarvesterCooldownOverlay.style.display = 'none';
+                    }, 300000); // 5 minutes total
+
+                    cosmicHarvesterCooldownOverlay.style.display = 'flex';
+                    cosmicHarvesterCooldownText.textContent = '5:00';
+                    startCosmicHarvesterCooldownTimer();
+                    startCosmicHarvester();
+                    updateCounter();
+                }
+            });
+
+            // Function to start the Cosmic Harvester cooldown timer
+            function startCosmicHarvesterCooldownTimer() {
+                const interval = setInterval(() => {
+                    const remainingTime = Math.ceil((cosmicHarvesterCooldownEnd - Date.now()) / 1000);
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        cosmicHarvesterCooldownOverlay.style.display = 'none';
+                    } else {
+                        const minutes = Math.floor(remainingTime / 60);
+                        const seconds = remainingTime % 60;
+                        cosmicHarvesterCooldownText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+            }
+
+            // Function to start the Cosmic Harvester
+            function startCosmicHarvester() {
+                if (cosmicHarvesterActive) {
+                    const interval = setInterval(() => {
+                        const cosmicPoints = Math.floor(multiplier * rebirthLevel * 100);
+                        count += cosmicPoints;
+                        updateCounter();
+                    }, 1000);
+
+                    setTimeout(() => {
+                        clearInterval(interval);
+                    }, 30000); // 30 seconds
+                }
+            }
+
+            // Time Fracture button functionality
+            timeFractureButton.addEventListener('click', function() {
+                if (!timeFractureActive && !timeFractureCooldown) {
+                    timeFractureActive = true;
+                    timeFractureCooldown = true;
+                    timeFractureCooldownEnd = Date.now() + 900000; // 15 minutes
+
+                    setTimeout(() => {
+                        timeFractureActive = false;
+                    }, 60000); // 1 minute active
+
+                    setTimeout(() => {
+                        timeFractureCooldown = false;
+                        timeFractureCooldownOverlay.style.display = 'none';
+                    }, 900000); // 15 minutes total
+
+                    timeFractureCooldownOverlay.style.display = 'flex';
+                    timeFractureCooldownText.textContent = '15:00';
+                    startTimeFractureCooldownTimer();
+                    startTimeFracture();
+                    updateCounter();
+                }
+            });
+
+            // Function to start the Time Fracture cooldown timer
+            function startTimeFractureCooldownTimer() {
+                const interval = setInterval(() => {
+                    const remainingTime = Math.ceil((timeFractureCooldownEnd - Date.now()) / 1000);
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        timeFractureCooldownOverlay.style.display = 'none';
+                    } else {
+                        const minutes = Math.floor(remainingTime / 60);
+                        const seconds = remainingTime % 60;
+                        timeFractureCooldownText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+            }
+
+            // Function to start the Time Fracture
+            function startTimeFracture() {
+                if (timeFractureActive) {
+                    // Change the click cooldown to be faster
+                    const originalClickCooldown = clickCooldown;
+                    clickCooldown = 50; // Much faster clicks during time fracture
+
+                    setTimeout(() => {
+                        clickCooldown = originalClickCooldown;
+                    }, 60000); // 1 minute
+                }
+            }
+
+            // Dimensional Portal button functionality
+            dimensionalPortalButton.addEventListener('click', function() {
+                dimensionalPortalOpen = !dimensionalPortalOpen;
+                updateCounter();
+            });
+
+            // Reality Warper button functionality
+            realityWarperButton.addEventListener('click', function() {
+                realityWarped = !realityWarped;
+                updateCounter();
+            });
+
+            // Quantum Singularity button functionality
+            quantumSingularityButton.addEventListener('click', function() {
+                quantumSingularityCreated = !quantumSingularityCreated;
+                if (quantumSingularityCreated) {
+                    startQuantumSingularity();
+                }
+                updateCounter();
+            });
+
+            // Function to start the Quantum Singularity
+            function startQuantumSingularity() {
+                if (quantumSingularityCreated) {
+                    const interval = setInterval(() => {
+                        const singularityPoints = Math.floor(multiplier * rebirthLevel * 1000);
+                        count += singularityPoints;
+                        updateCounter();
+                    }, 3000);
+
+                    // Store the interval so we can clear it later if needed
+                    window.quantumSingularityInterval = interval;
+                } else if (window.quantumSingularityInterval) {
+                    clearInterval(window.quantumSingularityInterval);
+                }
+            }
+
+            // Infinity Engine button functionality
+            infinityEngineButton.addEventListener('click', function() {
+                infinityEngineActive = !infinityEngineActive;
+                if (infinityEngineActive) {
+                    startInfinityEngine();
+                }
+                updateCounter();
+            });
+
+            // Function to start the Infinity Engine
+            function startInfinityEngine() {
+                if (infinityEngineActive) {
+                    const interval = setInterval(() => {
+                        const enginePoints = Math.floor(multiplier * rebirthLevel * 5000);
+                        count += enginePoints;
+                        updateCounter();
+                    }, 5000);
+
+                    // Store the interval so we can clear it later if needed
+                    window.infinityEngineInterval = interval;
+                } else if (window.infinityEngineInterval) {
+                    clearInterval(window.infinityEngineInterval);
+                }
+            }
+
+            // Void Extractor button functionality
+            voidExtractorButton.addEventListener('click', function() {
+                voidExtractorActive = !voidExtractorActive;
+                if (voidExtractorActive) {
+                    startVoidExtractor();
+                }
+                updateCounter();
+            });
+
+            // Function to start the Void Extractor
+            function startVoidExtractor() {
+                if (voidExtractorActive) {
+                    const interval = setInterval(() => {
+                        const voidPoints = Math.floor(multiplier * rebirthLevel * 2000);
+                        count += voidPoints;
+                        updateCounter();
+                    }, 2000);
+
+                    // Store the interval so we can clear it later if needed
+                    window.voidExtractorInterval = interval;
+                } else if (window.voidExtractorInterval) {
+                    clearInterval(window.voidExtractorInterval);
+                }
+            }
+
+            // Celestial Forge button functionality
+            celestialForgeButton.addEventListener('click', function() {
+                celestialForgeActive = !celestialForgeActive;
+                if (celestialForgeActive) {
+                    startCelestialForge();
+                }
+                updateCounter();
+            });
+
+            // Function to start the Celestial Forge
+            function startCelestialForge() {
+                if (celestialForgeActive) {
+                    const interval = setInterval(() => {
+                        const forgePoints = Math.floor(multiplier * rebirthLevel * 3000);
+                        count += forgePoints;
+                        updateCounter();
+                    }, 3000);
+
+                    // Store the interval so we can clear it later if needed
+                    window.celestialForgeInterval = interval;
+                } else if (window.celestialForgeInterval) {
+                    clearInterval(window.celestialForgeInterval);
+                }
+            }
+
+            // Eternity Core button functionality
+            eternityCoreButton.addEventListener('click', function() {
+                eternityCoreActive = !eternityCoreActive;
+                if (eternityCoreActive) {
+                    startEternityCore();
+                }
+                updateCounter();
+            });
+
+            // Function to start the Eternity Core
+            function startEternityCore() {
+                if (eternityCoreActive) {
+                    const interval = setInterval(() => {
+                        const corePoints = Math.floor(multiplier * rebirthLevel * 10000);
+                        count += corePoints;
+                        updateCounter();
+                    }, 10000);
+
+                    // Store the interval so we can clear it later if needed
+                    window.eternityCoreInterval = interval;
+                } else if (window.eternityCoreInterval) {
+                    clearInterval(window.eternityCoreInterval);
+                }
+            }
+
+            // Omnipotent Ascension button functionality
+            omnipotentAscensionButton.addEventListener('click', function() {
+                if (confirm("Are you sure you want to ascend to omnipotence? This will reset all your progress but grant you ultimate power!")) {
+                    omnipotentAscensionAchieved = true;
+                    rebirthLevel = 0;
+                    count = 0;
+                    multiplier = 1000000; // Massive multiplier
+                    upgradeCost = 1000000000;
+                    rebirthCost = 1000000000000;
+                    autoClickerEnabled = false;
+                    clearInterval(autoClickerInterval);
+                    quantumGardenPlanted = false;
+                    clearInterval(quantumGardenInterval);
+                    cosmicHarvesterActive = false;
+                    timeFractureActive = false;
+                    dimensionalPortalOpen = false;
+                    realityWarped = false;
+                    quantumSingularityCreated = false;
+                    infinityEngineActive = false;
+                    voidExtractorActive = false;
+                    celestialForgeActive = false;
+                    eternityCoreActive = false;
+                    
+                    updateCounter();
+                    saveMessageElement.textContent = "You have ascended to omnipotence! The universe is yours to command.";
+                }
+            });
+
             // Reset button functionality
             resetButton.addEventListener('click', function() {
                 if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including rebirth levels!")) {
@@ -1724,6 +2475,17 @@
                     clearInterval(autoClickerInterval);
                     quantumGardenPlanted = false;
                     clearInterval(quantumGardenInterval);
+                    cosmicHarvesterActive = false;
+                    timeFractureActive = false;
+                    dimensionalPortalOpen = false;
+                    realityWarped = false;
+                    quantumSingularityCreated = false;
+                    infinityEngineActive = false;
+                    voidExtractorActive = false;
+                    celestialForgeActive = false;
+                    eternityCoreActive = false;
+                    omnipotentAscensionAchieved = false;
+                    
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
                         "Game reset. Progress saved automatically" : 
@@ -1866,6 +2628,17 @@
                     clearInterval(autoClickerInterval);
                     quantumGardenPlanted = false;
                     clearInterval(quantumGardenInterval);
+                    cosmicHarvesterActive = false;
+                    timeFractureActive = false;
+                    dimensionalPortalOpen = false;
+                    realityWarped = false;
+                    quantumSingularityCreated = false;
+                    infinityEngineActive = false;
+                    voidExtractorActive = false;
+                    celestialForgeActive = false;
+                    eternityCoreActive = false;
+                    omnipotentAscensionAchieved = false;
+                    
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
                         "Game reset. Progress saved automatically" : 
