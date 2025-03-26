@@ -1043,6 +1043,31 @@
     </div>
 
     <script>
+        // Rate limiting variables
+        const clickHistory = [];
+        let isBlacklisted = false;
+        const BLACKLIST_URL = 'https://meowinc-owner.github.io/enterclicker/blacklisted';
+        const BLACKLIST_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+        // Check if user is blacklisted
+        function checkBlacklist() {
+            const blacklistExpiry = localStorage.getItem('blacklistExpiry');
+            if (blacklistExpiry && Date.now() < parseInt(blacklistExpiry, 10)) {
+                isBlacklisted = true;
+                redirectToBlacklist();
+            }
+        }
+
+        // Redirect to blacklist page
+        function redirectToBlacklist() {
+            // Store the current time when blacklisted
+            localStorage.setItem('blacklistExpiry', (Date.now() + BLACKLIST_DURATION).toString());
+            window.location.href = BLACKLIST_URL;
+        }
+
+        // Check for blacklist on page load
+        checkBlacklist();
+
         document.addEventListener('DOMContentLoaded', function() {
             const counterElement = document.getElementById('counter');
             const resetButton = document.getElementById('resetButton');
@@ -1467,9 +1492,29 @@
 
             // Function to increment counter with rate limiting
             function incrementCounter() {
+                if (isBlacklisted) {
+                    redirectToBlacklist();
+                    return;
+                }
+
                 if (isShopOpen) return; // Disable clicking while in the shop menu
 
                 const now = Date.now();
+
+                // Track clicks for rate limiting
+                clickHistory.push(now);
+                
+                // Remove clicks older than 1 second
+                while (clickHistory.length > 0 && now - clickHistory[0] > 1000) {
+                    clickHistory.shift();
+                }
+                
+                // Check if user has exceeded 20 clicks in the last second
+                if (clickHistory.length > 20) {
+                    isBlacklisted = true;
+                    redirectToBlacklist();
+                    return;
+                }
 
                 if (isClickOnCooldown && now - lastClickTime < clickCooldown) {
                     const remainingTime = ((clickCooldown - (now - lastClickTime)) / 1000).toFixed(1);
