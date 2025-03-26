@@ -2519,20 +2519,10 @@
                 isShopOpen = true;
                 shopMenu.classList.add('open');
                 blurOverlay.classList.add('active');
-
+            
                 if (autoClickerEnabled) {
                     clearInterval(autoClickerInterval);
                 }
-
-                setTimeout(() => {
-                    shopMenu.classList.remove('open');
-                    blurOverlay.classList.remove('active');
-                    isShopOpen = false;
-
-                    if (autoClickerEnabled) {
-                        startAutoClicker();
-                    }
-                }, 10000);
             });
 
             closeShopMenu.addEventListener('click', function() {
