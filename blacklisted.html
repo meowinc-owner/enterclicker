@@ -62,11 +62,6 @@
             margin-top: 10px;
             display: none;
         }
-        .permanent-ban {
-            color: #dc3545;
-            font-weight: bold;
-            margin: 20px 0;
-        }
     </style>
 </head>
 <body>
@@ -87,112 +82,86 @@
     </div>
 
     <script>
-        // Security checks
         const PERMANENT_BAN_URL = 'https://meowinc-owner.github.io/enterclicker/permanent-ban';
         const UNBAN_PASSCODE = "UNBAN-CHECKDEV";
-        const PERMANENT_BAN_PASSCODE = "BANEVASION-APPEAL7819350264";
         
-        // Check for console tampering
-        function checkForTampering() {
-            // Check if expiry was modified in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            let expiryTime = parseInt(urlParams.get('expiry'));
-            
-            // If no expiry in URL, check localStorage
-            if (!expiryTime) {
-                expiryTime = parseInt(localStorage.getItem('blacklistExpiry'));
-            }
-            
-            // If expiry seems too small (tampered with)
-            if (expiryTime && expiryTime < Date.now() + 600000) { // Less than 10 min
+        // Get the expiry time from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        let expiryTime = parseInt(urlParams.get('expiry'));
+        
+        // If no expiry in URL, check localStorage
+        if (!expiryTime) {
+            expiryTime = parseInt(localStorage.getItem('blacklistExpiry'));
+        }
+        
+        // If still no expiry, default to 10 minutes from now
+        if (!expiryTime) {
+            expiryTime = Date.now() + 600000;
+            localStorage.setItem('blacklistExpiry', expiryTime.toString());
+        }
+        
+        // Check for obvious tampering (expiry time in past or suspiciously short)
+        if (expiryTime < Date.now() || (expiryTime - Date.now()) < 300000) { // Less than 5 minutes remaining
+            // Only set permanent ban if expiry was in URL (indicating tampering)
+            if (urlParams.has('expiry')) {
                 localStorage.setItem('permanentBan', 'true');
                 window.location.href = PERMANENT_BAN_URL;
-                return true;
-            }
-            
-            // Check if console is open (basic detection)
-            let consoleOpen = false;
-            const checkConsole = () => {
-                consoleOpen = true;
-            };
-            
-            // Only runs when console is open
-            console.log('%c', checkConsole);
-            setTimeout(() => {
-                if (consoleOpen) {
-                    localStorage.setItem('permanentBan', 'true');
-                    window.location.href = PERMANENT_BAN_URL;
-                }
-            }, 1000);
-            
-            return false;
-        }
-
-        // Only proceed if not tampered
-        if (!checkForTampering()) {
-            // Get the expiry time from URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            let expiryTime = parseInt(urlParams.get('expiry'));
-            
-            // If no expiry in URL, check localStorage
-            if (!expiryTime) {
-                expiryTime = parseInt(localStorage.getItem('blacklistExpiry'));
-            }
-            
-            // If still no expiry, default to 10 minutes from now
-            if (!expiryTime) {
+            } else {
+                // If from localStorage, just reset to 10 minutes
                 expiryTime = Date.now() + 600000;
                 localStorage.setItem('blacklistExpiry', expiryTime.toString());
             }
+        }
+        
+        const countdownElement = document.getElementById('countdown');
+        const unbanCodeInput = document.getElementById('unbanCode');
+        const submitButton = document.getElementById('submitCode');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // Update countdown every second
+        function updateCountdown() {
+            const now = Date.now();
+            const remainingTime = Math.max(0, expiryTime - now);
             
-            const countdownElement = document.getElementById('countdown');
-            const unbanCodeInput = document.getElementById('unbanCode');
-            const submitButton = document.getElementById('submitCode');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            // Update countdown every second
-            function updateCountdown() {
-                const now = Date.now();
-                const remainingTime = Math.max(0, expiryTime - now);
-                
-                if (remainingTime <= 0) {
-                    countdownElement.textContent = "Ban expired! You will be redirected...";
-                    localStorage.removeItem('blacklistExpiry');
-                    setTimeout(() => {
-                        window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-                    }, 2000);
-                    return;
-                }
-                
-                const minutes = Math.floor(remainingTime / 60000);
-                const seconds = Math.floor((remainingTime % 60000) / 1000);
-                countdownElement.textContent = `Time remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            if (remainingTime <= 0) {
+                countdownElement.textContent = "Ban expired! You will be redirected...";
+                localStorage.removeItem('blacklistExpiry');
+                setTimeout(() => {
+                    window.location.href = "https://meowinc-owner.github.io/enterclicker/";
+                }, 2000);
+                return;
             }
             
-            // Check unban code
-            submitButton.addEventListener('click', () => {
-                if (unbanCodeInput.value.trim().toUpperCase() === UNBAN_PASSCODE) {
-                    localStorage.removeItem('blacklistExpiry');
-                    window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-                } else {
-                    errorMessage.style.display = 'block';
-                    setTimeout(() => {
-                        errorMessage.style.display = 'none';
-                    }, 3000);
-                }
-            });
-            
-            // Also allow Enter key to submit
-            unbanCodeInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    submitButton.click();
-                }
-            });
-            
-            // Initial update
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
+            const minutes = Math.floor(remainingTime / 60000);
+            const seconds = Math.floor((remainingTime % 60000) / 1000);
+            countdownElement.textContent = `Time remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
         }
+        
+        // Check unban code
+        submitButton.addEventListener('click', () => {
+            if (unbanCodeInput.value.trim().toUpperCase() === UNBAN_PASSCODE) {
+                localStorage.removeItem('blacklistExpiry');
+                window.location.href = "https://meowinc-owner.github.io/enterclicker/";
+            } else {
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+        });
+        
+        // Also allow Enter key to submit
+        unbanCodeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitButton.click();
+            }
+        });
+        
+        // Initial update
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // Remove console tampering detection as it was causing false positives
     </script>
 </body>
 </html>
