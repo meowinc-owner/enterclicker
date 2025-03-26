@@ -41,7 +41,8 @@
             margin-bottom: 2rem;
         }
 
-        .welcome-content .play-button {
+        .welcome-content .play-button,
+        .welcome-content .leaderboard-button {
             background-color: #2196F3;
             color: white;
             font-size: 1.2rem;
@@ -50,9 +51,11 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin: 0.5rem; /* Add a little space between buttons */
         }
 
-        .welcome-content .play-button:hover {
+        .welcome-content .play-button:hover,
+        .welcome-content .leaderboard-button:hover {
             background-color: #1976D2;
         }
     </style>
@@ -62,11 +65,17 @@
         <h1>Welcome to Enter Clicker!</h1>
         <p>Click your way to infinity and beyond! Press the button below to start playing.</p>
         <button class="play-button" id="playButton">Play</button>
+        <button class="leaderboard-button" id="leaderboardButton">Leaderboard</button> <!-- New Leaderboard Button -->
     </div>
 
     <script>
         document.getElementById('playButton').addEventListener('click', function() {
             window.location.href = 'https://meowinc-owner.github.io/enterclicker/';
+        });
+
+        // New Event Listener for the Leaderboard Button
+        document.getElementById('leaderboardButton').addEventListener('click', function() {
+            window.location.href = 'https://meowinc-owner.github.io/enterclicker/leaderboard';
         });
     </script>
 </body>
