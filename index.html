@@ -837,42 +837,6 @@ console.log("Firebase initialized:", app); // Debugging
             cursor: not-allowed;
         }
 
-        .quantum-garden-item .garden-status {
-            font-size: 0.9rem;
-            color: var(--secondary-text);
-            margin-top: 10px;
-        }
-
-        /* Leaderboard Button Styles */
-        .leaderboard-button {
-            position: absolute;
-            top: 15px;
-            right: 120px; /* Adjust based on theme button position */
-            z-index: 100;
-        }
-
-        .leaderboard-button .theme-button {
-            background-color: var(--container-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 25px;
-            padding: 8px 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 5px var(--shadow-color);
-            transition: all 0.3s ease;
-        }
-
-        .leaderboard-button .theme-button:hover {
-            box-shadow: 0 4px 8px var(--shadow-color);
-        }
-
-        .leaderboard-button .icon {
-            margin-right: 5px;
-            font-size: 1rem;
-        }
     </style>
 </head>
 <body>
@@ -893,14 +857,6 @@ console.log("Firebase initialized:", app); // Debugging
             </div>
         </div>
 
-        <!-- Leaderboard Button -->
-                <div class="leaderboard-button">
-            <button id="leaderboardButton" class="theme-button">
-                <span class="icon">🏆</span>
-                <span class="text">Leaderboard</span>
-            </button>
-        </div>
-        
         <div class="credit-box">Made by Damian B - Meowinc<span class="trademark">™</span></div>
         
         <div class="game-container">
@@ -1100,7 +1056,6 @@ console.log("Firebase initialized:", app); // Debugging
             const playButton = document.getElementById('playButton');
             const upgradeCooldownOverlay = document.getElementById('upgradeCooldownOverlay');
             const upgradeCooldownText = document.getElementById('upgradeCooldownText');
-            const leaderboardButton = document.getElementById('leaderboardButton');
 
             // Initialize game state with defaults
             let count = 0;
@@ -1854,17 +1809,6 @@ console.log("Firebase initialized:", app); // Debugging
             // Welcome Screen Play Button Click Handler
             playButton.addEventListener('click', function() {
                 welcomeOverlay.style.display = 'none';
-            });
-
-            // Leaderboard Button Click Handler
-            leaderboardButton.addEventListener('click', function() {
-                try {
-                    // Open the leaderboard in a new tab
-                    window.open('https://meowinc-owner.github.io/enterclicker/leaderboard', '_blank');
-                } catch (error) {
-                    console.error('Error opening leaderboard:', error);
-                    alert('Failed to open the leaderboard. Please check the URL or try again later.');
-                }
             });
         });
     </script>
