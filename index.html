@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Clicker! - by Damian B (meowinc)</title>
     <link rel="icon" type="image/x-icon" href="https://meowinc-owner.github.io/enterclicker/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Firebase App (required for Firebase services) -->
     <script type="module">
@@ -35,865 +37,568 @@
     </script>
 
     <style>
-        /* Disable text selection */
-        body {
-            -webkit-user-select: none; /* Safari */
-            -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* IE10+/Edge */
-            user-select: none; /* Standard */
+        /* Base Styles */
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5649c0;
+            --secondary: #00cec9;
+            --accent: #fd79a8;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --gray: #636e72;
+            --light-gray: #dfe6e9;
+            
+            --bg-color: var(--light);
+            --text-color: var(--dark);
+            --container-bg: rgba(255, 255, 255, 0.9);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --button-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --glow: 0 0 15px rgba(108, 92, 231, 0.5);
+            
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius: 12px;
+            --button-radius: 8px;
         }
 
-        /* Your provided CSS */
-        html, body {
-            overflow: hidden;
-            height: 100%;
+        /* Dark Theme */
+        .dark-mode {
+            --primary: #a29bfe;
+            --primary-dark: #847bff;
+            --secondary: #55efc4;
+            --accent: #ff7675;
+            --success: #00b894;
+            --warning: #ffeaa7;
+            --danger: #ff7675;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            
+            --bg-color: #121212;
+            --text-color: #f5f6fa;
+            --container-bg: rgba(30, 30, 30, 0.95);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            --button-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --glow: 0 0 20px rgba(162, 155, 254, 0.7);
+        }
+
+        /* Rainbow Theme */
+        .rainbow-mode {
+            --primary: #6c5ce7;
+            --primary-dark: #5649c0;
+            --secondary: #00cec9;
+            --accent: #fd79a8;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            
+            --bg-color: linear-gradient(135deg, #6c5ce7, #00cec9, #fd79a8, #fdcb6e);
+            --text-color: #2d3436;
+            --container-bg: rgba(255, 255, 255, 0.9);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --button-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --glow: 0 0 15px rgba(108, 92, 231, 0.5);
+        }
+
+        /* Global Styles */
+        * {
             margin: 0;
             padding: 0;
-        }
-        
-        :root {
-            --bg-color: #f5f5f5;
-            --container-bg: white;
-            --text-color: #333;
-            --secondary-text: #666;
-            --tertiary-text: #757575;
-            --border-color: #e0e0e0;
-            --stats-border: #eee;
-            --credit-bg: #f9f9f9;
-            --warning-bg: #ffebee;
-            --warning-border: #f44336;
-            --warning-text: #c62828;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --rebirth-color: #673AB7;
-            --rebirth-hover: #5E35B1;
-            --cooldown-overlay: rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        body.dark-mode {
-            --bg-color: #121212;
-            --container-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --secondary-text: #b0b0b0;
-            --tertiary-text: #909090;
-            --border-color: #333;
-            --stats-border: #333;
-            --credit-bg: #2a2a2a;
-            --warning-bg: #3a1c1c;
-            --warning-border: #912923;
-            --warning-text: #ff6b6b;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --rebirth-color: #9575CD;
-            --rebirth-hover: #7E57C2;
-            --cooldown-overlay: rgba(0, 0, 0, 0.7);
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: auto;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
         }
 
-        /* Rainbow Light Theme */
-        body.rainbow-light-mode {
-            --container-bg: rgba(255, 255, 255, 0.9);
-            --text-color: #000;
-            --secondary-text: #555;
-            --tertiary-text: #777;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --stats-border: rgba(0, 0, 0, 0.1);
-            --credit-bg: rgba(255, 255, 255, 0.8);
-            --warning-bg: rgba(255, 235, 238, 0.9);
-            --warning-border: #f44336;
-            --warning-text: #c62828;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --rebirth-color: #673AB7;
-            --rebirth-hover: #5E35B1;
-            --cooldown-overlay: rgba(0, 0, 0, 0.5);
+        body.rainbow-mode {
+            background: linear-gradient(-45deg, #6c5ce7, #00cec9, #fd79a8, #fdcb6e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
 
-        /* Rainbow Dark Theme */
-        body.rainbow-dark-mode {
-            --container-bg: rgba(30, 30, 30, 0.9);
-            --text-color: #e0e0e0;
-            --secondary-text: #b0b0b0;
-            --tertiary-text: #909090;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --stats-border: rgba(255, 255, 255, 0.1);
-            --credit-bg: rgba(30, 30, 30, 0.8);
-            --warning-bg: rgba(58, 28, 28, 0.9);
-            --warning-border: #912923;
-            --warning-text: #ff6b6b;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --rebirth-color: #9575CD;
-            --rebirth-hover: #7E57C2;
-            --cooldown-overlay: rgba(0, 0, 0, 0.7);
-        }
-
-        /* Custom Theme */
-        body.custom-theme {
-            --bg-color: #f5f5f5;
-            --container-bg: white;
-            --text-color: #333;
-            --secondary-text: #666;
-            --tertiary-text: #757575;
-            --border-color: #e0e0e0;
-            --stats-border: #eee;
-            --credit-bg: #f9f9f9;
-            --warning-bg: #ffebee;
-            --warning-border: #f44336;
-            --warning-text: #c62828;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --rebirth-color: #673AB7;
-            --rebirth-hover: #5E35B1;
-            --cooldown-overlay: rgba(0, 0, 0, 0.5);
-        }
-
-        /* Rainbow animation */
-        @keyframes rainbowBackground {
+        @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* Rainbow Light Background */
-        body.rainbow-light-mode {
-            background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee, #fbc2eb, #ff9a9e);
-            background-size: 400% 400%;
-            animation: rainbowBackground 10s ease infinite;
-        }
-
-        /* Rainbow Dark Background */
-        body.rainbow-dark-mode {
-            background: linear-gradient(270deg, #673AB7, #5E35B1, #512DA8, #4527A0, #512DA8, #673AB7);
-            background-size: 400% 400%;
-            animation: rainbowBackground 10s ease infinite;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: var(--bg-color);
-            flex-direction: column;
-            position: relative;
-            color: var(--text-color);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        
-        .main-content {
+        /* Main Layout */
+        .main-container {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100%;
-            position: relative;
-            padding-bottom: 70px; /* Space for cookie banner */
-        }
-        
-        .theme-menu {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 100;
-        }
-        
-        .theme-button {
-            background-color: var(--container-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 25px;
-            padding: 8px 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 5px var(--shadow-color);
-            transition: all 0.3s ease;
-        }
-        
-        .theme-button:hover {
-            box-shadow: 0 4px 8px var(--shadow-color);
-        }
-        
-        .theme-button .icon {
-            margin-right: 5px;
-            font-size: 1rem;
-        }
-        
-        /* New Theme Menu Styles */
-        .theme-menu-panel {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--shadow-color);
+            min-height: 100vh;
             padding: 20px;
-            width: 300px;
-            max-width: 90%;
-            z-index: 1001;
+            position: relative;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
-        .theme-menu-panel.show {
-            display: block;
-        }
-
-        .theme-menu-panel h2 {
-            margin-top: 0;
-            color: var(--text-color);
-            text-align: center;
-        }
-
-        .theme-menu-panel .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
-        .theme-menu-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .theme-menu-buttons button {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid var(--border-color);
-            background-color: var(--container-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .theme-menu-buttons button:hover {
-            background-color: var(--stats-border);
-            transform: translateY(-2px);
-        }
-
-        /* Custom Theme Panel */
-        .custom-theme-panel {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            padding: 20px;
-            width: 80%;
-            max-width: 500px;
-            z-index: 1001;
-        }
-
-        .custom-theme-panel.show {
-            display: block;
-        }
-
-        .custom-theme-panel h2 {
-            margin-top: 0;
-            color: var(--text-color);
-            text-align: center;
-        }
-
-        .custom-theme-panel .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
-        .custom-theme-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .custom-theme-control {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .custom-theme-control label {
-            margin-bottom: 5px;
-            color: var(--text-color);
-            font-size: 0.9rem;
-        }
-
-        .custom-theme-control input[type="color"],
-        .custom-theme-control input[type="range"] {
-            width: 100%;
-            cursor: pointer;
-        }
-
-        .custom-theme-control input[type="range"] {
-            -webkit-appearance: none;
-            height: 8px;
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-
-        .custom-theme-control input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--rebirth-color);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .custom-theme-presets {
+        .header {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 0;
             flex-wrap: wrap;
         }
 
-        .custom-theme-preset {
-            padding: 8px 12px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            flex-grow: 1;
-            text-align: center;
-            background-color: var(--stats-border);
-            color: var(--text-color);
-            transition: all 0.2s ease;
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 1.8rem;
+            color: var(--primary);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .custom-theme-preset:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 5px var(--shadow-color);
+        .logo span {
+            color: var(--accent);
         }
 
-        .custom-theme-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .custom-theme-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s ease;
-        }
-
-        .custom-theme-btn.apply {
-            background-color: var(--rebirth-color);
-            color: white;
-        }
-
-        .custom-theme-btn.reset {
-            background-color: var(--warning-border);
-            color: white;
-        }
-
-        .custom-theme-btn.save {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .custom-theme-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-        
-       .credit-box {
-            font-size: 0.75rem;
-            color: var(--tertiary-text);
-            background-color: transparent; /* Make background transparent */
-            padding: 3px 6px; /* Keep padding if needed */
-            border-radius: 3px; /* Keep border-radius if needed */
-            border: none; /* Remove the border if any */
-            margin-bottom: 15px;
-            font-weight: bold; /* Make text bold */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add shadow for readability */
-            transition: all 0.3s ease;
-        }
-        
-        /* Add a specific styling for dark mode if needed */
-        body.dark-mode .credit-box {
-            color: var(--text-color); /* High contrast color in dark mode */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Ensures text is readable against dark background */
-        }
-        
-        .trademark {
-            font-size: 0.6rem;
-            vertical-align: super;
-        }
-        
+        /* Game Container */
         .game-container {
+            background: var(--container-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 30px;
             text-align: center;
-            padding: 2rem;
-            border-radius: 10px;
-            background-color: var(--container-bg);
-            box-shadow: 0 4px 8px var(--shadow-color);
-            max-width: 600px;
+            max-width: 800px;
             width: 100%;
+            margin: 0 auto;
+            border: 1px solid var(--border-color);
             position: relative;
-            min-height: 400px;
-            transition: all 0.3s ease;
+            overflow: hidden;
+            z-index: 1;
         }
-        
+
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.3; }
+            100% { transform: scale(1.2); opacity: 0.1; }
+        }
+
+        /* Counter */
         .counter {
+            font-family: 'Orbitron', sans-serif;
             font-size: 5rem;
-            font-weight: bold;
-            color: var(--text-color);
-            margin: 1rem 0;
-            transition: color 0.3s ease;
+            font-weight: 600;
+            margin: 20px 0;
+            color: var(--primary);
+            text-shadow: 0 2px 10px rgba(108, 92, 231, 0.3);
+            transition: var(--transition);
         }
-        
-        .instructions {
-            color: var(--secondary-text);
-            margin-bottom: 1rem;
-            transition: color 0.3s ease;
-        }
-        
+
+        /* Buttons */
         .button {
-            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--button-radius);
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 1rem;
-            margin: 0.5rem;
-            transition: background-color 0.3s ease;
+            transition: var(--transition);
+            box-shadow: var(--button-shadow);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
             overflow: hidden;
         }
-        
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
+            background: var(--primary-dark);
+        }
+
+        .button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .button i {
+            margin-right: 8px;
+        }
+
+        .button.enter-button {
+            font-size: 1.5rem;
+            padding: 20px 40px;
+            margin: 30px auto;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), var(--glow);
+        }
+
+        .button.enter-button:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(108, 92, 231, 0.6);
+        }
+
+        .button.enter-button:active {
+            transform: scale(0.98);
+        }
+
+        .button.secondary {
+            background: var(--secondary);
+        }
+
+        .button.secondary:hover {
+            background: #00b5a8;
+        }
+
+        .button.danger {
+            background: var(--danger);
+        }
+
+        .button.danger:hover {
+            background: #c0392b;
+        }
+
+        .button.success {
+            background: var(--success);
+        }
+
+        .button.success:hover {
+            background: #00997b;
+        }
+
+        .button.warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .button.warning:hover {
+            background: #fdc14d;
+        }
+
+        .button.accent {
+            background: var(--accent);
+        }
+
+        .button.accent:hover {
+            background: #e84393;
+        }
+
+        .button:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .stat-card p {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .stat-card .multiplier {
+            color: var(--primary);
+        }
+
+        .stat-card .rebirth-stat {
+            color: var(--accent);
+        }
+
+        /* Theme Switcher */
+        .theme-switcher {
+            position: relative;
+        }
+
+        .theme-button {
+            background: var(--container-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            box-shadow: var(--button-shadow);
+            transition: var(--transition);
+        }
+
+        .theme-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px var(--shadow-color);
+        }
+
+        .theme-button i {
+            margin-right: 5px;
+        }
+
+        .theme-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--container-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 10px;
+            margin-top: 10px;
+            display: none;
+            flex-direction: column;
+            min-width: 150px;
+            z-index: 100;
+            border: 1px solid var(--border-color);
+        }
+
+        .theme-options.show {
+            display: flex;
+        }
+
+        .theme-option {
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-option:hover {
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .theme-option i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Shop Button */
+        .shop-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .shop-button:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Admin Panel Button */
+        .admin-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+            display: none; /* Hidden by default */
+        }
+
+        .admin-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Shop Menu */
+        .shop-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--container-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            border: 1px solid var(--border-color);
+        }
+
+        .shop-menu.open {
+            display: block;
+        }
+
+        .shop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .shop-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-button:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .shop-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .shop-item p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .shop-item .item-requirement {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .shop-item .item-status {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        .shop-item .buy-button {
+            width: 100%;
+            margin-top: 10px;
+        }
+
         .cooldown-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--cooldown-overlay);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
             color: white;
             font-weight: bold;
-            transition: width 0.1s linear;
-        }
-        
-        .button-container {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .reset-button {
-            background-color: #f44336;
-            color: white;
-        }
-        
-        .reset-button:hover {
-            background-color: #d32f2f;
-        }
-        
-        .upgrade-button {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        .upgrade-button:hover {
-            background-color: #388E3C;
-        }
-        
-        .upgrade-button:disabled {
-            background-color: #9E9E9E;
-            cursor: not-allowed;
-        }
-        
-        .rebirth-button {
-            background-color: var(--rebirth-color);
-            color: white;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        
-        .rebirth-button:hover {
-            background-color: var(--rebirth-hover);
-        }
-        
-        .rebirth-button:disabled {
-            background-color: #9E9E9E;
-            cursor: not-allowed;
-        }
-        
-        .stats {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--stats-border);
-            text-align: left;
-            width: 100%;
-            transition: border-color 0.3s ease;
-        }
-        
-        .multiplier {
-            font-weight: bold;
-            color: #4CAF50;
-        }
-        
-        .rebirth-stat {
-            font-weight: bold;
-            color: var(--rebirth-color);
-        }
-        
-        .enter-button {
-            background-color: #2196F3;
-            color: white;
-            font-size: 1.5rem;
-            padding: 1rem 2rem;
-            margin: 2rem auto;
-            display: block;
-            transition: transform 0.1s, background-color 0.3s ease;
-        }
-        
-        .enter-button:hover {
-            background-color: #1976D2;
-        }
-        
-        .enter-button:active {
-            transform: scale(0.95);
-        }
-        
-        .enter-button span {
-            font-size: 0.8rem;
-            display: block;
-            margin-top: 0.5rem;
-        }
-        
-        .warning-box {
-            margin-top: 20px;
-            background-color: var(--warning-bg);
-            border: 2px solid var(--warning-border);
-            border-radius: 5px;
-            padding: 10px 15px;
-            color: var(--warning-text);
-            font-weight: bold;
-            width: 600px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .save-message {
-            font-size: 0.8rem;
-            color: var(--tertiary-text);
-            margin-top: 5px;
-            font-style: italic;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 300px;
-            transition: color 0.3s ease;
-        }
-        
-        .cookie-consent {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(51, 51, 51, 0.9);
-            color: white;
-            text-align: center;
-            padding: 15px;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .cookie-text {
-            margin-right: 20px;
-        }
-        
-        .cookie-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .cookie-button:hover {
-            background-color: #388E3C;
-        }
-
-        .rate-limiter {
-            display: inline-block;
-            margin-left: 10px;
-            font-size: 0.8rem;
-            color: #f44336;
-            font-weight: bold;
-        }
-
-        .rebirth-info {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: var(--container-bg); /* Solid background that matches theme */
-            border-radius: 5px;
-            font-size: 0.9rem;
-            text-align: left;
-            border: 2px solid var(--text-color); /* Border color changes with theme */
-            position: absolute;
-            bottom: 120px;
-            right: 20px;
-            width: 250px;
-            z-index: 10;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
-        }
-
-        .rebirth-button:hover + .rebirth-info {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        @media (max-width: 600px) {
-            .theme-menu {
-                position: static; /* Change to static for mobile */
-                margin-bottom: 10px; /* Add some space */
-            }
-
-            .main-content {
-                padding: 10px; /* Reduce padding for smaller screens */
-            }
-
-            .game-container {
-                padding: 1rem;
-                max-width: 100%; /* Ensure it takes the full width */
-                border-radius: 5px; /* Make corners less rounded */
-            }
-
-            .counter {
-                font-size: 3rem; /* Reduce the counter size on mobile */
-            }
-
-            .enter-button {
-                font-size: 1.2rem; /* Make button text larger */
-                padding: 0.8rem 1rem; /* Make button larger */
-                margin: 1rem auto; /* Margins for spacing */
-            }
-
-            .shop-button {
-                bottom: 10px; /* Adjust position */
-                left: 10px; /* Adjust position */
-                width: 60px; /* Smaller icon size for mobile */
-                height: 60px; /* Smaller icon size for mobile */
-                font-size: 1.2rem; /* Even larger icon */
-            }
-
-            .shop-menu {
-                width: 90%; /* Take more of the screen */
-                padding: 10px; /* Ensure items aren't too close to the edge */
-            }
-
-            .shop-item {
-                width: 100%; /* Full width on mobile */
-                max-width: none; /* Remove max-width constraint */
-                margin: 5px 0; /* Stack items vertically with slight space */
-            }
-
-            .rebirth-button, .reset-button, .upgrade-button {
-                padding: 0.6rem 1rem; /* Increase button size for better touch area */
-                font-size: 1rem; /* Adjust button font size */
-            }
-
-            .cookie-consent {
-                padding: 10px; /* Reduce padding */
-                font-size: 0.85rem; /* Slightly reduce font size */
-            }
-
-            .debug-overlay {
-                font-size: 0.8rem; /* Smaller font size for debug overlay */
-            }
-
-            /* Custom theme panel adjustments for mobile */
-            .custom-theme-panel {
-                width: 95%;
-                max-width: none;
-            }
-
-            .custom-theme-controls {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-height: 800px) {
-            .game-container {
-                min-height: 300px; /* Less height restriction for mobile */
-                padding: 1rem; /* Padding for smaller devices */
-            }
-
-            .warning-box {
-                margin-top: 5px; /* Adjust warning box */
-            }
-        }
-
-        /* New styles for the shop button and menu */
-        .shop-button {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background-color: var(--container-bg);
-            color: var(--text-color);
-            border: 2px solid var(--border-color);
-            border-radius: 50%;
-            width: 70px; /* Increased size */
-            height: 70px; /* Increased size */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            font-size: 1.5rem; /* Larger icon */
-            animation: pulse 2s infinite; /* Added animation */
-        }
-
-        .shop-button:hover {
-            transform: scale(1.1); /* Slightly enlarge on hover */
-            box-shadow: 0 6px 12px var(--shadow-color);
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .shop-menu {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            padding: 20px;
-            width: 800px; /* Wider menu */
-            z-index: 1001;
-            display: none;
-            flex-direction: row; /* Horizontal layout */
-            flex-wrap: wrap; /* Wrap items if they don't fit */
-            justify-content: space-around; /* Space items evenly */
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .shop-menu.open {
-            display: flex;
-        }
-
-        .shop-menu .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
-        .shop-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 15px;
-            padding: 15px;
-            margin: 10px;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            transition: all 0.3s ease;
-            width: 200px; /* Fixed width for each item */
-            position: relative; /* Added for cooldown overlay */
-        }
-
-        .shop-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px var(--shadow-color);
-        }
-
-        .shop-item h3 {
-            margin: 0;
             font-size: 1.2rem;
-            color: var(--text-color);
+            display: none;
         }
 
-        .shop-item p {
-            margin: 10px 0;
-            font-size: 0.9rem;
-            color: var(--secondary-text);
-            text-align: center;
-        }
-
-        .shop-item .buy-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .shop-item .buy-button:hover {
-            background-color: #388E3C; /* Change hover color */
-        }
-
-        .shop-item .buy-button:disabled {
-            background-color: #9E9E9E; /* Change disabled color */
-            cursor: not-allowed;
-        }
-
-        .shop-item .disable-button {
-            background-color: #f44336; /* Change button color */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .shop-item .disable-button:hover {
-            background-color: #d32f2f; /* Change hover color */
-        }
-
-        .shop-item .disable-button:disabled {
-            background-color: #9E9E9E; /* Change disabled color */
-            cursor: not-allowed;
-        }
-
+        /* Blur Overlay */
         .blur-overlay {
             position: fixed;
             top: 0;
@@ -901,6 +606,7 @@
             width: 100%;
             height: 100%;
             backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 999;
             display: none;
         }
@@ -909,621 +615,610 @@
             display: block;
         }
 
-        /* Centered Auto Clicker Buttons */
-        .auto-clicker-buttons {
+        /* Warning Box */
+        .warning-box {
+            background: rgba(214, 48, 49, 0.1);
+            border-left: 4px solid var(--danger);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px auto;
+            max-width: 600px;
+            color: var(--danger);
+            font-weight: 500;
             display: flex;
-            justify-content: center;
-            gap: 10px; /* Space between buttons */
-            margin-top: 20px; /* Space above the buttons */
+            align-items: center;
         }
 
-        /* Admin Panel Styles */
-        .admin-panel-icon {
+        .warning-box i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Cookie Consent */
+        .cookie-consent {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 20px;
-            height: 20px;
-            background-color: rgba(255, 255, 255, 0);
-            border: 1px solid rgba(255, 255, 255, 0);
-            border-radius: 50%;
-            cursor: pointer;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--dark);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             z-index: 1000;
-            opacity: 0.1;
-            transition: opacity 0.3s ease;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
         }
 
-        .admin-panel-icon:hover {
-            opacity: 1;
+        .cookie-consent.show {
+            transform: translateY(0);
         }
 
+        .cookie-text {
+            flex: 1;
+            margin-right: 20px;
+            font-size: 0.9rem;
+        }
+
+        .cookie-button {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .cookie-button:hover {
+            background: #00997b;
+        }
+
+        /* Admin Panel */
         .admin-panel {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            padding: 20px;
-            width: 400px;
-            z-index: 1001;
+            background: var(--container-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            z-index: 1000;
             display: none;
+            border: 1px solid var(--border-color);
         }
 
         .admin-panel.open {
             display: block;
         }
 
-        .admin-panel .close-button {
-            position: absolute;
-            top: 8px;
-            right: -185px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
         .admin-panel h2 {
-            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 1.5rem;
         }
 
         .admin-panel input {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background-color: var(--container-bg);
+            border-radius: var(--button-radius);
+            background: rgba(255, 255, 255, 0.1);
             color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
         }
 
-        .admin-panel button {
-            width: 100%;
-            padding: 8px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        .admin-panel .button {
             margin-bottom: 10px;
-        }
-
-        .admin-panel button:hover {
-            background-color: #388E3C;
-        }
-
-        /* Rate Limiter Buttons */
-        .rate-limiter-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .rate-limiter-buttons .buy-button {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .rate-limiter-buttons .disable-button {
-            background-color: #f44336;
-            color: white;
-        }
-
-        .rate-limiter-buttons button:disabled {
-            background-color: #9E9E9E;
-            cursor: not-allowed;
-        }
-
-        /* Welcome Screen Overlay */
-        .welcome-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
         }
 
-        .welcome-content {
-            text-align: center;
-            background-color: var(--container-bg);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            max-width: 500px;
-            width: 90%;
+        /* Animations */
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(108, 92, 231, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0); }
         }
 
-        .welcome-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-color);
+        .pulse {
+            animation: pulse-glow 2s infinite;
         }
 
-        .welcome-content p {
-            font-size: 1.1rem;
-            color: var(--secondary-text);
-            margin-bottom: 2rem;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 20px;
+            }
+            
+            .counter {
+                font-size: 3.5rem;
+            }
+            
+            .button.enter-button {
+                font-size: 1.2rem;
+                padding: 15px 30px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .shop-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .shop-button, .admin-button {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 20px;
+            }
+            
+            .shop-button {
+                right: 20px;
+            }
+            
+            .admin-button {
+                left: 20px;
+            }
         }
 
-        .welcome-content .play-button {
-            background-color: #2196F3;
-            color: white;
-            font-size: 1.2rem;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .counter {
+                font-size: 2.5rem;
+            }
+            
+            .button {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .button.enter-button {
+                font-size: 1.1rem;
+                padding: 12px 25px;
+            }
+            
+            .cookie-consent {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .cookie-text {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .shop-button, .admin-button {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+                bottom: 15px;
+            }
+            
+            .shop-button {
+                right: 15px;
+            }
+            
+            .admin-button {
+                left: 15px;
+            }
         }
 
-        .welcome-content .play-button:hover {
-            background-color: #1976D2;
+        /* Special item styles */
+        .quantum-item {
+            border: 1px solid rgba(155, 89, 182, 0.3);
         }
-
-        /* Quantum Garden Styles */
-        .quantum-garden-item {
-            display: none; /* Hidden by default */
+        
+        .quantum-item:hover {
+            box-shadow: 0 0 15px rgba(155, 89, 182, 0.3);
         }
-
-        .quantum-garden-item.show {
-            display: block; /* Show when unlocked */
+        
+        .cosmic-item {
+            border: 1px solid rgba(25, 181, 254, 0.3);
         }
-
-        .quantum-garden-item .buy-button {
-            background-color: #9C27B0; /* Purple color for uniqueness */
+        
+        .cosmic-item:hover {
+            box-shadow: 0 0 15px rgba(25, 181, 254, 0.3);
         }
-
-        .quantum-garden-item .buy-button:hover {
-            background-color: #7B1FA2; /* Darker purple on hover */
+        
+        .time-item {
+            border: 1px solid rgba(253, 203, 110, 0.3);
         }
-
-        .quantum-garden-item .buy-button:disabled {
-            background-color: #9E9E9E;
-            cursor: not-allowed;
+        
+        .time-item:hover {
+            box-shadow: 0 0 15px rgba(253, 203, 110, 0.3);
         }
-
-        /* New shop item styles */
-        .cosmic-item .buy-button {
-            background-color: #2196F3; /* Blue for cosmic items */
+        
+        .dimensional-item {
+            border: 1px solid rgba(108, 92, 231, 0.3);
         }
-
-        .cosmic-item .buy-button:hover {
-            background-color: #0b7dda;
+        
+        .dimensional-item:hover {
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.3);
         }
-
-        .time-item .buy-button {
-            background-color: #FF9800; /* Orange for time items */
+        
+        .reality-item {
+            border: 1px solid rgba(214, 48, 49, 0.3);
         }
-
-        .time-item .buy-button:hover {
-            background-color: #e68a00;
+        
+        .reality-item:hover {
+            box-shadow: 0 0 15px rgba(214, 48, 49, 0.3);
         }
-
-        .dimensional-item .buy-button {
-            background-color: #4CAF50; /* Green for dimensional items */
+        
+        .infinity-item {
+            border: 1px solid rgba(0, 206, 201, 0.3);
         }
-
-        .dimensional-item .buy-button:hover {
-            background-color: #3e8e41;
+        
+        .infinity-item:hover {
+            box-shadow: 0 0 15px rgba(0, 206, 201, 0.3);
         }
-
-        .reality-item .buy-button {
-            background-color: #F44336; /* Red for reality items */
+        
+        .void-item {
+            border: 1px solid rgba(45, 52, 54, 0.3);
         }
-
-        .reality-item .buy-button:hover {
-            background-color: #da190b;
+        
+        .void-item:hover {
+            box-shadow: 0 0 15px rgba(45, 52, 54, 0.3);
         }
-
-        .quantum-item .buy-button {
-            background-color: #9C27B0; /* Purple for quantum items */
+        
+        .celestial-item {
+            border: 1px solid rgba(253, 203, 110, 0.3);
         }
-
-        .quantum-item .buy-button:hover {
-            background-color: #7b1fa2;
+        
+        .celestial-item:hover {
+            box-shadow: 0 0 15px rgba(253, 203, 110, 0.3);
         }
-
-        .infinity-item .buy-button {
-            background-color: #00BCD4; /* Cyan for infinity items */
+        
+        .eternity-item {
+            border: 1px solid rgba(129, 236, 236, 0.3);
         }
-
-        .infinity-item .buy-button:hover {
-            background-color: #0097a7;
+        
+        .eternity-item:hover {
+            box-shadow: 0 0 15px rgba(129, 236, 236, 0.3);
         }
-
-        .void-item .buy-button {
-            background-color: #607D8B; /* Blue grey for void items */
+        
+        .omnipotent-item {
+            border: 1px solid rgba(108, 92, 231, 0.3);
+            animation: rainbowBorder 5s linear infinite;
         }
-
-        .void-item .buy-button:hover {
-            background-color: #455a64;
+        
+        .omnipotent-item:hover {
+            box-shadow: 0 0 20px rgba(108, 92, 231, 0.5);
         }
-
-        .celestial-item .buy-button {
-            background-color: #FFEB3B; /* Yellow for celestial items */
-            color: #333;
+        
+        @keyframes rainbowBorder {
+            0% { border-color: rgba(108, 92, 231, 0.3); }
+            14% { border-color: rgba(25, 181, 254, 0.3); }
+            28% { border-color: rgba(0, 206, 201, 0.3); }
+            42% { border-color: rgba(0, 184, 148, 0.3); }
+            57% { border-color: rgba(253, 203, 110, 0.3); }
+            71% { border-color: rgba(225, 112, 85, 0.3); }
+            85% { border-color: rgba(214, 48, 49, 0.3); }
+            100% { border-color: rgba(108, 92, 231, 0.3); }
         }
-
-        .celestial-item .buy-button:hover {
-            background-color: #fdd835;
-        }
-
-        .eternity-item .buy-button {
-            background-color: #795548; /* Brown for eternity items */
-        }
-
-        .eternity-item .buy-button:hover {
-            background-color: #5d4037;
-        }
-
+        
         .omnipotent-item .buy-button {
-            background: linear-gradient(45deg, #FF0000, #FF7F00, #FFFF00, #00FF00, #0000FF, #4B0082, #9400D3);
+            background: linear-gradient(90deg, 
+                #6c5ce7, #19b5fe, #00cec9, #00b894, 
+                #fdcb6e, #e17055, #d63031, #6c5ce7);
             background-size: 400% 400%;
-            animation: rainbowBackground 5s ease infinite;
-            color: white;
+            animation: rainbowBG 5s linear infinite;
         }
-
-        .omnipotent-item .buy-button:hover {
-            animation: rainbowBackground 2s ease infinite;
-        }
-
-        .shop-item .item-requirement {
-            font-size: 0.8rem;
-            color: var(--secondary-text);
-            margin-bottom: 10px;
-            font-style: italic;
-        }
-
-        .shop-item .item-status {
-            font-size: 0.8rem;
-            margin-top: 10px;
-            color: var(--secondary-text);
+        
+        @keyframes rainbowBG {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
     </style>
 </head>
 <body>
-    <div class="main-content">
-        <!-- Theme Button and Menu -->
-        <div class="theme-menu">
-            <button id="themeButton" class="theme-button">
-                <span class="icon">🎨</span>
-                <span class="text">Customize</span>
-            </button>
-        </div>
-
-        <!-- New Theme Menu Panel (Removed since we're moving everything to custom panel) -->
-
-        <!-- Custom Theme Panel -->
-        <div id="customThemePanel" class="custom-theme-panel">
-            <button class="close-button" id="closeCustomThemePanel">✕</button>
-            <h2>Theme Customizer</h2>
-            
-            <div class="theme-menu-buttons">
-                <div id="lightTheme"></div>
-                <div id="darkTheme"></div>
-                <div id="rainbowLightTheme"></div>
-                <div id="rainbowDarkTheme"></div>
-            </div>
-            
-            <div class="custom-theme-controls">
-                <div class="custom-theme-control">
-                    <label for="bgColor">Background Color</label>
-                    <input type="color" id="bgColor" value="#f5f5f5">
+    <div class="main-container">
+        <div class="header">
+            <div class="logo">Enter<span>Clicker</span></div>
+            <div class="theme-switcher">
+                <button class="theme-button" id="themeButton">
+                    <i class="fas fa-palette"></i> Theme
+                </button>
+                <div class="theme-options" id="themeOptions">
+                    <div class="theme-option" data-theme="light">
+                        <i class="fas fa-sun"></i> Light
+                    </div>
+                    <div class="theme-option" data-theme="dark">
+                        <i class="fas fa-moon"></i> Dark
+                    </div>
+                    <div class="theme-option" data-theme="rainbow">
+                        <i class="fas fa-rainbow"></i> Rainbow
+                    </div>
                 </div>
-                
-                <div class="custom-theme-control">
-                    <label for="containerBg">Container Background</label>
-                    <input type="color" id="containerBg" value="#ffffff">
-                </div>
-                
-                <div class="custom-theme-control">
-                    <label for="textColor">Text Color</label>
-                    <input type="color" id="textColor" value="#333333">
-                </div>
-                
-                <div class="custom-theme-control">
-                    <label for="secondaryText">Secondary Text</label>
-                    <input type="color" id="secondaryText" value="#666666">
-                </div>
-                
-                <div class="custom-theme-control">
-                    <label for="borderColor">Border Color</label>
-                    <input type="color" id="borderColor" value="#e0e0e0">
-                </div>
-                
-                <div class="custom-theme-control">
-                    <label for="rebirthColor">Rebirth Button</label>
-                    <input type="color" id="rebirthColor" value="#673AB7">
-                </div>
-                
-                <div class="custom-theme-control">
-                    <label for="shadowOpacity">Shadow Opacity</label>
-                    <input type="range" id="shadowOpacity" min="0" max="100" value="10">
-                </div>
-                
-                <div class="custom-theme-control">
-                    <label for="contrast">Contrast</label>
-                    <input type="range" id="contrast" min="80" max="150" value="100">
-                </div>
-            </div>
-            
-            <div class="custom-theme-presets">
-                <div class="custom-theme-preset" data-preset="light">Light</div>
-                <div class="custom-theme-preset" data-preset="dark">Dark</div>
-                <div class="custom-theme-preset" data-preset="ocean">Ocean</div>
-                <div class="custom-theme-preset" data-preset="forest">Forest</div>
-                <div class="custom-theme-preset" data-preset="sunset">Sunset</div>
-                <div class="custom-theme-preset" data-preset="matrix">Matrix</div>
-            </div>
-            
-            <div class="custom-theme-actions">
-                <button class="custom-theme-btn reset" id="resetCustomTheme">Reset</button>
-                <button class="custom-theme-btn save" id="saveCustomTheme">Save</button>
-                <button class="custom-theme-btn apply" id="applyCustomTheme">Apply</button>
             </div>
         </div>
 
-        <div class="credit-box">Made by Damian B - Meowinc<span class="trademark">™</span></div>
-        
         <div class="game-container">
             <div class="instructions">Press Enter key or click the button below <span id="rateLimitInfo" class="rate-limiter"></span></div>
             <div class="counter" id="counter">0</div>
             
-            <button class="button enter-button" id="enterButton">
-                CLICK
-                <span>or press Enter key</span>
+            <button class="button enter-button pulse" id="enterButton">
+                <i class="fas fa-keyboard">  ENTER</i>
+                <span>or click</span>
             </button>
             
             <div class="stats">
-                <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
-                <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
-                <p>Rebirth level: <span id="rebirthLevel" class="rebirth-stat">0</span> (+<span id="rebirthBonus">0</span>% per click)</p>
-                <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
+                <div class="stat-card">
+                    <h3>Score per press</h3>
+                    <p class="multiplier" id="multiplier">1</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Next upgrade cost</h3>
+                    <p id="upgradeCost">10</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Rebirth level</h3>
+                    <p class="rebirth-stat" id="rebirthLevel">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Rebirth bonus</h3>
+                    <p>+<span id="rebirthBonus">0</span>%</p>
+                </div>
             </div>
             
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                No external autoclickers or you'll be blacklisted from the website!
+            </div>
+            
+            <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
+            
             <div class="button-container">
-                <button class="button reset-button" id="resetButton">Reset Game</button>
-            </div>
-        </div>
-        
-        <div class="warning-box">
-            No external autoclickers or you'll be blacklisted from the website!
-        </div>
-    </div>
-    
-    <div id="cookieConsent" class="cookie-consent">
-        <div class="cookie-text">This site uses cookies to save your game progress. By accepting, you'll never lose your clicks again!</div>
-        <button id="acceptCookies" class="cookie-button">Accept Cookies</button>
-    </div>
-
-    <!-- Shop Button -->
-    <div class="shop-button" id="shopButton">
-        🛒
-    </div>
-
-    <!-- Shop Menu -->
-    <div class="shop-menu" id="shopMenu">
-        <button class="close-button" id="closeShopMenu">✕</button>
-        <h2>Shop</h2>
-        
-        <!-- Multiplier Upgrade Item -->
-        <div class="shop-item">
-            <h3>Multiplier Upgrade</h3>
-            <p>Double your points per click!</p>
-            <button class="buy-button" id="upgradeButton">
-                Buy: <span id="upgradeCostDisplay">10</span> points
-            </button>
-            <div class="cooldown-overlay" id="upgradeCooldownOverlay" style="display: none;">
-                <span id="upgradeCooldownText"></span>
-            </div>
-        </div>
-        
-        <!-- Rebirth Item -->
-        <div class="shop-item">
-            <h3>Rebirth</h3>
-            <p>Reset your progress for a permanent bonus!</p>
-            <button class="buy-button" id="rebirthButton" disabled>
-                Rebirth: <span id="rebirthCostDisplay">1,000</span> points
-            </button>
-        </div>
-
-        <!-- Auto Clicker Upgrade Item (Hidden until 1 rebirth) -->
-        <div class="shop-item" id="autoClickerItem" style="display: none;">
-            <h3>Auto Clicker</h3>
-            <p>Automatically clicks for you every 0.2 seconds!</p>
-            <div class="auto-clicker-buttons">
-                <button class="buy-button" id="autoClickerButton">
-                    Enable Auto Clicker
-                </button>
-                <button class="disable-button" id="disableAutoClickerButton" disabled>
-                    Disable Auto Clicker
+                <button class="button danger" id="resetButton">
+                    <i class="fas fa-redo"></i> Reset Game
                 </button>
             </div>
         </div>
+        
+        <div class="shop-button" id="shopButton">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+        
+        <div class="admin-button" id="adminButton">
+            <i class="fas fa-user-shield"></i>
+        </div>
+        
+        <div class="shop-menu" id="shopMenu">
+            <div class="shop-header">
+                <h2 class="shop-title">Quantum Shop</h2>
+                <button class="close-button" id="closeShopMenu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="shop-items">
+                <!-- Multiplier Upgrade Item -->
+                <div class="shop-item">
+                    <h3><i class="fas fa-arrow-up"></i> Multiplier Upgrade</h3>
+                    <p>Double your points per click!</p>
+                    <button class="button success buy-button" id="upgradeButton">
+                        Buy: <span id="upgradeCostDisplay">10</span> points
+                    </button>
+                    <div class="cooldown-overlay" id="upgradeCooldownOverlay" style="display: none;">
+                        <span id="upgradeCooldownText"></span>
+                    </div>
+                </div>
+                
+                <!-- Rebirth Item -->
+                <div class="shop-item">
+                    <h3><i class="fas fa-sync-alt"></i> Rebirth</h3>
+                    <p>Reset your progress for a permanent bonus!</p>
+                    <button class="button accent buy-button" id="rebirthButton" disabled>
+                        Rebirth: <span id="rebirthCostDisplay">1,000</span> points
+                    </button>
+                </div>
 
-        <!-- Time Warp Item (Hidden until 2 rebirths) -->
-        <div class="shop-item" id="timeWarpItem" style="display: none;">
-            <h3>Time Warp</h3>
-            <p>Temporarily quintuple your points for 5 seconds! (10-minute cooldown)</p>
-            <button class="buy-button" id="timeWarpButton">
-                Activate Time Warp
+                <!-- Auto Clicker Upgrade Item (Hidden until 1 rebirth) -->
+                <div class="shop-item" id="autoClickerItem" style="display: none;">
+                    <h3><i class="fas fa-robot"></i> Auto Clicker</h3>
+                    <p>Automatically clicks for you every 0.2 seconds!</p>
+                    <div class="auto-clicker-buttons">
+                        <button class="button success buy-button" id="autoClickerButton">
+                            Enable Auto Clicker
+                        </button>
+                        <button class="button danger disable-button" id="disableAutoClickerButton" disabled>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Time Warp Item (Hidden until 2 rebirths) -->
+                <div class="shop-item time-item" id="timeWarpItem" style="display: none;">
+                    <h3><i class="fas fa-clock"></i> Time Warp</h3>
+                    <p>Temporarily quintuple your points for 5 seconds! (10-minute cooldown)</p>
+                    <button class="button warning buy-button" id="timeWarpButton">
+                        Activate Time Warp
+                    </button>
+                    <div class="cooldown-overlay" id="timeWarpCooldownOverlay" style="display: none;">
+                        <span id="timeWarpCooldownText"></span>
+                    </div>
+                </div>
+
+                <!-- Quantum Leap Item (Hidden until 3 rebirths) -->
+                <div class="shop-item quantum-item" id="quantumLeapItem" style="display: none;">
+                    <h3><i class="fas fa-atom"></i> Quantum Leap</h3>
+                    <p>Instantly gain 1,000,000 points! (30-minute cooldown)</p>
+                    <button class="button buy-button" id="quantumLeapButton">
+                        Activate Quantum Leap
+                    </button>
+                    <div class="cooldown-overlay" id="quantumLeapCooldownOverlay" style="display: none;">
+                        <span id="quantumLeapCooldownText"></span>
+                    </div>
+                </div>
+
+                <!-- Quantum Garden Item (Hidden until 4 rebirths) -->
+                <div class="shop-item quantum-item" id="quantumGardenItem" style="display: none;">
+                    <h3><i class="fas fa-seedling"></i> Quantum Garden</h3>
+                    <p>Grow quantum plants that generate points automatically!</p>
+                    <button class="button success buy-button" id="quantumGardenButton">
+                        Plant Garden
+                    </button>
+                    <div class="item-status" id="gardenStatus">Garden not planted yet.</div>
+                </div>
+
+                <!-- Cosmic Harvester (5 rebirths) -->
+                <div class="shop-item cosmic-item" id="cosmicHarvesterItem" style="display: none;">
+                    <h3><i class="fas fa-star"></i> Cosmic Harvester</h3>
+                    <p>Harvest cosmic energy for massive point boosts!</p>
+                    <p class="item-requirement">Requires 5 rebirths</p>
+                    <button class="button buy-button" id="cosmicHarvesterButton">
+                        Activate Harvester
+                    </button>
+                    <div class="cooldown-overlay" id="cosmicHarvesterCooldownOverlay" style="display: none;">
+                        <span id="cosmicHarvesterCooldownText"></span>
+                    </div>
+                    <div class="item-status" id="cosmicHarvesterStatus">Not active</div>
+                </div>
+
+                <!-- Time Fracture (6 rebirths) -->
+                <div class="shop-item time-item" id="timeFractureItem" style="display: none;">
+                    <h3><i class="fas fa-hourglass-half"></i> Time Fracture</h3>
+                    <p>Slow down time to click faster than ever before!</p>
+                    <p class="item-requirement">Requires 6 rebirths</p>
+                    <button class="button warning buy-button" id="timeFractureButton">
+                        Fracture Time
+                    </button>
+                    <div class="cooldown-overlay" id="timeFractureCooldownOverlay" style="display: none;">
+                        <span id="timeFractureCooldownText"></span>
+                    </div>
+                    <div class="item-status" id="timeFractureStatus">Time is normal</div>
+                </div>
+
+                <!-- Dimensional Portal (7 rebirths) -->
+                <div class="shop-item dimensional-item" id="dimensionalPortalItem" style="display: none;">
+                    <h3><i class="fas fa-door-open"></i> Dimensional Portal</h3>
+                    <p>Open a portal to another dimension with unique bonuses!</p>
+                    <p class="item-requirement">Requires 7 rebirths</p>
+                    <button class="button buy-button" id="dimensionalPortalButton">
+                        Open Portal
+                    </button>
+                    <div class="item-status" id="dimensionalPortalStatus">Portal closed</div>
+                </div>
+
+                <!-- Reality Warper (8 rebirths) -->
+                <div class="shop-item reality-item" id="realityWarperItem" style="display: none;">
+                    <h3><i class="fas fa-meteor"></i> Reality Warper</h3>
+                    <p>Bend reality to your will for exponential gains!</p>
+                    <p class="item-requirement">Requires 8 rebirths</p>
+                    <button class="button danger buy-button" id="realityWarperButton">
+                        Warp Reality
+                    </button>
+                    <div class="item-status" id="realityWarperStatus">Reality stable</div>
+                </div>
+
+                <!-- Quantum Singularity (9 rebirths) -->
+                <div class="shop-item quantum-item" id="quantumSingularityItem" style="display: none;">
+                    <h3><i class="fas fa-circle-notch"></i> Quantum Singularity</h3>
+                    <p>Create a singularity that generates points from nothingness!</p>
+                    <p class="item-requirement">Requires 9 rebirths</p>
+                    <button class="button buy-button" id="quantumSingularityButton">
+                        Create Singularity
+                    </button>
+                    <div class="item-status" id="quantumSingularityStatus">No singularity</div>
+                </div>
+
+                <!-- Infinity Engine (10 rebirths) -->
+                <div class="shop-item infinity-item" id="infinityEngineItem" style="display: none;">
+                    <h3><i class="fas fa-infinity"></i> Infinity Engine</h3>
+                    <p>Harness infinite energy for unlimited potential!</p>
+                    <p class="item-requirement">Requires 10 rebirths</p>
+                    <button class="button secondary buy-button" id="infinityEngineButton">
+                        Activate Engine
+                    </button>
+                    <div class="item-status" id="infinityEngineStatus">Engine offline</div>
+                </div>
+
+                <!-- Void Extractor (11 rebirths) -->
+                <div class="shop-item void-item" id="voidExtractorItem" style="display: none;">
+                    <h3><i class="fas fa-moon"></i> Void Extractor</h3>
+                    <p>Extract points from the void between dimensions!</p>
+                    <p class="item-requirement">Requires 11 rebirths</p>
+                    <button class="button buy-button" id="voidExtractorButton">
+                        Extract Void Energy
+                    </button>
+                    <div class="item-status" id="voidExtractorStatus">Not extracting</div>
+                </div>
+
+                <!-- Celestial Forge (12 rebirths) -->
+                <div class="shop-item celestial-item" id="celestialForgeItem" style="display: none;">
+                    <h3><i class="fas fa-hammer"></i> Celestial Forge</h3>
+                    <p>Forge celestial artifacts that boost all your abilities!</p>
+                    <p class="item-requirement">Requires 12 rebirths</p>
+                    <button class="button warning buy-button" id="celestialForgeButton">
+                        Activate Forge
+                    </button>
+                    <div class="item-status" id="celestialForgeStatus">Forge inactive</div>
+                </div>
+
+                <!-- Eternity Core (13 rebirths) -->
+                <div class="shop-item eternity-item" id="eternityCoreItem" style="display: none;">
+                    <h3><i class="fas fa-gem"></i> Eternity Core</h3>
+                    <p>Tap into the power of eternity itself!</p>
+                    <p class="item-requirement">Requires 13 rebirths</p>
+                    <button class="button secondary buy-button" id="eternityCoreButton">
+                        Power Core
+                    </button>
+                    <div class="item-status" id="eternityCoreStatus">Core dormant</div>
+                </div>
+
+                <!-- Omnipotent Ascension (14 rebirths) -->
+                <div class="shop-item omnipotent-item" id="omnipotentAscensionItem" style="display: none;">
+                    <h3><i class="fas fa-crown"></i> Omnipotent Ascension</h3>
+                    <p>Ascend to near-omnipotence with ultimate power!</p>
+                    <p class="item-requirement">Requires 14 rebirths</p>
+                    <button class="button buy-button" id="omnipotentAscensionButton">
+                        Ascend Now
+                    </button>
+                    <div class="item-status" id="omnipotentAscensionStatus">Mortal form</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Blur Overlay -->
+        <div class="blur-overlay" id="blurOverlay"></div>
+
+        <!-- Admin Panel -->
+        <div class="admin-panel" id="adminPanel">
+            <button class="close-button" id="closeAdminPanel">
+                <i class="fas fa-times"></i>
             </button>
-            <div class="cooldown-overlay" id="timeWarpCooldownOverlay" style="display: none;">
-                <span id="timeWarpCooldownText"></span>
+            <h2>Admin Panel</h2>
+            <input type="number" id="setScoreInput" placeholder="Set Score">
+            <button class="button" id="setScoreButton">Set Score</button>
+            <input type="number" id="setRebirthsInput" placeholder="Set Rebirths">
+            <button class="button" id="setRebirthsButton">Set Rebirths</button>
+            <input type="number" id="setMultiplierInput" placeholder="Set Multiplier">
+            <button class="button" id="setMultiplierButton">Set Multiplier</button>
+            <button class="button success" id="enableAutoClicker">Enable Auto Clicker</button>
+            <button class="button danger" id="disableAutoClicker">Disable Auto Clicker</button>
+            <button class="button danger" id="resetGame">Reset Game</button>
+            <div class="rate-limiter-buttons">
+                <button class="button success" id="enableRateLimiter">Enable Rate Limiter</button>
+                <button class="button danger" id="disableRateLimiter">Disable Rate Limiter</button>
             </div>
         </div>
 
-        <!-- Quantum Leap Item (Hidden until 3 rebirths) -->
-        <div class="shop-item" id="quantumLeapItem" style="display: none;">
-            <h3>Quantum Leap</h3>
-            <p>Instantly gain 1,000,000 points! (30-minute cooldown)</p>
-            <button class="buy-button" id="quantumLeapButton">
-                Activate Quantum Leap
-            </button>
-            <div class="cooldown-overlay" id="quantumLeapCooldownOverlay" style="display: none;">
-                <span id="quantumLeapCooldownText"></span>
-            </div>
-        </div>
-
-        <!-- Quantum Garden Item (Hidden until 4 rebirths) -->
-        <div class="shop-item quantum-garden-item" id="quantumGardenItem">
-            <h3>Quantum Garden</h3>
-            <p>Grow quantum plants that generate points automatically!</p>
-            <button class="buy-button" id="quantumGardenButton">
-                Plant Garden
-            </button>
-            <div class="garden-status" id="gardenStatus">Garden not planted yet.</div>
-        </div>
-
-        <!-- Cosmic Harvester (5 rebirths) -->
-        <div class="shop-item cosmic-item" id="cosmicHarvesterItem" style="display: none;">
-            <h3>Cosmic Harvester</h3>
-            <p>Harvest cosmic energy for massive point boosts!</p>
-            <p class="item-requirement">Requires 5 rebirths</p>
-            <button class="buy-button" id="cosmicHarvesterButton">
-                Activate Harvester
-            </button>
-            <div class="cooldown-overlay" id="cosmicHarvesterCooldownOverlay" style="display: none;">
-                <span id="cosmicHarvesterCooldownText"></span>
-            </div>
-            <div class="item-status" id="cosmicHarvesterStatus">Not active</div>
-        </div>
-
-        <!-- Time Fracture (6 rebirths) -->
-        <div class="shop-item time-item" id="timeFractureItem" style="display: none;">
-            <h3>Time Fracture</h3>
-            <p>Slow down time to click faster than ever before!</p>
-            <p class="item-requirement">Requires 6 rebirths</p>
-            <button class="buy-button" id="timeFractureButton">
-                Fracture Time
-            </button>
-            <div class="cooldown-overlay" id="timeFractureCooldownOverlay" style="display: none;">
-                <span id="timeFractureCooldownText"></span>
-            </div>
-            <div class="item-status" id="timeFractureStatus">Time is normal</div>
-        </div>
-
-        <!-- Dimensional Portal (7 rebirths) -->
-        <div class="shop-item dimensional-item" id="dimensionalPortalItem" style="display: none;">
-            <h3>Dimensional Portal</h3>
-            <p>Open a portal to another dimension with unique bonuses!</p>
-            <p class="item-requirement">Requires 7 rebirths</p>
-            <button class="buy-button" id="dimensionalPortalButton">
-                Open Portal
-            </button>
-            <div class="item-status" id="dimensionalPortalStatus">Portal closed</div>
-        </div>
-
-        <!-- Reality Warper (8 rebirths) -->
-        <div class="shop-item reality-item" id="realityWarperItem" style="display: none;">
-            <h3>Reality Warper</h3>
-            <p>Bend reality to your will for exponential gains!</p>
-            <p class="item-requirement">Requires 8 rebirths</p>
-            <button class="buy-button" id="realityWarperButton">
-                Warp Reality
-            </button>
-            <div class="item-status" id="realityWarperStatus">Reality stable</div>
-        </div>
-
-        <!-- Quantum Singularity (9 rebirths) -->
-        <div class="shop-item quantum-item" id="quantumSingularityItem" style="display: none;">
-            <h3>Quantum Singularity</h3>
-            <p>Create a singularity that generates points from nothingness!</p>
-            <p class="item-requirement">Requires 9 rebirths</p>
-            <button class="buy-button" id="quantumSingularityButton">
-                Create Singularity
-            </button>
-            <div class="item-status" id="quantumSingularityStatus">No singularity</div>
-        </div>
-
-        <!-- Infinity Engine (10 rebirths) -->
-        <div class="shop-item infinity-item" id="infinityEngineItem" style="display: none;">
-            <h3>Infinity Engine</h3>
-            <p>Harness infinite energy for unlimited potential!</p>
-            <p class="item-requirement">Requires 10 rebirths</p>
-            <button class="buy-button" id="infinityEngineButton">
-                Activate Engine
-            </button>
-            <div class="item-status" id="infinityEngineStatus">Engine offline</div>
-        </div>
-
-        <!-- Void Extractor (11 rebirths) -->
-        <div class="shop-item void-item" id="voidExtractorItem" style="display: none;">
-            <h3>Void Extractor</h3>
-            <p>Extract points from the void between dimensions!</p>
-            <p class="item-requirement">Requires 11 rebirths</p>
-            <button class="buy-button" id="voidExtractorButton">
-                Extract Void Energy
-            </button>
-            <div class="item-status" id="voidExtractorStatus">Not extracting</div>
-        </div>
-
-        <!-- Celestial Forge (12 rebirths) -->
-        <div class="shop-item celestial-item" id="celestialForgeItem" style="display: none;">
-            <h3>Celestial Forge</h3>
-            <p>Forge celestial artifacts that boost all your abilities!</p>
-            <p class="item-requirement">Requires 12 rebirths</p>
-            <button class="buy-button" id="celestialForgeButton">
-                Activate Forge
-            </button>
-            <div class="item-status" id="celestialForgeStatus">Forge inactive</div>
-        </div>
-
-        <!-- Eternity Core (13 rebirths) -->
-        <div class="shop-item eternity-item" id="eternityCoreItem" style="display: none;">
-            <h3>Eternity Core</h3>
-            <p>Tap into the power of eternity itself!</p>
-            <p class="item-requirement">Requires 13 rebirths</p>
-            <button class="buy-button" id="eternityCoreButton">
-                Power Core
-            </button>
-            <div class="item-status" id="eternityCoreStatus">Core dormant</div>
-        </div>
-
-        <!-- Omnipotent Ascension (14 rebirths) -->
-        <div class="shop-item omnipotent-item" id="omnipotentAscensionItem" style="display: none;">
-            <h3>Omnipotent Ascension</h3>
-            <p>Ascend to near-omnipotence with ultimate power!</p>
-            <p class="item-requirement">Requires 14 rebirths</p>
-            <button class="buy-button" id="omnipotentAscensionButton">
-                Ascend Now
-            </button>
-            <div class="item-status" id="omnipotentAscensionStatus">Mortal form</div>
-        </div>
-    </div>
-
-    <!-- Blur Overlay -->
-    <div class="blur-overlay" id="blurOverlay"></div>
-
-    <!-- Admin Panel Icon -->
-    <div class="admin-panel-icon" id="adminPanelIcon"></div>
-
-    <!-- Admin Panel -->
-    <div class="admin-panel" id="adminPanel">
-        <button class="close-button" id="closeAdminPanel">✕</button>
-        <h2>Admin Panel</h2>
-        <input type="number" id="setScoreInput" placeholder="Set Score">
-        <button id="setScoreButton">Set Score</button>
-        <input type="number" id="setRebirthsInput" placeholder="Set Rebirths">
-        <button id="setRebirthsButton">Set Rebirths</button>
-        <input type="number" id="setMultiplierInput" placeholder="Set Multiplier">
-        <button id="setMultiplierButton">Set Multiplier</button>
-        <button id="enableAutoClicker">Enable Auto Clicker (Very Glitchy, refresh after use)</button>
-        <button id="disableAutoClicker">Disable Auto Clicker (Very glitchy, refresh after use)</button>
-        <button id="resetGame">Reset Game</button>
-        <div class="rate-limiter-buttons">
-            <button id="enableRateLimiter" class="buy-button">Enable Rate Limiter</button>
-            <button id="disableRateLimiter" class="disable-button">Disable Rate Limiter</button>
+        <!-- Cookie Consent -->
+        <div class="cookie-consent" id="cookieConsent">
+            <div class="cookie-text">This site uses cookies to save your game progress. By accepting, you'll never lose your clicks again!</div>
+            <button id="acceptCookies" class="cookie-button">Accept Cookies</button>
         </div>
     </div>
 
@@ -1569,6 +1264,7 @@
                 return; // Don't proceed with the rest if blacklisted
             }
 
+            // DOM Elements
             const counterElement = document.getElementById('counter');
             const resetButton = document.getElementById('resetButton');
             const upgradeButton = document.getElementById('upgradeButton');
@@ -1579,17 +1275,15 @@
             const cookieConsentElement = document.getElementById('cookieConsent');
             const acceptCookiesButton = document.getElementById('acceptCookies');
             const themeButton = document.getElementById('themeButton');
-            const lightThemeButton = document.getElementById('lightTheme');
-            const darkThemeButton = document.getElementById('darkTheme');
-            const rainbowLightThemeButton = document.getElementById('rainbowLightTheme');
-            const rainbowDarkThemeButton = document.getElementById('rainbowDarkTheme');
+            const themeOptions = document.getElementById('themeOptions');
             const rebirthButton = document.getElementById('rebirthButton');
             const rebirthLevelElement = document.getElementById('rebirthLevel');
             const rebirthBonusElement = document.getElementById('rebirthBonus');
-            const rebirthInfoElement = document.getElementById('rebirthInfo');
             const rateLimitInfoElement = document.getElementById('rateLimitInfo');
-            const upgradeCooldownElement = document.getElementById('upgradeCooldown');
+            const upgradeCooldownOverlay = document.getElementById('upgradeCooldownOverlay');
+            const upgradeCooldownText = document.getElementById('upgradeCooldownText');
             const shopButton = document.getElementById('shopButton');
+            const adminButton = document.getElementById('adminButton');
             const shopMenu = document.getElementById('shopMenu');
             const closeShopMenu = document.getElementById('closeShopMenu');
             const blurOverlay = document.getElementById('blurOverlay');
@@ -1609,7 +1303,6 @@
             const quantumGardenItem = document.getElementById('quantumGardenItem');
             const quantumGardenButton = document.getElementById('quantumGardenButton');
             const gardenStatus = document.getElementById('gardenStatus');
-            const adminPanelIcon = document.getElementById('adminPanelIcon');
             const adminPanel = document.getElementById('adminPanel');
             const closeAdminPanel = document.getElementById('closeAdminPanel');
             const setScoreInput = document.getElementById('setScoreInput');
@@ -1623,68 +1316,37 @@
             const resetGame = document.getElementById('resetGame');
             const enableRateLimiter = document.getElementById('enableRateLimiter');
             const disableRateLimiter = document.getElementById('disableRateLimiter');
-            const welcomeOverlay = document.getElementById('welcomeOverlay');
-            const playButton = document.getElementById('playButton');
-            const upgradeCooldownOverlay = document.getElementById('upgradeCooldownOverlay');
-            const upgradeCooldownText = document.getElementById('upgradeCooldownText');
-
-            // Custom theme elements
-            const customThemePanel = document.getElementById('customThemePanel');
-            const closeCustomThemePanel = document.getElementById('closeCustomThemePanel');
-            const bgColorInput = document.getElementById('bgColor');
-            const containerBgInput = document.getElementById('containerBg');
-            const textColorInput = document.getElementById('textColor');
-            const secondaryTextInput = document.getElementById('secondaryText');
-            const borderColorInput = document.getElementById('borderColor');
-            const rebirthColorInput = document.getElementById('rebirthColor');
-            const shadowOpacityInput = document.getElementById('shadowOpacity');
-            const contrastInput = document.getElementById('contrast');
-            const resetCustomThemeBtn = document.getElementById('resetCustomTheme');
-            const saveCustomThemeBtn = document.getElementById('saveCustomTheme');
-            const applyCustomThemeBtn = document.getElementById('applyCustomTheme');
-            const themePresets = document.querySelectorAll('.custom-theme-preset');
-
-            // New shop item elements
             const cosmicHarvesterItem = document.getElementById('cosmicHarvesterItem');
             const cosmicHarvesterButton = document.getElementById('cosmicHarvesterButton');
             const cosmicHarvesterCooldownOverlay = document.getElementById('cosmicHarvesterCooldownOverlay');
             const cosmicHarvesterCooldownText = document.getElementById('cosmicHarvesterCooldownText');
             const cosmicHarvesterStatus = document.getElementById('cosmicHarvesterStatus');
-            
             const timeFractureItem = document.getElementById('timeFractureItem');
             const timeFractureButton = document.getElementById('timeFractureButton');
             const timeFractureCooldownOverlay = document.getElementById('timeFractureCooldownOverlay');
             const timeFractureCooldownText = document.getElementById('timeFractureCooldownText');
             const timeFractureStatus = document.getElementById('timeFractureStatus');
-            
             const dimensionalPortalItem = document.getElementById('dimensionalPortalItem');
             const dimensionalPortalButton = document.getElementById('dimensionalPortalButton');
             const dimensionalPortalStatus = document.getElementById('dimensionalPortalStatus');
-            
             const realityWarperItem = document.getElementById('realityWarperItem');
             const realityWarperButton = document.getElementById('realityWarperButton');
             const realityWarperStatus = document.getElementById('realityWarperStatus');
-            
             const quantumSingularityItem = document.getElementById('quantumSingularityItem');
             const quantumSingularityButton = document.getElementById('quantumSingularityButton');
             const quantumSingularityStatus = document.getElementById('quantumSingularityStatus');
-            
             const infinityEngineItem = document.getElementById('infinityEngineItem');
             const infinityEngineButton = document.getElementById('infinityEngineButton');
             const infinityEngineStatus = document.getElementById('infinityEngineStatus');
-            
             const voidExtractorItem = document.getElementById('voidExtractorItem');
             const voidExtractorButton = document.getElementById('voidExtractorButton');
             const voidExtractorStatus = document.getElementById('voidExtractorStatus');
-            
             const celestialForgeItem = document.getElementById('celestialForgeItem');
             const celestialForgeButton = document.getElementById('celestialForgeButton');
             const celestialForgeStatus = document.getElementById('celestialForgeStatus');
-            
             const eternityCoreItem = document.getElementById('eternityCoreItem');
             const eternityCoreButton = document.getElementById('eternityCoreButton');
             const eternityCoreStatus = document.getElementById('eternityCoreStatus');
-            
             const omnipotentAscensionItem = document.getElementById('omnipotentAscensionItem');
             const omnipotentAscensionButton = document.getElementById('omnipotentAscensionButton');
             const omnipotentAscensionStatus = document.getElementById('omnipotentAscensionStatus');
@@ -1731,10 +1393,16 @@
             const clickCooldown = 200; // 0.2 seconds in milliseconds
             let isClickOnCooldown = true;
 
+            // Show cookie consent after 3 seconds
+            setTimeout(() => {
+                if (getCookie('cookiesAccepted') !== 'true') {
+                    cookieConsentElement.classList.add('show');
+                }
+            }, 3000);
+
             // Check if cookies were previously accepted
             if (getCookie('cookiesAccepted') === 'true') {
                 cookiesAccepted = true;
-                cookieConsentElement.style.display = 'none';
                 loadGameData();
             }
 
@@ -1744,225 +1412,25 @@
                 setTheme(savedTheme);
             }
 
-            // Theme button click handler - opens the custom theme panel
+            // Theme switcher
             themeButton.addEventListener('click', function() {
-                customThemePanel.classList.add('show');
-                blurOverlay.classList.add('active');
+                themeOptions.classList.toggle('show');
             });
 
-            // Close custom theme panel
-            closeCustomThemePanel.addEventListener('click', function() {
-                customThemePanel.classList.remove('show');
-                blurOverlay.classList.remove('active');
-            });
-
-            // Light theme button click handler
-            lightThemeButton.addEventListener('click', function() {
-                setTheme('light');
-                customThemePanel.classList.remove('show');
-                blurOverlay.classList.remove('active');
-            });
-
-            // Dark theme button click handler
-            darkThemeButton.addEventListener('click', function() {
-                setTheme('dark');
-                customThemePanel.classList.remove('show');
-                blurOverlay.classList.remove('active');
-            });
-
-            // Rainbow Light theme button click handler
-            rainbowLightThemeButton.addEventListener('click', function() {
-                setTheme('rainbow-light');
-                customThemePanel.classList.remove('show');
-                blurOverlay.classList.remove('active');
-            });
-
-            // Rainbow Dark theme button click handler
-            rainbowDarkThemeButton.addEventListener('click', function() {
-                setTheme('rainbow-dark');
-                customThemePanel.classList.remove('show');
-                blurOverlay.classList.remove('active');
-            });
-
-            // Apply custom theme
-            applyCustomThemeBtn.addEventListener('click', function() {
-                applyCustomTheme();
-            });
-
-            // Save custom theme
-            saveCustomThemeBtn.addEventListener('click', function() {
-                const customTheme = {
-                    bgColor: bgColorInput.value,
-                    containerBg: containerBgInput.value,
-                    textColor: textColorInput.value,
-                    secondaryText: secondaryTextInput.value,
-                    borderColor: borderColorInput.value,
-                    rebirthColor: rebirthColorInput.value,
-                    shadowOpacity: shadowOpacityInput.value,
-                    contrast: contrastInput.value
-                };
-                
-                setCookie('customTheme', JSON.stringify(customTheme), 365);
-                alert('Custom theme saved!');
-            });
-
-            // Reset custom theme
-            resetCustomThemeBtn.addEventListener('click', function() {
-                bgColorInput.value = '#f5f5f5';
-                containerBgInput.value = '#ffffff';
-                textColorInput.value = '#333333';
-                secondaryTextInput.value = '#666666';
-                borderColorInput.value = '#e0e0e0';
-                rebirthColorInput.value = '#673AB7';
-                shadowOpacityInput.value = 10;
-                contrastInput.value = 100;
-                
-                applyCustomTheme();
-            });
-
-            // Theme presets
-            themePresets.forEach(preset => {
-                preset.addEventListener('click', function() {
-                    const presetType = this.getAttribute('data-preset');
-                    applyThemePreset(presetType);
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-theme');
+                    setTheme(theme);
+                    themeOptions.classList.remove('show');
                 });
             });
 
-            // Function to apply theme preset
-            function applyThemePreset(preset) {
-                switch(preset) {
-                    case 'light':
-                        bgColorInput.value = '#f5f5f5';
-                        containerBgInput.value = '#ffffff';
-                        textColorInput.value = '#333333';
-                        secondaryTextInput.value = '#666666';
-                        borderColorInput.value = '#e0e0e0';
-                        rebirthColorInput.value = '#673AB7';
-                        shadowOpacityInput.value = 10;
-                        contrastInput.value = 100;
-                        break;
-                    case 'dark':
-                        bgColorInput.value = '#121212';
-                        containerBgInput.value = '#1e1e1e';
-                        textColorInput.value = '#e0e0e0';
-                        secondaryTextInput.value = '#b0b0b0';
-                        borderColorInput.value = '#333333';
-                        rebirthColorInput.value = '#9575CD';
-                        shadowOpacityInput.value = 30;
-                        contrastInput.value = 100;
-                        break;
-                    case 'ocean':
-                        bgColorInput.value = '#e0f7fa';
-                        containerBgInput.value = '#b2ebf2';
-                        textColorInput.value = '#006064';
-                        secondaryTextInput.value = '#00838f';
-                        borderColorInput.value = '#4fb3bf';
-                        rebirthColorInput.value = '#0288d1';
-                        shadowOpacityInput.value = 15;
-                        contrastInput.value = 120;
-                        break;
-                    case 'forest':
-                        bgColorInput.value = '#e8f5e9';
-                        containerBgInput.value = '#c8e6c9';
-                        textColorInput.value = '#1b5e20';
-                        secondaryTextInput.value = '#2e7d32';
-                        borderColorInput.value = '#66bb6a';
-                        rebirthColorInput.value = '#43a047';
-                        shadowOpacityInput.value = 15;
-                        contrastInput.value = 110;
-                        break;
-                    case 'sunset':
-                        bgColorInput.value = '#fff3e0';
-                        containerBgInput.value = '#ffe0b2';
-                        textColorInput.value = '#e65100';
-                        secondaryTextInput.value = '#ef6c00';
-                        borderColorInput.value = '#ff8a65';
-                        rebirthColorInput.value = '#ff5722';
-                        shadowOpacityInput.value = 20;
-                        contrastInput.value = 130;
-                        break;
-                    case 'matrix':
-                        bgColorInput.value = '#000000';
-                        containerBgInput.value = '#0a0a0a';
-                        textColorInput.value = '#00ff00';
-                        secondaryTextInput.value = '#00cc00';
-                        borderColorInput.value = '#003300';
-                        rebirthColorInput.value = '#00ff00';
-                        shadowOpacityInput.value = 50;
-                        contrastInput.value = 150;
-                        break;
-                }
-                
-                applyCustomTheme();
-            }
-
-            // Function to apply custom theme
-            function applyCustomTheme() {
-                document.body.classList.remove('dark-mode', 'rainbow-light-mode', 'rainbow-dark-mode');
-                document.body.classList.add('custom-theme');
-                
-                // Calculate contrast adjustment
-                const contrast = parseInt(contrastInput.value) / 100;
-                
-                // Apply custom colors
-                document.body.style.setProperty('--bg-color', bgColorInput.value);
-                document.body.style.setProperty('--container-bg', containerBgInput.value);
-                document.body.style.setProperty('--text-color', textColorInput.value);
-                document.body.style.setProperty('--secondary-text', secondaryTextInput.value);
-                document.body.style.setProperty('--tertiary-text', adjustColor(secondaryTextInput.value, contrast));
-                document.body.style.setProperty('--border-color', borderColorInput.value);
-                document.body.style.setProperty('--rebirth-color', rebirthColorInput.value);
-                document.body.style.setProperty('--rebirth-hover', adjustColor(rebirthColorInput.value, 0.9));
-                document.body.style.setProperty('--shadow-color', `rgba(0, 0, 0, ${parseInt(shadowOpacityInput.value)/100})`);
-                
-                currentTheme = 'custom';
-                if (cookiesAccepted) {
-                    setCookie('theme', 'custom', 365);
-                }
-            }
-
-            // Helper function to adjust color brightness
-            function adjustColor(color, factor) {
-                // Convert hex to RGB
-                let r = parseInt(color.substring(1, 3), 16);
-                let g = parseInt(color.substring(3, 5), 16);
-                let b = parseInt(color.substring(5, 7), 16);
-                
-                // Adjust brightness
-                r = Math.min(255, Math.max(0, Math.floor(r * factor)));
-                g = Math.min(255, Math.max(0, Math.floor(g * factor)));
-                b = Math.min(255, Math.max(0, Math.floor(b * factor)));
-                
-                // Convert back to hex
-                return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-            }
-
-            // Function to set the theme
             function setTheme(theme) {
-                document.body.classList.remove('dark-mode', 'rainbow-light-mode', 'rainbow-dark-mode', 'custom-theme');
+                document.body.className = '';
                 if (theme === 'dark') {
                     document.body.classList.add('dark-mode');
-                } else if (theme === 'rainbow-light') {
-                    document.body.classList.add('rainbow-light-mode');
-                } else if (theme === 'rainbow-dark') {
-                    document.body.classList.add('rainbow-dark-mode');
-                } else if (theme === 'custom') {
-                    document.body.classList.add('custom-theme');
-                    // Apply saved custom theme
-                    const savedCustomTheme = getCookie('customTheme');
-                    if (savedCustomTheme) {
-                        const theme = JSON.parse(savedCustomTheme);
-                        bgColorInput.value = theme.bgColor || '#f5f5f5';
-                        containerBgInput.value = theme.containerBg || '#ffffff';
-                        textColorInput.value = theme.textColor || '#333333';
-                        secondaryTextInput.value = theme.secondaryText || '#666666';
-                        borderColorInput.value = theme.borderColor || '#e0e0e0';
-                        rebirthColorInput.value = theme.rebirthColor || '#673AB7';
-                        shadowOpacityInput.value = theme.shadowOpacity || 10;
-                        contrastInput.value = theme.contrast || 100;
-                        
-                        applyCustomTheme();
-                    }
+                } else if (theme === 'rainbow') {
+                    document.body.classList.add('rainbow-mode');
                 }
                 currentTheme = theme;
                 if (cookiesAccepted) {
@@ -1975,7 +1443,7 @@
                 cookiesAccepted = true;
                 setCookie('cookiesAccepted', 'true', 365);
                 setCookie('theme', currentTheme, 365);
-                cookieConsentElement.style.display = 'none';
+                cookieConsentElement.classList.remove('show');
                 saveGameData();
                 saveMessageElement.textContent = 'Cookies accepted! Your progress will be saved automatically.';
             });
@@ -2076,6 +1544,9 @@
 
                     if (savedAutoClickerEnabled !== null) {
                         autoClickerEnabled = savedAutoClickerEnabled === 'true';
+                        if (autoClickerEnabled) {
+                            startAutoClicker();
+                        }
                     }
 
                     if (savedQuantumLeapCooldownEnd !== null) {
@@ -2318,7 +1789,9 @@
                 rebirthLevelElement.textContent = rebirthLevel;
                 rebirthBonusElement.textContent = rebirthLevel * 10;
                 upgradeCostElement.textContent = formatNumber(upgradeCost);
-                upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
+                upgradeCostDisplay.textContent = formatNumber(upgradeCost);
+                rebirthCostDisplay.textContent = formatNumber(rebirthCost);
+                upgradeButton.textContent = `Buy: ${formatNumber(upgradeCost)} points`;
 
                 // Show/hide auto-clicker item based on rebirth level
                 if (rebirthLevel >= 1) {
@@ -2419,6 +1892,7 @@
                 }
 
                 // Update status displays
+                gardenStatus.textContent = quantumGardenPlanted ? "Quantum Garden planted! Generating points..." : "Garden not planted yet.";
                 cosmicHarvesterStatus.textContent = cosmicHarvesterActive ? "Harvesting cosmic energy!" : "Not active";
                 timeFractureStatus.textContent = timeFractureActive ? "Time is fractured!" : "Time is normal";
                 dimensionalPortalStatus.textContent = dimensionalPortalOpen ? "Portal open to another dimension!" : "Portal closed";
@@ -2492,6 +1966,7 @@
 
                 updateCounter();
 
+                // Add click animation
                 enterButton.classList.add('active');
                 setTimeout(() => {
                     enterButton.classList.remove('active');
@@ -2546,6 +2021,18 @@
                         rebirthCost *= 10;
                         autoClickerEnabled = false;
                         clearInterval(autoClickerInterval);
+                        quantumGardenPlanted = false;
+                        clearInterval(quantumGardenInterval);
+                        cosmicHarvesterActive = false;
+                        timeFractureActive = false;
+                        dimensionalPortalOpen = false;
+                        realityWarped = false;
+                        quantumSingularityCreated = false;
+                        infinityEngineActive = false;
+                        voidExtractorActive = false;
+                        celestialForgeActive = false;
+                        eternityCoreActive = false;
+                        
                         updateCounter();
                         saveMessageElement.textContent = "Rebirth complete! Your permanent bonus is now +" + (rebirthLevel * 10) + "% per click.";
                     }
@@ -2646,7 +2133,6 @@
                 if (!quantumGardenPlanted) {
                     quantumGardenPlanted = true;
                     startQuantumGarden();
-                    gardenStatus.textContent = 'Quantum Garden planted! Generating points...';
                     updateCounter();
                 }
             });
@@ -2963,27 +2449,6 @@
                 }
             });
 
-            // Prevent scrolling
-            document.body.addEventListener('wheel', function(e) {
-                e.preventDefault();
-            }, { passive: false });
-
-            // Prevent touchmove scrolling on mobile
-            document.body.addEventListener('touchmove', function(e) {
-                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-
-            // Save game data every 30 seconds as a backup
-            setInterval(saveGameData, 30000);
-
-            // Save game data when tab/window is closed
-            window.addEventListener('beforeunload', saveGameData);
-
-            // Initial update
-            updateCounter(false);
-
             // Shop button and menu functionality
             shopButton.addEventListener('click', function() {
                 isShopOpen = true;
@@ -3027,18 +2492,29 @@
 
             isAllowedIP().then(allowed => {
                 if (allowed) {
-                    adminPanelIcon.style.display = 'block';
+                    adminButton.style.display = 'flex';
                 }
             });
 
-            adminPanelIcon.addEventListener('click', function() {
+            // Admin button click handler
+            adminButton.addEventListener('click', function() {
                 adminPanel.classList.add('open');
                 blurOverlay.classList.add('active');
+                isShopOpen = true;
+                
+                if (autoClickerEnabled) {
+                    clearInterval(autoClickerInterval);
+                }
             });
 
             closeAdminPanel.addEventListener('click', function() {
                 adminPanel.classList.remove('open');
                 blurOverlay.classList.remove('active');
+                isShopOpen = false;
+
+                if (autoClickerEnabled) {
+                    startAutoClicker();
+                }
             });
 
             setScoreButton.addEventListener('click', function() {
@@ -3123,9 +2599,28 @@
             enableRateLimiter.disabled = true;
             disableRateLimiter.disabled = false;
 
-            playButton.addEventListener('click', function() {
-                welcomeOverlay.style.display = 'none';
-            });
+            // Prevent scrolling
+            document.body.addEventListener('wheel', function(e) {
+                if (!isShopOpen) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            // Prevent touchmove scrolling on mobile
+            document.body.addEventListener('touchmove', function(e) {
+                if (!isShopOpen && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            // Save game data every 30 seconds as a backup
+            setInterval(saveGameData, 30000);
+
+            // Save game data when tab/window is closed
+            window.addEventListener('beforeunload', saveGameData);
+
+            // Initial update
+            updateCounter(false);
         });
     </script>
 </body>
