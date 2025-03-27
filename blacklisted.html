@@ -62,6 +62,11 @@
             margin-top: 10px;
             display: none;
         }
+        .attempts {
+            margin-top: 10px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +81,7 @@
             <input type="text" id="unbanCode" placeholder="Enter unban code">
             <button id="submitCode">Submit</button>
             <div class="error" id="errorMessage">Invalid unban code</div>
+            <div class="attempts" id="attemptsCounter">Attempts remaining: 5</div>
         </div>
         
         <p style="margin-top: 30px;">If you want to appeal, please email bertid000@niagaracatholic.ca or meowinc.owner@gmail.com.</p>
@@ -84,6 +90,7 @@
     <script>
         const PERMANENT_BAN_URL = 'https://meowinc-owner.github.io/enterclicker/permanent-ban';
         const UNBAN_PASSCODE = "UNBAN-CHECKDEV";
+        const MAX_ATTEMPTS = 5;
         
         // Get the expiry time from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -113,10 +120,24 @@
             }
         }
         
+        // Get or initialize attempt counter
+        let attempts = parseInt(localStorage.getItem('unbanAttempts')) || 0;
+        if (attempts >= MAX_ATTEMPTS) {
+            localStorage.setItem('permanentBan', 'true');
+            window.location.href = PERMANENT_BAN_URL;
+        }
+        
         const countdownElement = document.getElementById('countdown');
         const unbanCodeInput = document.getElementById('unbanCode');
         const submitButton = document.getElementById('submitCode');
         const errorMessage = document.getElementById('errorMessage');
+        const attemptsCounter = document.getElementById('attemptsCounter');
+        
+        // Update attempts counter display
+        function updateAttemptsDisplay() {
+            attemptsCounter.textContent = `Attempts remaining: ${MAX_ATTEMPTS - attempts}`;
+        }
+        updateAttemptsDisplay();
         
         // Update countdown every second
         function updateCountdown() {
@@ -126,6 +147,7 @@
             if (remainingTime <= 0) {
                 countdownElement.textContent = "Ban expired! You will be redirected...";
                 localStorage.removeItem('blacklistExpiry');
+                localStorage.removeItem('unbanAttempts');
                 setTimeout(() => {
                     window.location.href = "https://meowinc-owner.github.io/enterclicker/";
                 }, 2000);
@@ -141,12 +163,22 @@
         submitButton.addEventListener('click', () => {
             if (unbanCodeInput.value.trim().toUpperCase() === UNBAN_PASSCODE) {
                 localStorage.removeItem('blacklistExpiry');
+                localStorage.removeItem('unbanAttempts');
                 window.location.href = "https://meowinc-owner.github.io/enterclicker/";
             } else {
+                attempts++;
+                localStorage.setItem('unbanAttempts', attempts.toString());
+                updateAttemptsDisplay();
+                
                 errorMessage.style.display = 'block';
                 setTimeout(() => {
                     errorMessage.style.display = 'none';
                 }, 3000);
+                
+                if (attempts >= MAX_ATTEMPTS) {
+                    localStorage.setItem('permanentBan', 'true');
+                    window.location.href = PERMANENT_BAN_URL;
+                }
             }
         });
         
