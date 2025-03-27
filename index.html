@@ -237,7 +237,15 @@
             border-radius: 3px; /* Keep border-radius if needed */
             border: none; /* Remove the border if any */
             margin-bottom: 15px;
+            font-weight: bold; /* Make text bold */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add shadow for readability */
             transition: all 0.3s ease;
+        }
+        
+        /* Add a specific styling for dark mode if needed */
+        body.dark-mode .credit-box {
+            color: var(--text-color); /* High contrast color in dark mode */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Ensures text is readable against dark background */
         }
         
         .trademark {
