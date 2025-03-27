@@ -84,49 +84,67 @@
     </div>
 
     <script>
-        const PERMANENT_BAN_PASSCODE = "BANEVASION-APPEAL7819350264";
-        const unbanCodeInput = document.getElementById('unbanCode');
-        const submitButton = document.getElementById('submitCode');
-        const errorMessage = document.getElementById('errorMessage');
-        
-        // Check if actually permanently banned
-        if (localStorage.getItem('permanentBan') !== 'true') {
-            window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-        }
-        
-        // Check unban code
-        submitButton.addEventListener('click', () => {
-            if (unbanCodeInput.value.trim() === PERMANENT_BAN_PASSCODE) {
-                localStorage.removeItem('permanentBan');
-                localStorage.removeItem('blacklistExpiry');
+        document.addEventListener('DOMContentLoaded', () => {
+            const unbanCodeInput = document.getElementById('unbanCode');
+            const submitButton = document.getElementById('submitCode');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Check if actually permanently banned
+            if (localStorage.getItem('permanentBan') !== 'true') {
                 window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-            } else {
-                errorMessage.style.display = 'block';
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                }, 3000);
             }
+            
+            // Simple hash function - converts string to numeric hash
+            const hashCode = (s) => {
+                return s.split('').reduce((a, b) => {
+                    a = ((a << 5) - a) + b.charCodeAt(0);
+                    return a & a;
+                }, 0);
+            };
+            
+            // Check unban code by comparing hashes
+            submitButton.addEventListener('click', () => {
+                const inputHash = hashCode(unbanCodeInput.value.trim());
+                if (inputHash === -1208621169) {
+                    localStorage.removeItem('permanentBan');
+                    localStorage.removeItem('blacklistExpiry');
+                    window.location.href = "https://meowinc-owner.github.io/enterclicker/";
+                } else {
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 3000);
+                }
+            });
+            
+            // Also allow Enter key to submit
+            unbanCodeInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    submitButton.click();
+                }
+            });
+            
+            // Enhanced console tampering detection
+            const consoleCheck = () => {
+                const start = Date.now();
+                debugger;
+                if (Date.now() - start > 100) {
+                    window.location.reload();
+                }
+            };
+            
+            try {
+                console.log('%c', consoleCheck);
+                setInterval(consoleCheck, 2000);
+            } catch (e) {
+                // Silently handle errors
+            }
+            
+            const fP1 = "BAN-APPEAL-12345";
+            const fP2 = "UNBAN-ME-PLEASE";
+            const fH1 = hashCode(fP1);
+            const fH2 = hashCode(fP2);
         });
-        
-        // Also allow Enter key to submit
-        unbanCodeInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                submitButton.click();
-            }
-        });
-        
-        // Basic console tampering detection
-        let consoleOpen = false;
-        const checkConsole = () => {
-            consoleOpen = true;
-        };
-        console.log('%c', checkConsole);
-        setTimeout(() => {
-            if (consoleOpen) {
-                // Just refresh to maintain ban if they keep console open
-                window.location.reload();
-            }
-        }, 1000);
     </script>
 </body>
 </html>
