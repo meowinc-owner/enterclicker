@@ -5,63 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Permanent Ban - Enter Clicker</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 600px;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #dc3545;
-            margin-bottom: 20px;
-        }
-        .permanent-ban-warning {
-            color: #dc3545;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 20px 0;
-        }
-        .unban-form {
-            margin-top: 30px;
-        }
-        input[type="text"] {
-            padding: 10px;
-            width: 250px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .error {
-            color: #dc3545;
-            margin-top: 10px;
-            display: none;
-        }
+        body{font-family:Arial,sans-serif;background-color:#f8f9fa;color:#343a40;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;text-align:center;line-height:1.6}.container{max-width:600px;background-color:white;padding:30px;border-radius:10px;box-shadow:0 4px 6px rgba(0,0,0,0.1)}h1{color:#dc3545;margin-bottom:20px}.permanent-ban-warning{color:#dc3545;font-weight:bold;font-size:1.2rem;margin:20px 0}.unban-form{margin-top:30px}input[type="text"]{padding:10px;width:250px;border:1px solid #ced4da;border-radius:4px;margin-right:10px}button{padding:10px 20px;background-color:#007bff;color:white;border:none;border-radius:4px;cursor:pointer;transition:background-color 0.3s}button:hover{background-color:#0056b3}.error{color:#dc3545;margin-top:10px;display:none}
     </style>
 </head>
 <body>
@@ -70,80 +14,28 @@
         <div class="permanent-ban-warning">
             You have been permanently banned for attempting to evade the blacklist system.
         </div>
-        
         <p>Your account has been flagged for attempting to manipulate the ban system through console tampering or URL manipulation.</p>
-        
         <div class="unban-form">
             <p>To appeal this ban, please enter the permanent unban code:</p>
-            <input type="text" id="unbanCode" placeholder="Enter permanent unban code">
-            <button id="submitCode">Submit Appeal</button>
-            <div class="error" id="errorMessage">Invalid unban code</div>
+            <input type="text" id="uc" placeholder="Enter permanent unban code">
+            <button id="sb">Submit Appeal</button>
+            <div class="error" id="em">Invalid unban code</div>
         </div>
-        
-        <p style="margin-top: 30px;">If you believe this is a mistake, please email bertid000@niagaracatholic.ca or meowinc.owner@gmail.com with proof of innocence.</p>
+        <p style="margin-top:30px">If you believe this is a mistake, please email bertid000@niagaracatholic.ca or meowinc.owner@gmail.com with proof of innocence.</p>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const unbanCodeInput = document.getElementById('unbanCode');
-            const submitButton = document.getElementById('submitCode');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            // Check if actually permanently banned
-            if (localStorage.getItem('permanentBan') !== 'true') {
-                window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-            }
-            
-            // Simple hash function - converts string to numeric hash
-            const hashCode = (s) => {
-                return s.split('').reduce((a, b) => {
-                    a = ((a << 5) - a) + b.charCodeAt(0);
-                    return a & a;
-                }, 0);
-            };
-            
-            // Check unban code by comparing hashes
-            submitButton.addEventListener('click', () => {
-                const inputHash = hashCode(unbanCodeInput.value.trim());
-                if (inputHash === -1208621169) {
-                    localStorage.removeItem('permanentBan');
-                    localStorage.removeItem('blacklistExpiry');
-                    window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-                } else {
-                    errorMessage.style.display = 'block';
-                    setTimeout(() => {
-                        errorMessage.style.display = 'none';
-                    }, 3000);
-                }
+        document.addEventListener('DOMContentLoaded',()=>{
+            const e=document.getElementById('uc'),t=document.getElementById('sb'),n=document.getElementById('em');
+            if(localStorage.getItem('pb')!=='1')window.location.href="https://meowinc-owner.github.io/enterclicker/";
+            const o=e=>{let t=0;for(let n=0;n<e.length;n++){const o=e.charCodeAt(n);t=(t<<5)-t+o,t=t&t}return t};
+            t.addEventListener('click',()=>{
+                const t=e.value.trim();
+                o(t)===-1208621169?(localStorage.removeItem('pb'),localStorage.removeItem('be'),window.location.href="https://meowinc-owner.github.io/enterclicker/"):(n.style.display='block',setTimeout(()=>{n.style.display='none'},3e3))
             });
-            
-            // Also allow Enter key to submit
-            unbanCodeInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    submitButton.click();
-                }
-            });
-            
-            // Enhanced console tampering detection
-            const consoleCheck = () => {
-                const start = Date.now();
-                debugger;
-                if (Date.now() - start > 100) {
-                    window.location.reload();
-                }
-            };
-            
-            try {
-                console.log('%c', consoleCheck);
-                setInterval(consoleCheck, 2000);
-            } catch (e) {
-                // Silently handle errors
-            }
-            
-            const fP1 = "BAN-APPEAL-12345";
-            const fP2 = "UNBAN-ME-PLEASE";
-            const fH1 = hashCode(fP1);
-            const fH2 = hashCode(fP2);
+            e.addEventListener('keypress',e=>{'Enter'===e.key&&t.click()});
+            setInterval(()=>{const e=Date.now();console.log('.'),console.clear(),Date.now()-e>200&&window.location.reload()},2e3);
+            ['x1y2z3','a1b2c3','d4e5f6'].map(e=>o(e));
         });
     </script>
 </body>
