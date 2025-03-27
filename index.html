@@ -1259,37 +1259,42 @@
     </div>
 
     <script>
-        // Blacklist system variables
-        const BLACKLIST_URL = 'https://meowinc-owner.github.io/enterclicker/blacklisted';
-        const BLACKLIST_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
-        const UNBAN_PASSCODE = "UNBAN-CHECKDEV";
-        let isBlacklisted = false;
-        let clickHistory = [];
-
-        // Check blacklist status
-        function checkBlacklist() {
-            const blacklistExpiry = localStorage.getItem('blacklistExpiry');
-            if (blacklistExpiry && Date.now() < parseInt(blacklistExpiry, 10)) {
-                isBlacklisted = true;
-                // Pass the existing expiry time to maintain the original ban duration
-                window.location.href = BLACKLIST_URL + "?expiry=" + blacklistExpiry;
-                return true;
-            }
-            return false;
-        }
-
-        // Redirect to blacklist page
-        function redirectToBlacklist() {
-            // First check if we're already blacklisted
-            if (!checkBlacklist()) {
-                // Only set new blacklist if we're not already blacklisted
-                const expiryTime = Date.now() + BLACKLIST_DURATION;
-                localStorage.setItem('blacklistExpiry', expiryTime.toString());
-                window.location.href = BLACKLIST_URL + "?expiry=" + expiryTime;
-            }
+        // Permanent ban check - must be first thing in the script
+        if (localStorage.getItem('permanentBan') === 'true') {
+            window.location.href = "https://meowinc-owner.github.io/enterclicker/permanent-ban";
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Blacklist system variables
+            const BLACKLIST_URL = 'https://meowinc-owner.github.io/enterclicker/blacklisted';
+            const BLACKLIST_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+            const UNBAN_PASSCODE = "UNBAN-CHECKDEV";
+            let isBlacklisted = false;
+            let clickHistory = [];
+
+            // Check blacklist status
+            function checkBlacklist() {
+                const blacklistExpiry = localStorage.getItem('blacklistExpiry');
+                if (blacklistExpiry && Date.now() < parseInt(blacklistExpiry, 10)) {
+                    isBlacklisted = true;
+                    // Pass the existing expiry time to maintain the original ban duration
+                    window.location.href = BLACKLIST_URL + "?expiry=" + blacklistExpiry;
+                    return true;
+                }
+                return false;
+            }
+
+            // Redirect to blacklist page
+            function redirectToBlacklist() {
+                // First check if we're already blacklisted
+                if (!checkBlacklist()) {
+                    // Only set new blacklist if we're not already blacklisted
+                    const expiryTime = Date.now() + BLACKLIST_DURATION;
+                    localStorage.setItem('blacklistExpiry', expiryTime.toString());
+                    window.location.href = BLACKLIST_URL + "?expiry=" + expiryTime;
+                }
+            }
+
             // Check blacklist status on load
             if (checkBlacklist()) {
                 return; // Don't proceed with the rest if blacklisted
