@@ -25,18 +25,37 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded',()=>{
+        (function(){
+            const pbState = localStorage.getItem('pb');
+            if(pbState !== '1') return;
+            
             const e=document.getElementById('uc'),t=document.getElementById('sb'),n=document.getElementById('em');
-            if(localStorage.getItem('pb')!=='1')window.location.href="https://meowinc-owner.github.io/enterclicker/";
             const o=e=>{let t=0;for(let n=0;n<e.length;n++){const o=e.charCodeAt(n);t=(t<<5)-t+o,t=t&t}return t};
+            
             t.addEventListener('click',()=>{
                 const t=e.value.trim();
-                o(t)===-1208621169?(localStorage.removeItem('pb'),localStorage.removeItem('be'),window.location.href="https://meowinc-owner.github.io/enterclicker/"):(n.style.display='block',setTimeout(()=>{n.style.display='none'},3e3))
+                if(o(t)===-1208621169){
+                    localStorage.removeItem('pb');
+                    localStorage.removeItem('be');
+                    window.location.replace("https://meowinc-owner.github.io/enterclicker/");
+                }else{
+                    n.style.display='block';
+                    setTimeout(()=>{n.style.display='none'},3e3);
+                }
             });
+            
             e.addEventListener('keypress',e=>{'Enter'===e.key&&t.click()});
-            setInterval(()=>{const e=Date.now();console.log('.'),console.clear(),Date.now()-e>200&&window.location.reload()},2e3);
-            ['x1y2z3','a1b2c3','d4e5f6'].map(e=>o(e));
-        });
+            
+            let consoleCheck = false;
+            setInterval(()=>{
+                if(consoleCheck){
+                    window.location.reload();
+                }
+                consoleCheck = true;
+                console.log('%c','');
+                consoleCheck = false;
+            },2000);
+        })();
     </script>
 </body>
 </html>
