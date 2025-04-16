@@ -2526,6 +2526,7 @@
                             clearInterval(interval);
                             upgradeCooldownOverlay.style.display = 'none';
                             upgradeCooldownActive = false;
+                            updateCounter();
                         } else {
                             upgradeCooldownText.textContent = remainingTime;
                         }
@@ -2582,16 +2583,13 @@
 
                     setTimeout(() => {
                         timeWarpActive = false;
+                        updateCounter();
                     }, 5000);
-
-                    setTimeout(() => {
-                        timeWarpCooldown = false;
-                        timeWarpCooldownOverlay.style.display = 'none';
-                    }, 600000);
 
                     timeWarpCooldownOverlay.style.display = 'flex';
                     timeWarpCooldownText.textContent = '10:00';
                     startTimeWarpCooldownTimer();
+                    updateCounter();
                 }
             });
 
@@ -2602,6 +2600,8 @@
                     if (remainingTime <= 0) {
                         clearInterval(interval);
                         timeWarpCooldownOverlay.style.display = 'none';
+                        timeWarpCooldown = false;
+                        updateCounter();
                     } else {
                         const minutes = Math.floor(remainingTime / 60);
                         const seconds = remainingTime % 60;
@@ -2633,6 +2633,7 @@
                         clearInterval(interval);
                         quantumLeapCooldownOverlay.style.display = 'none';
                         quantumLeapCooldown = false;
+                        updateCounter();
                     } else {
                         const minutes = Math.floor(remainingTime / 60);
                         const seconds = remainingTime % 60;
@@ -2671,12 +2672,8 @@
 
                     setTimeout(() => {
                         cosmicHarvesterActive = false;
+                        updateCounter();
                     }, 30000); // 30 seconds active
-
-                    setTimeout(() => {
-                        cosmicHarvesterCooldown = false;
-                        cosmicHarvesterCooldownOverlay.style.display = 'none';
-                    }, 300000); // 5 minutes total
 
                     cosmicHarvesterCooldownOverlay.style.display = 'flex';
                     cosmicHarvesterCooldownText.textContent = '5:00';
@@ -2693,6 +2690,8 @@
                     if (remainingTime <= 0) {
                         clearInterval(interval);
                         cosmicHarvesterCooldownOverlay.style.display = 'none';
+                        cosmicHarvesterCooldown = false;
+                        updateCounter();
                     } else {
                         const minutes = Math.floor(remainingTime / 60);
                         const seconds = remainingTime % 60;
@@ -2725,12 +2724,8 @@
 
                     setTimeout(() => {
                         timeFractureActive = false;
+                        updateCounter();
                     }, 60000); // 1 minute active
-
-                    setTimeout(() => {
-                        timeFractureCooldown = false;
-                        timeFractureCooldownOverlay.style.display = 'none';
-                    }, 900000); // 15 minutes total
 
                     timeFractureCooldownOverlay.style.display = 'flex';
                     timeFractureCooldownText.textContent = '15:00';
@@ -2747,6 +2742,8 @@
                     if (remainingTime <= 0) {
                         clearInterval(interval);
                         timeFractureCooldownOverlay.style.display = 'none';
+                        timeFractureCooldown = false;
+                        updateCounter();
                     } else {
                         const minutes = Math.floor(remainingTime / 60);
                         const seconds = remainingTime % 60;
