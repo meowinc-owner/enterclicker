@@ -70,6 +70,120 @@
             --diamond-color: #4fc3f7;
         }
 
+        @keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+.shop-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: slideIn 0.3s ease-out;
+}
+
+.enter-button:active {
+    animation: bounce 0.2s ease-in-out;
+}
+
+.shop-item {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.shop-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.button {
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.button:active {
+    animation: bounce 0.2s ease-in-out;
+}
+
+.blur-overlay {
+    transition: opacity 0.3s ease;
+}
+
+.blur-overlay.active {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.shop-button, .diamond-shop-button {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.shop-button:hover, .diamond-shop-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px var(--shadow-color);
+}
+
+.theme-button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.cooldown-overlay {
+    transition: opacity 0.3s ease;
+}
+
+.shop-item .buy-button, 
+.shop-item .disable-button, 
+.shop-item .diamond-button {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.shop-item .buy-button:hover, 
+.shop-item .disable-button:hover, 
+.shop-item .diamond-button:hover {
+    transform: translateY(-2px);
+}
+
+.custom-theme-preset {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-theme-preset:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
 
         body.dark-mode {
             --bg-color: #121212;
@@ -3709,10 +3823,10 @@
                     reader.onload = function(e) {
                         try {
                             const saveData = JSON.parse(e.target.result);
-                            
+
                             // Validate save data
                             if (!saveData.count && saveData.count !== 0) throw new Error('Invalid save file');
-                            
+
                             // Apply save data
                             count = saveData.count;
                             multiplier = saveData.multiplier;
