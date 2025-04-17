@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Enter Clicker! - by Damian B (meowinc)</title>
     <link rel="icon" type="image/x-icon" href="https://meowinc-owner.github.io/enterclicker/favicon.ico">
 
@@ -67,7 +67,9 @@
             --rebirth-color: #673AB7;
             --rebirth-hover: #5E35B1;
             --cooldown-overlay: rgba(0, 0, 0, 0.5);
+            --diamond-color: #4fc3f7;
         }
+        
 
         body.dark-mode {
             --bg-color: #121212;
@@ -85,6 +87,7 @@
             --rebirth-color: #9575CD;
             --rebirth-hover: #7E57C2;
             --cooldown-overlay: rgba(0, 0, 0, 0.7);
+            --diamond-color: #29b6f6;
         }
 
         /* Rainbow Light Theme */
@@ -103,6 +106,7 @@
             --rebirth-color: #673AB7;
             --rebirth-hover: #5E35B1;
             --cooldown-overlay: rgba(0, 0, 0, 0.5);
+            --diamond-color: #4fc3f7;
         }
 
         /* Rainbow Dark Theme */
@@ -121,6 +125,7 @@
             --rebirth-color: #9575CD;
             --rebirth-hover: #7E57C2;
             --cooldown-overlay: rgba(0, 0, 0, 0.7);
+            --diamond-color: #29b6f6;
         }
 
         /* Custom Theme */
@@ -140,6 +145,7 @@
             --rebirth-color: #673AB7;
             --rebirth-hover: #5E35B1;
             --cooldown-overlay: rgba(0, 0, 0, 0.5);
+            --diamond-color: #4fc3f7;
         }
 
         /* Rainbow animation */
@@ -451,12 +457,18 @@
             transition: all 0.3s ease;
         }
         
-        .counter {
-            font-size: 5rem;
+                .counter {
+            font-size: 3rem;
             font-weight: bold;
             color: var(--text-color);
             margin: 1rem 0;
             transition: color 0.3s ease;
+        }
+        
+        @media (min-width: 768px) {
+            .counter {
+                font-size: 5rem;
+            }
         }
         
         .instructions {
@@ -557,16 +569,30 @@
             font-weight: bold;
             color: var(--rebirth-color);
         }
+
+        .diamond-stat {
+            font-weight: bold;
+            color: var(--diamond-color);
+        }
         
         .enter-button {
-            background-color: #2196F3;
-            color: white;
-            font-size: 1.5rem;
-            padding: 1rem 2rem;
-            margin: 2rem auto;
-            display: block;
-            transition: transform 0.1s, background-color 0.3s ease;
-        }
+    background-color: #2196F3;
+    color: white;
+    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem;
+    margin: 1rem auto;
+    display: block;
+    transition: transform 0.1s, background-color 0.3s ease;
+    width: 90%;
+    max-width: 300px;
+}
+
+@media (min-width: 768px) {
+    .enter-button {
+        font-size: 1.5rem;
+        padding: 1rem 2rem;
+    }
+}
         
         .enter-button:hover {
             background-color: #1976D2;
@@ -679,14 +705,32 @@
             }
 
             .main-content {
-                padding: 10px; /* Reduce padding for smaller screens */
-            }
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    padding-bottom: 70px;
+    transform-origin: top left;
+    transform: scale(1); /* Ensure no scaling is applied */
+}
 
             .game-container {
-                padding: 1rem;
-                max-width: 100%; /* Ensure it takes the full width */
-                border-radius: 5px; /* Make corners less rounded */
-            }
+    text-align: center;
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: var(--container-bg);
+    box-shadow: 0 4px 8px var(--shadow-color);
+    max-width: 90%;
+    width: 100%;
+    position: relative;
+    min-height: auto;
+    transition: all 0.3s ease;
+    margin: 0 auto;
+}
 
             .counter {
                 font-size: 3rem; /* Reduce the counter size on mobile */
@@ -891,6 +935,26 @@
 
         .shop-item .disable-button:disabled {
             background-color: #9E9E9E; /* Change disabled color */
+            cursor: not-allowed;
+        }
+
+        .shop-item .diamond-button {
+            background-color: var(--diamond-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .shop-item .diamond-button:hover {
+            background-color: #039be5;
+        }
+
+        .shop-item .diamond-button:disabled {
+            background-color: #9E9E9E;
             cursor: not-allowed;
         }
 
@@ -1189,6 +1253,163 @@
             margin-top: 10px;
             color: var(--secondary-text);
         }
+
+        /* Diamond Shop Button */
+        .diamond-shop-button {
+            position: fixed;
+            bottom: 110px;
+            left: 20px;
+            background-color: var(--container-bg);
+            color: var(--diamond-color);
+            border: 2px solid var(--diamond-color);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .diamond-shop-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px var(--shadow-color);
+        }
+
+        /* Diamond Shop Menu */
+        .diamond-shop-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            padding: 20px;
+            width: 600px;
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .diamond-shop-menu.open {
+            display: flex;
+        }
+
+        .diamond-shop-menu .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .diamond-shop-menu h2 {
+            margin-top: 0;
+            text-align: center;
+            color: var(--diamond-color);
+        }
+
+        .diamond-shop-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .diamond-shop-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .diamond-shop-item h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .diamond-shop-item p {
+            margin: 10px 0;
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+            text-align: center;
+        }
+
+        .diamond-shop-item .item-cost {
+            font-weight: bold;
+            color: var(--diamond-color);
+            margin-bottom: 10px;
+        }
+
+        .diamond-shop-item .item-duration {
+            font-size: 0.8rem;
+            color: var(--tertiary-text);
+            margin-bottom: 10px;
+        }
+
+        .diamond-shop-item .item-status {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            color: var(--secondary-text);
+        }
+
+        .diamond-shop-item .buy-button {
+            background-color: var(--diamond-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .diamond-shop-item .buy-button:hover {
+            background-color: #039be5;
+        }
+
+        .diamond-shop-item .buy-button:disabled {
+            background-color: #9E9E9E;
+            cursor: not-allowed;
+        }
+
+        .diamond-count {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background-color: var(--container-bg);
+            color: var(--diamond-color);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 8px 15px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .diamond-count .icon {
+            margin-right: 5px;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -1201,7 +1422,11 @@
             </button>
         </div>
 
-        <!-- New Theme Menu Panel (Removed since we're moving everything to custom panel) -->
+        <!-- Diamond Count Display -->
+        <div class="diamond-count" id="diamondCount">
+            <span class="icon">💎</span>
+            <span id="diamondAmount">0</span>
+        </div>
 
         <!-- Custom Theme Panel -->
         <div id="customThemePanel" class="custom-theme-panel">
@@ -1288,6 +1513,7 @@
                 <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
                 <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
                 <p>Rebirth level: <span id="rebirthLevel" class="rebirth-stat">0</span> (+<span id="rebirthBonus">0</span>% per click)</p>
+                <p>Diamonds: <span id="diamondStat" class="diamond-stat">0</span> (+<span id="diamondBonus">1</span> per rebirth)</p>
                 <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
             </div>
             
@@ -1309,6 +1535,11 @@
     <!-- Shop Button -->
     <div class="shop-button" id="shopButton">
         🛒
+    </div>
+
+    <!-- Diamond Shop Button -->
+    <div class="diamond-shop-button" id="diamondShopButton">
+        💎
     </div>
 
     <!-- Shop Menu -->
@@ -1502,6 +1733,61 @@
         </div>
     </div>
 
+    <!-- Diamond Shop Menu -->
+    <div class="diamond-shop-menu" id="diamondShopMenu">
+        <button class="close-button" id="closeDiamondShopMenu">✕</button>
+        <h2>Diamond Shop</h2>
+        <p>Use diamonds to temporarily unlock rebirth-locked items!</p>
+        
+        <!-- Auto Clicker Temporary Unlock -->
+        <div class="diamond-shop-item" id="tempAutoClickerItem">
+            <h3>Auto Clicker (Temporary)</h3>
+            <p>Unlock the Auto Clicker for 1 hour, even if you haven't reached the required rebirth level!</p>
+            <p class="item-cost">Cost: 5 Diamonds</p>
+            <p class="item-duration">Duration: 1 hour</p>
+            <button class="buy-button" id="tempAutoClickerButton">
+                Unlock Auto Clicker
+            </button>
+            <div class="item-status" id="tempAutoClickerStatus">Not active</div>
+        </div>
+        
+        <!-- Time Warp Temporary Unlock -->
+        <div class="diamond-shop-item" id="tempTimeWarpItem">
+            <h3>Time Warp (Temporary)</h3>
+            <p>Unlock Time Warp for 1 hour, even if you haven't reached the required rebirth level!</p>
+            <p class="item-cost">Cost: 10 Diamonds</p>
+            <p class="item-duration">Duration: 1 hour</p>
+            <button class="buy-button" id="tempTimeWarpButton">
+                Unlock Time Warp
+            </button>
+            <div class="item-status" id="tempTimeWarpStatus">Not active</div>
+        </div>
+        
+        <!-- Quantum Leap Temporary Unlock -->
+        <div class="diamond-shop-item" id="tempQuantumLeapItem">
+            <h3>Quantum Leap (Temporary)</h3>
+            <p>Unlock Quantum Leap for 1 hour, even if you haven't reached the required rebirth level!</p>
+            <p class="item-cost">Cost: 15 Diamonds</p>
+            <p class="item-duration">Duration: 1 hour</p>
+            <button class="buy-button" id="tempQuantumLeapButton">
+                Unlock Quantum Leap
+            </button>
+            <div class="item-status" id="tempQuantumLeapStatus">Not active</div>
+        </div>
+        
+        <!-- Quantum Garden Temporary Unlock -->
+        <div class="diamond-shop-item" id="tempQuantumGardenItem">
+            <h3>Quantum Garden (Temporary)</h3>
+            <p>Unlock Quantum Garden for 1 hour, even if you haven't reached the required rebirth level!</p>
+            <p class="item-cost">Cost: 20 Diamonds</p>
+            <p class="item-duration">Duration: 1 hour</p>
+            <button class="buy-button" id="tempQuantumGardenButton">
+                Unlock Quantum Garden
+            </button>
+            <div class="item-status" id="tempQuantumGardenStatus">Not active</div>
+        </div>
+    </div>
+
     <!-- Blur Overlay -->
     <div class="blur-overlay" id="blurOverlay"></div>
 
@@ -1518,6 +1804,8 @@
         <button id="setRebirthsButton">Set Rebirths</button>
         <input type="number" id="setMultiplierInput" placeholder="Set Multiplier">
         <button id="setMultiplierButton">Set Multiplier</button>
+        <input type="number" id="setDiamondsInput" placeholder="Set Diamonds">
+        <button id="setDiamondsButton">Set Diamonds</button>
         <button id="enableAutoClicker">Enable Auto Clicker (Very Glitchy, refresh after use)</button>
         <button id="disableAutoClicker">Disable Auto Clicker (Very glitchy, refresh after use)</button>
         <button id="resetGame">Reset Game</button>
@@ -1586,12 +1874,18 @@
             const rebirthButton = document.getElementById('rebirthButton');
             const rebirthLevelElement = document.getElementById('rebirthLevel');
             const rebirthBonusElement = document.getElementById('rebirthBonus');
+            const diamondStatElement = document.getElementById('diamondStat');
+            const diamondBonusElement = document.getElementById('diamondBonus');
+            const diamondAmountElement = document.getElementById('diamondAmount');
             const rebirthInfoElement = document.getElementById('rebirthInfo');
             const rateLimitInfoElement = document.getElementById('rateLimitInfo');
             const upgradeCooldownElement = document.getElementById('upgradeCooldown');
             const shopButton = document.getElementById('shopButton');
             const shopMenu = document.getElementById('shopMenu');
             const closeShopMenu = document.getElementById('closeShopMenu');
+            const diamondShopButton = document.getElementById('diamondShopButton');
+            const diamondShopMenu = document.getElementById('diamondShopMenu');
+            const closeDiamondShopMenu = document.getElementById('closeDiamondShopMenu');
             const blurOverlay = document.getElementById('blurOverlay');
             const upgradeCostDisplay = document.getElementById('upgradeCostDisplay');
             const rebirthCostDisplay = document.getElementById('rebirthCostDisplay');
@@ -1618,6 +1912,8 @@
             const setRebirthsButton = document.getElementById('setRebirthsButton');
             const setMultiplierInput = document.getElementById('setMultiplierInput');
             const setMultiplierButton = document.getElementById('setMultiplierButton');
+            const setDiamondsInput = document.getElementById('setDiamondsInput');
+            const setDiamondsButton = document.getElementById('setDiamondsButton');
             const enableAutoClicker = document.getElementById('enableAutoClicker');
             const disableAutoClicker = document.getElementById('disableAutoClicker');
             const resetGame = document.getElementById('resetGame');
@@ -1627,6 +1923,16 @@
             const playButton = document.getElementById('playButton');
             const upgradeCooldownOverlay = document.getElementById('upgradeCooldownOverlay');
             const upgradeCooldownText = document.getElementById('upgradeCooldownText');
+
+            // Diamond shop elements
+            const tempAutoClickerButton = document.getElementById('tempAutoClickerButton');
+            const tempAutoClickerStatus = document.getElementById('tempAutoClickerStatus');
+            const tempTimeWarpButton = document.getElementById('tempTimeWarpButton');
+            const tempTimeWarpStatus = document.getElementById('tempTimeWarpStatus');
+            const tempQuantumLeapButton = document.getElementById('tempQuantumLeapButton');
+            const tempQuantumLeapStatus = document.getElementById('tempQuantumLeapStatus');
+            const tempQuantumGardenButton = document.getElementById('tempQuantumGardenButton');
+            const tempQuantumGardenStatus = document.getElementById('tempQuantumGardenStatus');
 
             // Custom theme elements
             const customThemePanel = document.getElementById('customThemePanel');
@@ -1697,6 +2003,8 @@
             let currentTheme = 'light';
             let rebirthLevel = 0;
             let rebirthCost = 1000;
+            let diamonds = 0;
+            let diamondBonus = 1;
             let autoClickerEnabled = false;
             let autoClickerInterval = null;
             let timeWarpActive = false;
@@ -1709,6 +2017,16 @@
             let isShopOpen = false;
             let quantumGardenPlanted = false;
             let quantumGardenInterval = null;
+
+            // Temporary unlock states
+            let tempAutoClickerActive = false;
+            let tempAutoClickerEnd = 0;
+            let tempTimeWarpActive = false;
+            let tempTimeWarpEnd = 0;
+            let tempQuantumLeapActive = false;
+            let tempQuantumLeapEnd = 0;
+            let tempQuantumGardenActive = false;
+            let tempQuantumGardenEnd = 0;
 
             // New shop item states
             let cosmicHarvesterActive = false;
@@ -2013,10 +2331,22 @@
                 setCookie('clickerUpgradeCost', upgradeCost.toString(), 365);
                 setCookie('clickerRebirthLevel', rebirthLevel.toString(), 365);
                 setCookie('clickerRebirthCost', rebirthCost.toString(), 365);
+                setCookie('clickerDiamonds', diamonds.toString(), 365);
+                setCookie('clickerDiamondBonus', diamondBonus.toString(), 365);
                 setCookie('clickerAutoClickerEnabled', autoClickerEnabled.toString(), 365);
                 setCookie('quantumLeapCooldownEnd', quantumLeapCooldownEnd.toString(), 365);
                 setCookie('quantumGardenPlanted', quantumGardenPlanted.toString(), 365);
                 setCookie('clickerLastSaved', now, 365);
+
+                // Save temporary unlock states
+                setCookie('tempAutoClickerActive', tempAutoClickerActive.toString(), 365);
+                setCookie('tempAutoClickerEnd', tempAutoClickerEnd.toString(), 365);
+                setCookie('tempTimeWarpActive', tempTimeWarpActive.toString(), 365);
+                setCookie('tempTimeWarpEnd', tempTimeWarpEnd.toString(), 365);
+                setCookie('tempQuantumLeapActive', tempQuantumLeapActive.toString(), 365);
+                setCookie('tempQuantumLeapEnd', tempQuantumLeapEnd.toString(), 365);
+                setCookie('tempQuantumGardenActive', tempQuantumGardenActive.toString(), 365);
+                setCookie('tempQuantumGardenEnd', tempQuantumGardenEnd.toString(), 365);
 
                 // Save new shop item states
                 setCookie('cosmicHarvesterActive', cosmicHarvesterActive.toString(), 365);
@@ -2042,10 +2372,22 @@
                 const savedUpgradeCost = getCookie('clickerUpgradeCost');
                 const savedRebirthLevel = getCookie('clickerRebirthLevel');
                 const savedRebirthCost = getCookie('clickerRebirthCost');
+                const savedDiamonds = getCookie('clickerDiamonds');
+                const savedDiamondBonus = getCookie('clickerDiamondBonus');
                 const savedAutoClickerEnabled = getCookie('clickerAutoClickerEnabled');
                 const savedQuantumLeapCooldownEnd = getCookie('quantumLeapCooldownEnd');
                 const savedQuantumGardenPlanted = getCookie('quantumGardenPlanted');
                 const lastSaved = getCookie('clickerLastSaved');
+
+                // Load temporary unlock states
+                const savedTempAutoClickerActive = getCookie('tempAutoClickerActive');
+                const savedTempAutoClickerEnd = getCookie('tempAutoClickerEnd');
+                const savedTempTimeWarpActive = getCookie('tempTimeWarpActive');
+                const savedTempTimeWarpEnd = getCookie('tempTimeWarpEnd');
+                const savedTempQuantumLeapActive = getCookie('tempQuantumLeapActive');
+                const savedTempQuantumLeapEnd = getCookie('tempQuantumLeapEnd');
+                const savedTempQuantumGardenActive = getCookie('tempQuantumGardenActive');
+                const savedTempQuantumGardenEnd = getCookie('tempQuantumGardenEnd');
 
                 // Load new shop item states
                 const savedCosmicHarvesterActive = getCookie('cosmicHarvesterActive');
@@ -2074,6 +2416,14 @@
                         rebirthCost = parseInt(savedRebirthCost, 10);
                     }
 
+                    if (savedDiamonds !== null) {
+                        diamonds = parseInt(savedDiamonds, 10);
+                    }
+
+                    if (savedDiamondBonus !== null) {
+                        diamondBonus = parseInt(savedDiamondBonus, 10);
+                    }
+
                     if (savedAutoClickerEnabled !== null) {
                         autoClickerEnabled = savedAutoClickerEnabled === 'true';
                     }
@@ -2090,6 +2440,55 @@
                         quantumGardenPlanted = savedQuantumGardenPlanted === 'true';
                         if (quantumGardenPlanted) {
                             startQuantumGarden();
+                        }
+                    }
+
+                    // Load temporary unlock states
+                    if (savedTempAutoClickerActive !== null) {
+                        tempAutoClickerActive = savedTempAutoClickerActive === 'true';
+                        if (savedTempAutoClickerEnd !== null) {
+                            tempAutoClickerEnd = parseInt(savedTempAutoClickerEnd, 10);
+                            if (tempAutoClickerEnd > Date.now()) {
+                                startTempAutoClicker();
+                            } else {
+                                tempAutoClickerActive = false;
+                            }
+                        }
+                    }
+
+                    if (savedTempTimeWarpActive !== null) {
+                        tempTimeWarpActive = savedTempTimeWarpActive === 'true';
+                        if (savedTempTimeWarpEnd !== null) {
+                            tempTimeWarpEnd = parseInt(savedTempTimeWarpEnd, 10);
+                            if (tempTimeWarpEnd > Date.now()) {
+                                startTempTimeWarp();
+                            } else {
+                                tempTimeWarpActive = false;
+                            }
+                        }
+                    }
+
+                    if (savedTempQuantumLeapActive !== null) {
+                        tempQuantumLeapActive = savedTempQuantumLeapActive === 'true';
+                        if (savedTempQuantumLeapEnd !== null) {
+                            tempQuantumLeapEnd = parseInt(savedTempQuantumLeapEnd, 10);
+                            if (tempQuantumLeapEnd > Date.now()) {
+                                startTempQuantumLeap();
+                            } else {
+                                tempQuantumLeapActive = false;
+                            }
+                        }
+                    }
+
+                    if (savedTempQuantumGardenActive !== null) {
+                        tempQuantumGardenActive = savedTempQuantumGardenActive === 'true';
+                        if (savedTempQuantumGardenEnd !== null) {
+                            tempQuantumGardenEnd = parseInt(savedTempQuantumGardenEnd, 10);
+                            if (tempQuantumGardenEnd > Date.now()) {
+                                startTempQuantumGarden();
+                            } else {
+                                tempQuantumGardenActive = false;
+                            }
                         }
                     }
 
@@ -2317,32 +2716,55 @@
                 multiplierElement.textContent = formatNumber(multiplier);
                 rebirthLevelElement.textContent = rebirthLevel;
                 rebirthBonusElement.textContent = rebirthLevel * 10;
+                diamondStatElement.textContent = formatNumber(diamonds);
+                diamondBonusElement.textContent = diamondBonus;
+                diamondAmountElement.textContent = formatNumber(diamonds);
                 upgradeCostElement.textContent = formatNumber(upgradeCost);
                 upgradeButton.textContent = `Buy Multiplier: ${formatNumber(upgradeCost)} points`;
 
-                // Show/hide auto-clicker item based on rebirth level
-                if (rebirthLevel >= 1) {
+                // Update temporary unlock buttons
+                tempAutoClickerButton.disabled = diamonds < 5 || tempAutoClickerActive;
+                tempTimeWarpButton.disabled = diamonds < 10 || tempTimeWarpActive;
+                tempQuantumLeapButton.disabled = diamonds < 15 || tempQuantumLeapActive;
+                tempQuantumGardenButton.disabled = diamonds < 20 || tempQuantumGardenActive;
+
+                // Update temporary unlock statuses
+                tempAutoClickerStatus.textContent = tempAutoClickerActive ? 
+                    `Active (${Math.ceil((tempAutoClickerEnd - Date.now()) / 1000 / 60)}m remaining)` : 
+                    "Not active";
+                tempTimeWarpStatus.textContent = tempTimeWarpActive ? 
+                    `Active (${Math.ceil((tempTimeWarpEnd - Date.now()) / 1000 / 60)}m remaining)` : 
+                    "Not active";
+                tempQuantumLeapStatus.textContent = tempQuantumLeapActive ? 
+                    `Active (${Math.ceil((tempQuantumLeapEnd - Date.now()) / 1000 / 60)}m remaining)` : 
+                    "Not active";
+                tempQuantumGardenStatus.textContent = tempQuantumGardenActive ? 
+                    `Active (${Math.ceil((tempQuantumGardenEnd - Date.now()) / 1000 / 60)}m remaining)` : 
+                    "Not active";
+
+                // Show/hide auto-clicker item based on rebirth level or temporary unlock
+                if (rebirthLevel >= 1 || tempAutoClickerActive) {
                     autoClickerItem.style.display = 'block';
                 } else {
                     autoClickerItem.style.display = 'none';
                 }
 
-                // Show/hide Time Warp item based on rebirth level
-                if (rebirthLevel >= 2) {
+                // Show/hide Time Warp item based on rebirth level or temporary unlock
+                if (rebirthLevel >= 2 || tempTimeWarpActive) {
                     timeWarpItem.style.display = 'block';
                 } else {
                     timeWarpItem.style.display = 'none';
                 }
 
-                // Show/hide Quantum Leap item based on rebirth level
-                if (rebirthLevel >= 3) {
+                // Show/hide Quantum Leap item based on rebirth level or temporary unlock
+                if (rebirthLevel >= 3 || tempQuantumLeapActive) {
                     quantumLeapItem.style.display = 'block';
                 } else {
                     quantumLeapItem.style.display = 'none';
                 }
 
-                // Show/hide Quantum Garden item based on rebirth level
-                if (rebirthLevel >= 4) {
+                // Show/hide Quantum Garden item based on rebirth level or temporary unlock
+                if (rebirthLevel >= 4 || tempQuantumGardenActive) {
                     quantumGardenItem.style.display = 'block';
                 } else {
                     quantumGardenItem.style.display = 'none';
@@ -2539,8 +2961,10 @@
             // Rebirth button functionality
             rebirthButton.addEventListener('click', function() {
                 if (count >= rebirthCost) {
-                    if (confirm(`Are you sure you want to rebirth? You will lose all your points (${formatNumber(count)}) and multipliers, but gain a permanent +10% bonus per click!`)) {
+                    if (confirm(`Are you sure you want to rebirth? You will lose all your points (${formatNumber(count)}) and multipliers, but gain a permanent +10% bonus per click and ${diamondBonus} diamonds!`)) {
                         rebirthLevel++;
+                        diamonds += diamondBonus;
+                        diamondBonus = Math.floor(rebirthLevel / 5) + 1; // Increase diamond bonus every 5 rebirths
                         count = 0;
                         multiplier = 1;
                         upgradeCost = 10;
@@ -2548,7 +2972,7 @@
                         autoClickerEnabled = false;
                         clearInterval(autoClickerInterval);
                         updateCounter();
-                        saveMessageElement.textContent = "Rebirth complete! Your permanent bonus is now +" + (rebirthLevel * 10) + "% per click.";
+                        saveMessageElement.textContent = `Rebirth complete! Your permanent bonus is now +${rebirthLevel * 10}% per click and you earned ${diamondBonus} diamonds.`;
                     }
                 }
             });
@@ -2911,6 +3335,8 @@
                     multiplier = 1000000; // Massive multiplier
                     upgradeCost = 1000000000;
                     rebirthCost = 1000000000000;
+                    diamonds = 0;
+                    diamondBonus = 1;
                     autoClickerEnabled = false;
                     clearInterval(autoClickerInterval);
                     quantumGardenPlanted = false;
@@ -2932,12 +3358,14 @@
 
             // Reset button functionality
             resetButton.addEventListener('click', function() {
-                if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including rebirth levels!")) {
+                if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including rebirth levels and diamonds!")) {
                     count = 0;
                     multiplier = 1;
                     upgradeCost = 10;
                     rebirthLevel = 0;
                     rebirthCost = 1000;
+                    diamonds = 0;
+                    diamondBonus = 1;
                     autoClickerEnabled = false;
                     clearInterval(autoClickerInterval);
                     quantumGardenPlanted = false;
@@ -2952,6 +3380,12 @@
                     celestialForgeActive = false;
                     eternityCoreActive = false;
                     omnipotentAscensionAchieved = false;
+                    
+                    // Reset temporary unlocks
+                    tempAutoClickerActive = false;
+                    tempTimeWarpActive = false;
+                    tempQuantumLeapActive = false;
+                    tempQuantumGardenActive = false;
                     
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
@@ -3002,8 +3436,19 @@
                 }
             });
 
-            blurOverlay.addEventListener('click', function() {
-                shopMenu.classList.remove('open');
+            // Diamond shop button and menu functionality
+            diamondShopButton.addEventListener('click', function() {
+                isShopOpen = true;
+                diamondShopMenu.classList.add('open');
+                blurOverlay.classList.add('active');
+            
+                if (autoClickerEnabled) {
+                    clearInterval(autoClickerInterval);
+                }
+            });
+
+            closeDiamondShopMenu.addEventListener('click', function() {
+                diamondShopMenu.classList.remove('open');
                 blurOverlay.classList.remove('active');
                 isShopOpen = false;
 
@@ -3011,6 +3456,133 @@
                     startAutoClicker();
                 }
             });
+
+            blurOverlay.addEventListener('click', function() {
+                shopMenu.classList.remove('open');
+                diamondShopMenu.classList.remove('open');
+                blurOverlay.classList.remove('active');
+                isShopOpen = false;
+
+                if (autoClickerEnabled) {
+                    startAutoClicker();
+                }
+            });
+
+            // Temporary Auto Clicker unlock functionality
+            tempAutoClickerButton.addEventListener('click', function() {
+                if (diamonds >= 5 && !tempAutoClickerActive) {
+                    if (confirm("Spend 5 diamonds to unlock the Auto Clicker for 1 hour?")) {
+                        diamonds -= 5;
+                        tempAutoClickerActive = true;
+                        tempAutoClickerEnd = Date.now() + 3600000; // 1 hour
+                        startTempAutoClicker();
+                        updateCounter();
+                    }
+                }
+            });
+
+            // Function to start temporary Auto Clicker
+            function startTempAutoClicker() {
+                if (tempAutoClickerActive) {
+                    // Show the auto clicker item
+                    autoClickerItem.style.display = 'block';
+                    
+                    // Set a timeout to end the temporary unlock
+                    setTimeout(() => {
+                        tempAutoClickerActive = false;
+                        updateCounter();
+                    }, tempAutoClickerEnd - Date.now());
+                    
+                    updateCounter();
+                }
+            }
+
+            // Temporary Time Warp unlock functionality
+            tempTimeWarpButton.addEventListener('click', function() {
+                if (diamonds >= 10 && !tempTimeWarpActive) {
+                    if (confirm("Spend 10 diamonds to unlock Time Warp for 1 hour?")) {
+                        diamonds -= 10;
+                        tempTimeWarpActive = true;
+                        tempTimeWarpEnd = Date.now() + 3600000; // 1 hour
+                        startTempTimeWarp();
+                        updateCounter();
+                    }
+                }
+            });
+
+            // Function to start temporary Time Warp
+            function startTempTimeWarp() {
+                if (tempTimeWarpActive) {
+                    // Show the time warp item
+                    timeWarpItem.style.display = 'block';
+                    
+                    // Set a timeout to end the temporary unlock
+                    setTimeout(() => {
+                        tempTimeWarpActive = false;
+                        updateCounter();
+                    }, tempTimeWarpEnd - Date.now());
+                    
+                    updateCounter();
+                }
+            }
+
+            // Temporary Quantum Leap unlock functionality
+            tempQuantumLeapButton.addEventListener('click', function() {
+                if (diamonds >= 15 && !tempQuantumLeapActive) {
+                    if (confirm("Spend 15 diamonds to unlock Quantum Leap for 1 hour?")) {
+                        diamonds -= 15;
+                        tempQuantumLeapActive = true;
+                        tempQuantumLeapEnd = Date.now() + 3600000; // 1 hour
+                        startTempQuantumLeap();
+                        updateCounter();
+                    }
+                }
+            });
+
+            // Function to start temporary Quantum Leap
+            function startTempQuantumLeap() {
+                if (tempQuantumLeapActive) {
+                    // Show the quantum leap item
+                    quantumLeapItem.style.display = 'block';
+                    
+                    // Set a timeout to end the temporary unlock
+                    setTimeout(() => {
+                        tempQuantumLeapActive = false;
+                        updateCounter();
+                    }, tempQuantumLeapEnd - Date.now());
+                    
+                    updateCounter();
+                }
+            }
+
+            // Temporary Quantum Garden unlock functionality
+            tempQuantumGardenButton.addEventListener('click', function() {
+                if (diamonds >= 20 && !tempQuantumGardenActive) {
+                    if (confirm("Spend 20 diamonds to unlock Quantum Garden for 1 hour?")) {
+                        diamonds -= 20;
+                        tempQuantumGardenActive = true;
+                        tempQuantumGardenEnd = Date.now() + 3600000; // 1 hour
+                        startTempQuantumGarden();
+                        updateCounter();
+                    }
+                }
+            });
+
+            // Function to start temporary Quantum Garden
+            function startTempQuantumGarden() {
+                if (tempQuantumGardenActive) {
+                    // Show the quantum garden item
+                    quantumGardenItem.style.display = 'block';
+                    
+                    // Set a timeout to end the temporary unlock
+                    setTimeout(() => {
+                        tempQuantumGardenActive = false;
+                        updateCounter();
+                    }, tempQuantumGardenEnd - Date.now());
+                    
+                    updateCounter();
+                }
+            }
 
             // Admin Panel Functionality
             const allowedIPs = ['216.121.159.114', '0.0.0.0'];
@@ -3050,6 +3622,7 @@
                 const newRebirths = parseInt(setRebirthsInput.value, 10);
                 if (!isNaN(newRebirths)) {
                     rebirthLevel = newRebirths;
+                    diamondBonus = Math.floor(rebirthLevel / 5) + 1;
                     updateCounter();
                 }
             });
@@ -3058,6 +3631,14 @@
                 const newMultiplier = parseInt(setMultiplierInput.value, 10);
                 if (!isNaN(newMultiplier)) {
                     multiplier = newMultiplier;
+                    updateCounter();
+                }
+            });
+
+            setDiamondsButton.addEventListener('click', function() {
+                const newDiamonds = parseInt(setDiamondsInput.value, 10);
+                if (!isNaN(newDiamonds)) {
+                    diamonds = newDiamonds;
                     updateCounter();
                 }
             });
@@ -3075,12 +3656,14 @@
             });
 
             resetGame.addEventListener('click', function() {
-                if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including rebirth levels!")) {
+                if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including rebirth levels and diamonds!")) {
                     count = 0;
                     multiplier = 1;
                     upgradeCost = 10;
                     rebirthLevel = 0;
                     rebirthCost = 1000;
+                    diamonds = 0;
+                    diamondBonus = 1;
                     autoClickerEnabled = false;
                     clearInterval(autoClickerInterval);
                     quantumGardenPlanted = false;
@@ -3095,6 +3678,12 @@
                     celestialForgeActive = false;
                     eternityCoreActive = false;
                     omnipotentAscensionAchieved = false;
+                    
+                    // Reset temporary unlocks
+                    tempAutoClickerActive = false;
+                    tempTimeWarpActive = false;
+                    tempQuantumLeapActive = false;
+                    tempQuantumGardenActive = false;
                     
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
