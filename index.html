@@ -1556,7 +1556,16 @@ html {
 
             <div class="custom-theme-controls">
                 <div class="custom-theme-control">
-                    <label for="bgColor">Background Color</label>
+                    <label for="bgImage">Background Image</label>
+                    <input type="file" id="bgImage" accept="image/*">
+                </div>
+                <div class="custom-theme-control">
+                    <label for="bgBlur">Background Blur</label>
+                    <input type="range" id="bgBlur" min="0" max="20" value="0">
+                    <span id="bgBlurValue">0px</span>
+                </div>
+                <div class="custom-theme-control">
+                    <label for="bgColor">Background Color (shown if no image)</label>
                     <input type="color" id="bgColor" value="#f5f5f5">
                 </div>
 
@@ -2332,9 +2341,37 @@ html {
             }
 
             // Function to apply custom theme
+            // Function to handle background image upload
+            document.getElementById('bgImage').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.body.style.backgroundImage = `url(${e.target.result})`;
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.backgroundPosition = 'center';
+                        document.body.style.backgroundAttachment = 'fixed';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Function to handle blur adjustment
+            document.getElementById('bgBlur').addEventListener('input', function(e) {
+                const blurValue = e.target.value;
+                document.getElementById('bgBlurValue').textContent = blurValue + 'px';
+                applyCustomTheme();
+            });
+
             function applyCustomTheme() {
                 document.body.classList.remove('dark-mode', 'rainbow-light-mode', 'rainbow-dark-mode');
                 document.body.classList.add('custom-theme');
+
+                // Apply background blur
+                const blurValue = document.getElementById('bgBlur').value;
+                if (document.body.style.backgroundImage) {
+                    document.body.style.backdropFilter = `blur(${blurValue}px)`;
+                }
 
                 // Calculate contrast adjustment
                 const contrast = parseInt(contrastInput.value) / 100;
