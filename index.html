@@ -1395,6 +1395,117 @@ html {
             box-shadow: 0 6px 12px var(--shadow-color);
         }
 
+        /* Achievements Button */
+        .achievements-button {
+            position: fixed;
+            bottom: 200px;
+            left: 20px;
+            background-color: var(--container-bg);
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .achievements-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px var(--shadow-color);
+        }
+
+        /* Achievements Menu */
+        .achievements-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            padding: 20px;
+            width: 600px;
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .achievements-menu.open {
+            display: flex;
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background-color: var(--container-bg);
+            transition: all 0.3s ease;
+        }
+
+        .achievement-item.locked {
+            opacity: 0.5;
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: #FFD700;
+        }
+
+        .achievement-info {
+            flex-grow: 1;
+        }
+
+        .achievement-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .achievement-description {
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+        }
+
+        .achievement-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--container-bg);
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text-color);
+            box-shadow: 0 4px 8px var(--shadow-color);
+            z-index: 1002;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
         /* Diamond Shop Menu */
         .diamond-shop-menu {
             position: fixed;
@@ -1667,6 +1778,235 @@ html {
     <div class="diamond-shop-button" id="diamondShopButton">
         💎
     </div>
+
+    <!-- Achievements Button -->
+    <div class="achievements-button" id="achievementsButton">
+        🏆
+    </div>
+
+    <!-- Achievements Menu -->
+    <div class="achievements-menu" id="achievementsMenu">
+        <button class="close-button" id="closeAchievementsMenu">✕</button>
+        <h2>Achievements</h2>
+        <div class="achievements-grid" id="achievementsList"></div>
+    </div>
+
+    <style>
+        .achievements-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            padding: 20px;
+            width: 800px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1001;
+            display: none;
+        }
+
+        .achievements-menu.open {
+            display: block;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            padding: 10px;
+        }
+
+        .achievement-item {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        .achievement-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .achievement-item.locked {
+            opacity: 0.6;
+            filter: grayscale(1);
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: #FFD700;
+        }
+
+        .achievement-info {
+            flex-grow: 1;
+        }
+
+        .achievement-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .achievement-description {
+            font-size: 0.9em;
+            color: var(--secondary-text);
+        }
+
+        .achievement-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--container-bg);
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            padding: 15px;
+            color: var(--text-color);
+            box-shadow: 0 4px 8px var(--shadow-color);
+            z-index: 1002;
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
+
+    <script>
+        // Achievement definitions
+        const achievements = [
+            { id: 'firstClick', name: "First Click", description: "Make your first click", icon: "🎯", achieved: false },
+            { id: 'tenClicks', name: "Getting Started", description: "Reach 10 clicks", icon: "🎮", achieved: false },
+            { id: 'hundredClicks', name: "Century Club", description: "Reach 100 clicks", icon: "💯", achieved: false },
+            { id: 'firstUpgrade', name: "Power Up!", description: "Buy your first multiplier upgrade", icon: "⚡", achieved: false },
+            { id: 'firstRebirth', name: "New Beginning", description: "Perform your first rebirth", icon: "🔄", achieved: false },
+            { id: 'firstDiamond', name: "Diamond Hunter", description: "Earn your first diamond", icon: "💎", achieved: false },
+            { id: 'autoClicker', name: "Automation", description: "Unlock the auto clicker", icon: "🤖", achieved: false },
+            { id: 'timeWarp', name: "Time Master", description: "Use time warp for the first time", icon: "⌛", achieved: false },
+            { id: 'quantumLeap', name: "Quantum Explorer", description: "Perform your first quantum leap", icon: "🌌", achieved: false },
+            { id: 'gardenMaster', name: "Garden Master", description: "Plant your first quantum garden", icon: "🌱", achieved: false },
+            { id: 'cosmicPower', name: "Cosmic Power", description: "Activate the Cosmic Harvester", icon: "🌟", achieved: false },
+            { id: 'timeBender', name: "Time Bender", description: "Use Time Fracture", icon: "🕰️", achieved: false }
+        ];
+
+        // Function to check achievements
+        function checkAchievements() {
+            achievements.forEach(achievement => {
+                if (!achievement.achieved) {
+                    switch(achievement.id) {
+                        case 'firstClick':
+                            if (count >= 1) unlockAchievement(achievement);
+                            break;
+                        case 'tenClicks':
+                            if (count >= 10) unlockAchievement(achievement);
+                            break;
+                        case 'hundredClicks':
+                            if (count >= 100) unlockAchievement(achievement);
+                            break;
+                        case 'firstUpgrade':
+                            if (multiplier > 1) unlockAchievement(achievement);
+                            break;
+                        case 'firstRebirth':
+                            if (rebirthLevel >= 1) unlockAchievement(achievement);
+                            break;
+                        case 'firstDiamond':
+                            if (diamonds >= 1) unlockAchievement(achievement);
+                            break;
+                        case 'autoClicker':
+                            if (autoClickerEnabled) unlockAchievement(achievement);
+                            break;
+                        case 'timeWarp':
+                            if (timeWarpActive) unlockAchievement(achievement);
+                            break;
+                        case 'quantumLeap':
+                            if (quantumLeapCooldown) unlockAchievement(achievement);
+                            break;
+                        case 'gardenMaster':
+                            if (quantumGardenPlanted) unlockAchievement(achievement);
+                            break;
+                        case 'cosmicPower':
+                            if (cosmicHarvesterActive) unlockAchievement(achievement);
+                            break;
+                        case 'timeBender':
+                            if (timeFractureActive) unlockAchievement(achievement);
+                            break;
+                    }
+                }
+            });
+        }
+
+        // Function to unlock achievement
+        function unlockAchievement(achievement) {
+            achievement.achieved = true;
+            showAchievementNotification(achievement);
+            updateAchievementsDisplay();
+            saveGameData();
+        }
+
+        // Function to show achievement notification
+        function showAchievementNotification(achievement) {
+            const notification = document.createElement('div');
+            notification.className = 'achievement-notification';
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center;">
+                    <span style="font-size: 2rem; margin-right: 10px;">${achievement.icon}</span>
+                    <div>
+                        <div style="font-weight: bold;">Achievement Unlocked!</div>
+                        <div>${achievement.name}</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Function to update achievements display
+        function updateAchievementsDisplay() {
+            const achievementsList = document.getElementById('achievementsList');
+            achievementsList.innerHTML = '';
+
+            achievements.forEach(achievement => {
+                const achievementElement = document.createElement('div');
+                achievementElement.className = `achievement-item ${achievement.achieved ? '' : 'locked'}`;
+                achievementElement.innerHTML = `
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">${achievement.name}</div>
+                        <div class="achievement-description">${achievement.description}</div>
+                    </div>
+                `;
+                achievementsList.appendChild(achievementElement);
+            });
+        }
+
+        // Achievements menu functionality
+        document.getElementById('achievementsButton').addEventListener('click', function() {
+            isShopOpen = true;
+            document.getElementById('achievementsMenu').classList.add('open');
+            document.getElementById('blurOverlay').classList.add('active');
+            updateAchievementsDisplay();
+        });
+
+        document.getElementById('closeAchievementsMenu').addEventListener('click', function() {
+            document.getElementById('achievementsMenu').classList.remove('open');
+            document.getElementById('blurOverlay').classList.remove('active');
+            isShopOpen = false;
+        });
+
+        // Add achievement checking to counter updates
+        const originalUpdateCounter = updateCounter;
+        updateCounter = function(saveData = true) {
+            originalUpdateCounter(saveData);
+            checkAchievements();
+        };
+    </script>
 
     <!-- Shop Menu -->
     <div class="shop-menu" id="shopMenu">
@@ -1941,6 +2281,7 @@ html {
         </div>
     </div>
 
+    <script src="script.js"></script>
     <script>
         // Permanent ban check - must be first thing in the script
         if (localStorage.getItem('permanentBan') === 'true') {
@@ -3020,6 +3361,15 @@ html {
                 if (isShopOpen) return;
 
                 const now = Date.now();
+                
+                // Check for click-based achievements
+                if (count === 0) {
+                    unlockAchievement(achievements.find(a => a.id === 'firstClick'));
+                } else if (count === 9) {
+                    unlockAchievement(achievements.find(a => a.id === 'tenClicks'));
+                } else if (count === 99) {
+                    unlockAchievement(achievements.find(a => a.id === 'hundredClicks'));
+                }
 
                 // Track clicks for rate limiting
                 clickHistory.push(now);
@@ -3092,6 +3442,11 @@ html {
                     upgradeCost *= 2;
                     upgradeCooldownActive = true;
                     upgradeCooldownEnd = Date.now() + 5000;
+                    
+                    // Check first upgrade achievement
+                    if (multiplier === 2) {
+                        unlockAchievement(achievements.find(a => a.id === 'firstUpgrade'));
+                    }
 
                     upgradeCooldownOverlay.style.display = 'flex';
                     upgradeCooldownText.textContent = '5.0';
@@ -3119,6 +3474,14 @@ html {
                         rebirthLevel++;
                         diamonds += diamondBonus;
                         diamondBonus = Math.floor(rebirthLevel / 5) + 1; // Increase diamond bonus every 5 rebirths
+                        
+                        // Check rebirth and diamond achievements
+                        if (rebirthLevel === 1) {
+                            unlockAchievement(achievements.find(a => a.id === 'firstRebirth'));
+                        }
+                        if (diamonds === diamondBonus) {
+                            unlockAchievement(achievements.find(a => a.id === 'firstDiamond'));
+                        }
                         count = 0;
                         multiplier = 1;
                         upgradeCost = 10;
