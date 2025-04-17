@@ -50,7 +50,7 @@
             margin: 0;
             padding: 0;
         }
-        
+
         :root {
             --bg-color: #f5f5f5;
             --container-bg: white;
@@ -69,7 +69,7 @@
             --cooldown-overlay: rgba(0, 0, 0, 0.5);
             --diamond-color: #4fc3f7;
         }
-        
+
 
         body.dark-mode {
             --bg-color: #121212;
@@ -168,7 +168,7 @@
             background-size: 400% 400%;
             animation: rainbowBackground 10s ease infinite;
         }
-        
+
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -180,7 +180,7 @@
             color: var(--text-color);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-        
+
         .main-content {
             display: flex;
             flex-direction: column;
@@ -191,14 +191,14 @@
             position: relative;
             padding-bottom: 70px; /* Space for cookie banner */
         }
-        
+
         .theme-menu {
             position: absolute;
             top: 15px;
             right: 15px;
             z-index: 100;
         }
-        
+
         .theme-button {
             background-color: var(--container-bg);
             color: var(--text-color);
@@ -212,16 +212,16 @@
             box-shadow: 0 2px 5px var(--shadow-color);
             transition: all 0.3s ease;
         }
-        
+
         .theme-button:hover {
             box-shadow: 0 4px 8px var(--shadow-color);
         }
-        
+
         .theme-button .icon {
             margin-right: 5px;
             font-size: 1rem;
         }
-        
+
         /* New Theme Menu Styles */
         .theme-menu-panel {
             display: none;
@@ -419,7 +419,7 @@
             opacity: 0.9;
             transform: translateY(-2px);
         }
-        
+
        .credit-box {
             font-size: 0.75rem;
             color: var(--tertiary-text);
@@ -432,18 +432,18 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add shadow for readability */
             transition: all 0.3s ease;
         }
-        
+
         /* Add a specific styling for dark mode if needed */
         body.dark-mode .credit-box {
             color: var(--text-color); /* High contrast color in dark mode */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Ensures text is readable against dark background */
         }
-        
+
         .trademark {
             font-size: 0.6rem;
             vertical-align: super;
         }
-        
+
         .game-container {
             text-align: center;
             padding: 2rem;
@@ -456,7 +456,7 @@
             min-height: 400px;
             transition: all 0.3s ease;
         }
-        
+
                 .counter {
             font-size: 3rem;
             font-weight: bold;
@@ -464,19 +464,19 @@
             margin: 1rem 0;
             transition: color 0.3s ease;
         }
-        
+
         @media (min-width: 768px) {
             .counter {
                 font-size: 5rem;
             }
         }
-        
+
         .instructions {
             color: var(--secondary-text);
             margin-bottom: 1rem;
             transition: color 0.3s ease;
         }
-        
+
         .button {
             padding: 0.5rem 1rem;
             border: none;
@@ -488,7 +488,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .cooldown-overlay {
             position: absolute;
             top: 0;
@@ -503,7 +503,7 @@
             font-weight: bold;
             transition: width 0.1s linear;
         }
-        
+
         .button-container {
             position: absolute;
             bottom: 20px;
@@ -511,46 +511,46 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .reset-button {
             background-color: #f44336;
             color: white;
         }
-        
+
         .reset-button:hover {
             background-color: #d32f2f;
         }
-        
+
         .upgrade-button {
             background-color: #4CAF50;
             color: white;
         }
-        
+
         .upgrade-button:hover {
             background-color: #388E3C;
         }
-        
+
         .upgrade-button:disabled {
             background-color: #9E9E9E;
             cursor: not-allowed;
         }
-        
+
         .rebirth-button {
             background-color: var(--rebirth-color);
             color: white;
             font-weight: bold;
             margin-top: 10px;
         }
-        
+
         .rebirth-button:hover {
             background-color: var(--rebirth-hover);
         }
-        
+
         .rebirth-button:disabled {
             background-color: #9E9E9E;
             cursor: not-allowed;
         }
-        
+
         .stats {
             margin-top: 1rem;
             padding-top: 1rem;
@@ -559,12 +559,12 @@
             width: 100%;
             transition: border-color 0.3s ease;
         }
-        
+
         .multiplier {
             font-weight: bold;
             color: #4CAF50;
         }
-        
+
         .rebirth-stat {
             font-weight: bold;
             color: var(--rebirth-color);
@@ -574,7 +574,7 @@
             font-weight: bold;
             color: var(--diamond-color);
         }
-        
+
         .enter-button {
     background-color: #2196F3;
     color: white;
@@ -593,21 +593,21 @@
         padding: 1rem 2rem;
     }
 }
-        
+
         .enter-button:hover {
             background-color: #1976D2;
         }
-        
+
         .enter-button:active {
             transform: scale(0.95);
         }
-        
+
         .enter-button span {
             font-size: 0.8rem;
             display: block;
             margin-top: 0.5rem;
         }
-        
+
         .warning-box {
             margin-top: 20px;
             background-color: var(--warning-bg);
@@ -620,7 +620,7 @@
             text-align: center;
             transition: all 0.3s ease;
         }
-        
+
         .save-message {
             font-size: 0.8rem;
             color: var(--tertiary-text);
@@ -632,7 +632,7 @@
             width: 300px;
             transition: color 0.3s ease;
         }
-        
+
         .cookie-consent {
             position: fixed;
             bottom: 0;
@@ -648,11 +648,11 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        
+
         .cookie-text {
             margin-right: 20px;
         }
-        
+
         .cookie-button {
             background-color: #4CAF50;
             color: white;
@@ -662,7 +662,7 @@
             cursor: pointer;
             font-weight: bold;
         }
-        
+
         .cookie-button:hover {
             background-color: #388E3C;
         }
@@ -1432,56 +1432,56 @@
         <div id="customThemePanel" class="custom-theme-panel">
             <button class="close-button" id="closeCustomThemePanel">✕</button>
             <h2>Theme Customizer</h2>
-            
+
             <div class="theme-menu-buttons">
                 <div id="lightTheme"></div>
                 <div id="darkTheme"></div>
                 <div id="rainbowLightTheme"></div>
                 <div id="rainbowDarkTheme"></div>
             </div>
-            
+
             <div class="custom-theme-controls">
                 <div class="custom-theme-control">
                     <label for="bgColor">Background Color</label>
                     <input type="color" id="bgColor" value="#f5f5f5">
                 </div>
-                
+
                 <div class="custom-theme-control">
                     <label for="containerBg">Container Background</label>
                     <input type="color" id="containerBg" value="#ffffff">
                 </div>
-                
+
                 <div class="custom-theme-control">
                     <label for="textColor">Text Color</label>
                     <input type="color" id="textColor" value="#333333">
                 </div>
-                
+
                 <div class="custom-theme-control">
                     <label for="secondaryText">Secondary Text</label>
                     <input type="color" id="secondaryText" value="#666666">
                 </div>
-                
+
                 <div class="custom-theme-control">
                     <label for="borderColor">Border Color</label>
                     <input type="color" id="borderColor" value="#e0e0e0">
                 </div>
-                
+
                 <div class="custom-theme-control">
                     <label for="rebirthColor">Rebirth Button</label>
                     <input type="color" id="rebirthColor" value="#673AB7">
                 </div>
-                
+
                 <div class="custom-theme-control">
                     <label for="shadowOpacity">Shadow Opacity</label>
                     <input type="range" id="shadowOpacity" min="0" max="100" value="10">
                 </div>
-                
+
                 <div class="custom-theme-control">
                     <label for="contrast">Contrast</label>
                     <input type="range" id="contrast" min="80" max="150" value="100">
                 </div>
             </div>
-            
+
             <div class="custom-theme-presets">
                 <div class="custom-theme-preset" data-preset="light">Light</div>
                 <div class="custom-theme-preset" data-preset="dark">Dark</div>
@@ -1490,7 +1490,7 @@
                 <div class="custom-theme-preset" data-preset="sunset">Sunset</div>
                 <div class="custom-theme-preset" data-preset="matrix">Matrix</div>
             </div>
-            
+
             <div class="custom-theme-actions">
                 <button class="custom-theme-btn reset" id="resetCustomTheme">Reset</button>
                 <button class="custom-theme-btn save" id="saveCustomTheme">Save</button>
@@ -1499,16 +1499,16 @@
         </div>
 
         <div class="credit-box">Made by Damian B - Meowinc<span class="trademark">™</span></div>
-        
+
         <div class="game-container">
             <div class="instructions">Press Enter key or click the button below <span id="rateLimitInfo" class="rate-limiter"></span></div>
             <div class="counter" id="counter">0</div>
-            
+
             <button class="button enter-button" id="enterButton">
                 CLICK
                 <span>or press Enter key</span>
             </button>
-            
+
             <div class="stats">
                 <p>Score per press: <span id="multiplier" class="multiplier">1</span></p>
                 <p>Next upgrade cost: <span id="upgradeCost">10</span> points</p>
@@ -1516,17 +1516,20 @@
                 <p>Diamonds: <span id="diamondStat" class="diamond-stat">0</span> (+<span id="diamondBonus">1</span> per rebirth)</p>
                 <p class="save-message" id="saveMessage">Accept cookies to save your progress</p>
             </div>
-            
+
             <div class="button-container">
                 <button class="button reset-button" id="resetButton">Reset Game</button>
+                <button class="button" id="exportButton" style="background-color: #4CAF50; color: white; margin-top: 10px;">Export Save</button>
+                <input type="file" id="importInput" style="display: none;" accept=".json">
+                <button class="button" id="importButton" style="background-color: #2196F3; color: white; margin-top: 10px;">Import Save</button>
             </div>
         </div>
-        
+
         <div class="warning-box">
             No external autoclickers or you'll be blacklisted from the website!
         </div>
     </div>
-    
+
     <div id="cookieConsent" class="cookie-consent">
         <div class="cookie-text">This site uses cookies to save your game progress. By accepting, you'll never lose your clicks again!</div>
         <button id="acceptCookies" class="cookie-button">Accept Cookies</button>
@@ -1546,7 +1549,7 @@
     <div class="shop-menu" id="shopMenu">
         <button class="close-button" id="closeShopMenu">✕</button>
         <h2>Shop</h2>
-        
+
         <!-- Multiplier Upgrade Item -->
         <div class="shop-item">
             <h3>Multiplier Upgrade</h3>
@@ -1558,7 +1561,7 @@
                 <span id="upgradeCooldownText"></span>
             </div>
         </div>
-        
+
         <!-- Rebirth Item -->
         <div class="shop-item">
             <h3>Rebirth</h3>
@@ -1738,7 +1741,7 @@
         <button class="close-button" id="closeDiamondShopMenu">✕</button>
         <h2>Diamond Shop</h2>
         <p>Use diamonds to temporarily unlock rebirth-locked items!</p>
-        
+
         <!-- Auto Clicker Temporary Unlock -->
         <div class="diamond-shop-item" id="tempAutoClickerItem">
             <h3>Auto Clicker (Temporary)</h3>
@@ -1750,7 +1753,7 @@
             </button>
             <div class="item-status" id="tempAutoClickerStatus">Not active</div>
         </div>
-        
+
         <!-- Time Warp Temporary Unlock -->
         <div class="diamond-shop-item" id="tempTimeWarpItem">
             <h3>Time Warp (Temporary)</h3>
@@ -1762,7 +1765,7 @@
             </button>
             <div class="item-status" id="tempTimeWarpStatus">Not active</div>
         </div>
-        
+
         <!-- Quantum Leap Temporary Unlock -->
         <div class="diamond-shop-item" id="tempQuantumLeapItem">
             <h3>Quantum Leap (Temporary)</h3>
@@ -1774,7 +1777,7 @@
             </button>
             <div class="item-status" id="tempQuantumLeapStatus">Not active</div>
         </div>
-        
+
         <!-- Quantum Garden Temporary Unlock -->
         <div class="diamond-shop-item" id="tempQuantumGardenItem">
             <h3>Quantum Garden (Temporary)</h3>
@@ -1956,41 +1959,41 @@
             const cosmicHarvesterCooldownOverlay = document.getElementById('cosmicHarvesterCooldownOverlay');
             const cosmicHarvesterCooldownText = document.getElementById('cosmicHarvesterCooldownText');
             const cosmicHarvesterStatus = document.getElementById('cosmicHarvesterStatus');
-            
+
             const timeFractureItem = document.getElementById('timeFractureItem');
             const timeFractureButton = document.getElementById('timeFractureButton');
             const timeFractureCooldownOverlay = document.getElementById('timeFractureCooldownOverlay');
             const timeFractureCooldownText = document.getElementById('timeFractureCooldownText');
             const timeFractureStatus = document.getElementById('timeFractureStatus');
-            
+
             const dimensionalPortalItem = document.getElementById('dimensionalPortalItem');
             const dimensionalPortalButton = document.getElementById('dimensionalPortalButton');
             const dimensionalPortalStatus = document.getElementById('dimensionalPortalStatus');
-            
+
             const realityWarperItem = document.getElementById('realityWarperItem');
             const realityWarperButton = document.getElementById('realityWarperButton');
             const realityWarperStatus = document.getElementById('realityWarperStatus');
-            
+
             const quantumSingularityItem = document.getElementById('quantumSingularityItem');
             const quantumSingularityButton = document.getElementById('quantumSingularityButton');
             const quantumSingularityStatus = document.getElementById('quantumSingularityStatus');
-            
+
             const infinityEngineItem = document.getElementById('infinityEngineItem');
             const infinityEngineButton = document.getElementById('infinityEngineButton');
             const infinityEngineStatus = document.getElementById('infinityEngineStatus');
-            
+
             const voidExtractorItem = document.getElementById('voidExtractorItem');
             const voidExtractorButton = document.getElementById('voidExtractorButton');
             const voidExtractorStatus = document.getElementById('voidExtractorStatus');
-            
+
             const celestialForgeItem = document.getElementById('celestialForgeItem');
             const celestialForgeButton = document.getElementById('celestialForgeButton');
             const celestialForgeStatus = document.getElementById('celestialForgeStatus');
-            
+
             const eternityCoreItem = document.getElementById('eternityCoreItem');
             const eternityCoreButton = document.getElementById('eternityCoreButton');
             const eternityCoreStatus = document.getElementById('eternityCoreStatus');
-            
+
             const omnipotentAscensionItem = document.getElementById('omnipotentAscensionItem');
             const omnipotentAscensionButton = document.getElementById('omnipotentAscensionButton');
             const omnipotentAscensionStatus = document.getElementById('omnipotentAscensionStatus');
@@ -2119,7 +2122,7 @@
                     shadowOpacity: shadowOpacityInput.value,
                     contrast: contrastInput.value
                 };
-                
+
                 setCookie('customTheme', JSON.stringify(customTheme), 365);
                 alert('Custom theme saved!');
             });
@@ -2134,7 +2137,7 @@
                 rebirthColorInput.value = '#673AB7';
                 shadowOpacityInput.value = 10;
                 contrastInput.value = 100;
-                
+
                 applyCustomTheme();
             });
 
@@ -2210,7 +2213,7 @@
                         contrastInput.value = 150;
                         break;
                 }
-                
+
                 applyCustomTheme();
             }
 
@@ -2218,10 +2221,10 @@
             function applyCustomTheme() {
                 document.body.classList.remove('dark-mode', 'rainbow-light-mode', 'rainbow-dark-mode');
                 document.body.classList.add('custom-theme');
-                
+
                 // Calculate contrast adjustment
                 const contrast = parseInt(contrastInput.value) / 100;
-                
+
                 // Apply custom colors
                 document.body.style.setProperty('--bg-color', bgColorInput.value);
                 document.body.style.setProperty('--container-bg', containerBgInput.value);
@@ -2232,7 +2235,7 @@
                 document.body.style.setProperty('--rebirth-color', rebirthColorInput.value);
                 document.body.style.setProperty('--rebirth-hover', adjustColor(rebirthColorInput.value, 0.9));
                 document.body.style.setProperty('--shadow-color', `rgba(0, 0, 0, ${parseInt(shadowOpacityInput.value)/100})`);
-                
+
                 currentTheme = 'custom';
                 if (cookiesAccepted) {
                     setCookie('theme', 'custom', 365);
@@ -2245,12 +2248,12 @@
                 let r = parseInt(color.substring(1, 3), 16);
                 let g = parseInt(color.substring(3, 5), 16);
                 let b = parseInt(color.substring(5, 7), 16);
-                
+
                 // Adjust brightness
                 r = Math.min(255, Math.max(0, Math.floor(r * factor)));
                 g = Math.min(255, Math.max(0, Math.floor(g * factor)));
                 b = Math.min(255, Math.max(0, Math.floor(b * factor)));
-                
+
                 // Convert back to hex
                 return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
             }
@@ -2278,7 +2281,7 @@
                         rebirthColorInput.value = theme.rebirthColor || '#673AB7';
                         shadowOpacityInput.value = theme.shadowOpacity || 10;
                         contrastInput.value = theme.contrast || 100;
-                        
+
                         applyCustomTheme();
                     }
                 }
@@ -2869,12 +2872,12 @@
 
                 // Track clicks for rate limiting
                 clickHistory.push(now);
-                
+
                 // Remove clicks older than 1 second
                 while (clickHistory.length > 0 && now - clickHistory[0] > 1000) {
                     clickHistory.shift();
                 }
-                
+
                 // Check if user has exceeded 20 clicks in the last second
                 if (clickHistory.length > 20) {
                     isBlacklisted = true;
@@ -3350,7 +3353,7 @@
                     voidExtractorActive = false;
                     celestialForgeActive = false;
                     eternityCoreActive = false;
-                    
+
                     updateCounter();
                     saveMessageElement.textContent = "You have ascended to omnipotence! The universe is yours to command.";
                 }
@@ -3380,13 +3383,13 @@
                     celestialForgeActive = false;
                     eternityCoreActive = false;
                     omnipotentAscensionAchieved = false;
-                    
+
                     // Reset temporary unlocks
                     tempAutoClickerActive = false;
                     tempTimeWarpActive = false;
                     tempQuantumLeapActive = false;
                     tempQuantumGardenActive = false;
-                    
+
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
                         "Game reset. Progress saved automatically" : 
@@ -3420,7 +3423,7 @@
                 isShopOpen = true;
                 shopMenu.classList.add('open');
                 blurOverlay.classList.add('active');
-            
+
                 if (autoClickerEnabled) {
                     clearInterval(autoClickerInterval);
                 }
@@ -3441,7 +3444,7 @@
                 isShopOpen = true;
                 diamondShopMenu.classList.add('open');
                 blurOverlay.classList.add('active');
-            
+
                 if (autoClickerEnabled) {
                     clearInterval(autoClickerInterval);
                 }
@@ -3486,13 +3489,13 @@
                 if (tempAutoClickerActive) {
                     // Show the auto clicker item
                     autoClickerItem.style.display = 'block';
-                    
+
                     // Set a timeout to end the temporary unlock
                     setTimeout(() => {
                         tempAutoClickerActive = false;
                         updateCounter();
                     }, tempAutoClickerEnd - Date.now());
-                    
+
                     updateCounter();
                 }
             }
@@ -3515,13 +3518,13 @@
                 if (tempTimeWarpActive) {
                     // Show the time warp item
                     timeWarpItem.style.display = 'block';
-                    
+
                     // Set a timeout to end the temporary unlock
                     setTimeout(() => {
                         tempTimeWarpActive = false;
                         updateCounter();
                     }, tempTimeWarpEnd - Date.now());
-                    
+
                     updateCounter();
                 }
             }
@@ -3544,13 +3547,13 @@
                 if (tempQuantumLeapActive) {
                     // Show the quantum leap item
                     quantumLeapItem.style.display = 'block';
-                    
+
                     // Set a timeout to end the temporary unlock
                     setTimeout(() => {
                         tempQuantumLeapActive = false;
                         updateCounter();
                     }, tempQuantumLeapEnd - Date.now());
-                    
+
                     updateCounter();
                 }
             }
@@ -3573,13 +3576,13 @@
                 if (tempQuantumGardenActive) {
                     // Show the quantum garden item
                     quantumGardenItem.style.display = 'block';
-                    
+
                     // Set a timeout to end the temporary unlock
                     setTimeout(() => {
                         tempQuantumGardenActive = false;
                         updateCounter();
                     }, tempQuantumGardenEnd - Date.now());
-                    
+
                     updateCounter();
                 }
             }
@@ -3655,6 +3658,96 @@
                 updateCounter();
             });
 
+            // Export save functionality
+            document.getElementById('exportButton').addEventListener('click', function() {
+                const saveData = {
+                    count,
+                    multiplier,
+                    upgradeCost,
+                    rebirthLevel,
+                    rebirthCost,
+                    diamonds,
+                    diamondBonus,
+                    autoClickerEnabled,
+                    quantumGardenPlanted,
+                    cosmicHarvesterActive,
+                    timeFractureActive,
+                    dimensionalPortalOpen,
+                    realityWarped,
+                    quantumSingularityCreated,
+                    infinityEngineActive,
+                    voidExtractorActive,
+                    celestialForgeActive,
+                    eternityCoreActive,
+                    omnipotentAscensionAchieved,
+                    tempAutoClickerActive,
+                    tempTimeWarpActive,
+                    tempQuantumLeapActive,
+                    tempQuantumGardenActive
+                };
+
+                const blob = new Blob([JSON.stringify(saveData)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'enterclicker-save.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            // Import save functionality
+            document.getElementById('importButton').addEventListener('click', function() {
+                document.getElementById('importInput').click();
+            });
+
+            document.getElementById('importInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const saveData = JSON.parse(e.target.result);
+                            
+                            // Validate save data
+                            if (!saveData.count && saveData.count !== 0) throw new Error('Invalid save file');
+                            
+                            // Apply save data
+                            count = saveData.count;
+                            multiplier = saveData.multiplier;
+                            upgradeCost = saveData.upgradeCost;
+                            rebirthLevel = saveData.rebirthLevel;
+                            rebirthCost = saveData.rebirthCost;
+                            diamonds = saveData.diamonds;
+                            diamondBonus = saveData.diamondBonus;
+                            autoClickerEnabled = saveData.autoClickerEnabled;
+                            quantumGardenPlanted = saveData.quantumGardenPlanted;
+                            cosmicHarvesterActive = saveData.cosmicHarvesterActive;
+                            timeFractureActive = saveData.timeFractureActive;
+                            dimensionalPortalOpen = saveData.dimensionalPortalOpen;
+                            realityWarped = saveData.realityWarped;
+                            quantumSingularityCreated = saveData.quantumSingularityCreated;
+                            infinityEngineActive = saveData.infinityEngineActive;
+                            voidExtractorActive = saveData.voidExtractorActive;
+                            celestialForgeActive = saveData.celestialForgeActive;
+                            eternityCoreActive = saveData.eternityCoreActive;
+                            omnipotentAscensionAchieved = saveData.omnipotentAscensionAchieved;
+                            tempAutoClickerActive = saveData.tempAutoClickerActive;
+                            tempTimeWarpActive = saveData.tempTimeWarpActive;
+                            tempQuantumLeapActive = saveData.tempQuantumLeapActive;
+                            tempQuantumGardenActive = saveData.tempQuantumGardenActive;
+
+                            updateCounter();
+                            alert('Save file imported successfully!');
+                        } catch (error) {
+                            alert('Error importing save file. Make sure it\'s a valid Enter Clicker save file.');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
             resetGame.addEventListener('click', function() {
                 if (confirm("Are you sure you want to reset your game progress? This will reset EVERYTHING including rebirth levels and diamonds!")) {
                     count = 0;
@@ -3678,13 +3771,13 @@
                     celestialForgeActive = false;
                     eternityCoreActive = false;
                     omnipotentAscensionAchieved = false;
-                    
+
                     // Reset temporary unlocks
                     tempAutoClickerActive = false;
                     tempTimeWarpActive = false;
                     tempQuantumLeapActive = false;
                     tempQuantumGardenActive = false;
-                    
+
                     updateCounter();
                     saveMessageElement.textContent = cookiesAccepted ? 
                         "Game reset. Progress saved automatically" : 
