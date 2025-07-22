@@ -33,6 +33,12 @@
             font-weight: bold;
             margin: 20px 0;
             color: #007bff;
+            cursor: pointer;
+            transition: color 0.3s, text-decoration 0.3s;
+        }
+        .code:hover {
+            color: red;
+            text-decoration: line-through;
         }
         .countdown {
             font-size: 1.2rem;
@@ -55,6 +61,11 @@
         button:hover {
             background-color: #0056b3;
         }
+        .confetti {
+            font-size: 3rem;
+            margin-top: 20px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -66,6 +77,7 @@
         <div class="button-container">
             <button id="createCodeButton">Create Code</button>
         </div>
+        <div class="confetti" id="confetti">🎉🎉🎉</div>
         <p style="margin-top: 20px;">Use this code before it expires. Enter it on the ban page to attempt unbanning.</p>
     </div>
 
@@ -73,6 +85,7 @@
         const unbanCodeElement = document.getElementById('unbanCode');
         const countdownElement = document.getElementById('countdown');
         const createCodeButton = document.getElementById('createCodeButton');
+        const confettiElement = document.getElementById('confetti');
         let countdownInterval;
 
         function generateCode() {
@@ -92,10 +105,27 @@
             localStorage.setItem('unbanCodeUsed', 'false');
 
             unbanCodeElement.textContent = code;
+            unbanCodeElement.style.display = 'block';
+            confettiElement.style.display = 'none';
             updateCountdown();
 
             clearInterval(countdownInterval);
             countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function removeCode() {
+            localStorage.removeItem('generatedUnbanCode');
+            localStorage.removeItem('unbanCodeExpiry');
+            localStorage.removeItem('unbanCodeUsed');
+            unbanCodeElement.textContent = 'Code deleted.';
+            countdownElement.textContent = '';
+            clearInterval(countdownInterval);
+        }
+
+        function celebrateCodeUsed() {
+            confettiElement.style.display = 'block';
+            unbanCodeElement.style.display = 'none';
+            countdownElement.textContent = 'Code used!';
         }
 
         function updateCountdown() {
@@ -107,16 +137,19 @@
             countdownElement.textContent = `Time remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             if (remainingTime <= 0) {
-                unbanCodeElement.textContent = 'Expired';
-                countdownElement.textContent = 'Code expired.';
-                localStorage.removeItem('generatedUnbanCode');
-                localStorage.removeItem('unbanCodeExpiry');
-                localStorage.removeItem('unbanCodeUsed');
-                clearInterval(countdownInterval);
+                removeCode();
             }
         }
 
         createCodeButton.addEventListener('click', createCode);
+        unbanCodeElement.addEventListener('click', removeCode);
+
+        // Listen for unban code being marked as used from other pages
+        window.addEventListener('storage', () => {
+            if (localStorage.getItem('unbanCodeUsed') === 'true') {
+                celebrateCodeUsed();
+            }
+        });
     </script>
 </body>
 </html>
