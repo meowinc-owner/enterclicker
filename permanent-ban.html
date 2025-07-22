@@ -42,7 +42,7 @@
             padding: 10px;
             width: 250px;
             border: 1px solid #ced4da;
-            border-radius:  4px;
+            border-radius: 4px;
             margin-right: 10px;
         }
         button {
@@ -83,41 +83,22 @@
         <p style="margin-top: 30px;">If you believe this is a mistake, please email bertid000@niagaracatholic.ca or meowinc.owner@gmail.com with proof of innocence.</p>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDRZjJpvd9TvP7aNaXnHvAKwbycn-O1VW4",
-            authDomain: "enterclickerleaderboard.firebaseapp.com",
-            projectId: "enterclickerleaderboard",
-            storageBucket: "enterclickerleaderboard.appspot.com",
-            messagingSenderId: "339564023566",
-            appId: "1:339564023566:web:bacf4857486349c240515f",
-            measurementId: "G-VZ3YBCEKYW"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
         const PERMANENT_BAN_PASSCODE = "BANEVASION-APPEAL7819350264";
-        const userId = 'replace_with_user_id';
-        const userRef = db.collection('bannedUsers').doc(userId);
-
         const unbanCodeInput = document.getElementById('unbanCode');
         const submitButton = document.getElementById('submitCode');
         const errorMessage = document.getElementById('errorMessage');
-
-        async function checkPermanentBan() {
-            const doc = await userRef.get();
-            const data = doc.exists ? doc.data() : {};
-            if (!data.permanentBan) {
-                window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-            }
+        
+        // Check if actually permanently banned
+        if (localStorage.getItem('permanentBan') !== 'true') {
+            window.location.href = "https://meowinc-owner.github.io/enterclicker/";
         }
-
-        async function handleUnbanAttempt() {
+        
+        // Check unban code
+        submitButton.addEventListener('click', () => {
             if (unbanCodeInput.value.trim() === PERMANENT_BAN_PASSCODE) {
-                await userRef.update({ permanentBan: firebase.firestore.FieldValue.delete() });
-                await userRef.update({ blacklistExpiry: firebase.firestore.FieldValue.delete() });
+                localStorage.removeItem('permanentBan');
+                localStorage.removeItem('blacklistExpiry');
                 window.location.href = "https://meowinc-owner.github.io/enterclicker/";
             } else {
                 errorMessage.style.display = 'block';
@@ -125,16 +106,27 @@
                     errorMessage.style.display = 'none';
                 }, 3000);
             }
-        }
-
-        submitButton.addEventListener('click', handleUnbanAttempt);
+        });
+        
+        // Also allow Enter key to submit
         unbanCodeInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 submitButton.click();
             }
         });
-
-        checkPermanentBan();
+        
+        // Basic console tampering detection
+        let consoleOpen = false;
+        const checkConsole = () => {
+            consoleOpen = true;
+        };
+        console.log('%c', checkConsole);
+        setTimeout(() => {
+            if (consoleOpen) {
+                // Just refresh to maintain ban if they keep console open
+                window.location.reload();
+            }
+        }, 1000);
     </script>
 </body>
 </html>
