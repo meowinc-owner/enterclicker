@@ -521,7 +521,6 @@
             background-color: #d32f2f;
         }
         
-        
         .upgrade-button {
             background-color: #4CAF50;
             color: white;
@@ -1520,10 +1519,6 @@
             
             <div class="button-container">
                 <button class="button reset-button" id="resetButton">Reset Game</button>
-                <button class="button" id="exportSaveBtn">Export Save</button>
-                <button class="button" id="importSaveBtn">Import Save</button>
-                <input type="file" id="importFileInput" accept=".json" style="display: none;">
-
             </div>
         </div>
         
@@ -3718,92 +3713,6 @@
                 welcomeOverlay.style.display = 'none';
             });
         });
-        async function getSHA256Hash(text) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-function getCurrentSaveData() {
-    return {
-        score: parseInt(localStorage.getItem("score") || 0),
-        multiplier: parseInt(localStorage.getItem("multiplier") || 1),
-        rebirths: parseInt(localStorage.getItem("rebirths") || 0),
-        diamonds: parseInt(localStorage.getItem("diamonds") || 0),
-    };
-}
-
-function applySaveData(data) {
-    if (!data) return;
-    localStorage.setItem("score", data.score ?? 0);
-    localStorage.setItem("multiplier", data.multiplier ?? 1);
-    localStorage.setItem("rebirths", data.rebirths ?? 0);
-    localStorage.setItem("diamonds", data.diamonds ?? 0);
-}
-
-function base64Encode(str) {
-    return btoa(unescape(encodeURIComponent(str)));
-}
-
-function base64Decode(str) {
-    return decodeURIComponent(escape(atob(str)));
-}
-
-document.getElementById("exportSaveBtn").addEventListener("click", async () => {
-    const saveData = getCurrentSaveData();
-    const jsonStr = JSON.stringify(saveData);
-    const encoded = base64Encode(jsonStr);
-    const hash = await getSHA256Hash(jsonStr);
-
-    const encryptedSave = {
-        data: encoded,
-        hash: hash
-    };
-
-    const blob = new Blob([JSON.stringify(encryptedSave, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "enterclicker_encrypted_save.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-});
-
-document.getElementById("importSaveBtn").addEventListener("click", () => {
-    document.getElementById("importFileInput").click();
-});
-
-document.getElementById("importFileInput").addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-        try {
-            const imported = JSON.parse(event.target.result);
-            const decoded = base64Decode(imported.data);
-            const expectedHash = await getSHA256Hash(decoded);
-
-            if (expectedHash !== imported.hash) {
-                alert("Invalid or tampered save file. Hash mismatch.");
-                return;
-            }
-
-            const saveData = JSON.parse(decoded);
-            applySaveData(saveData);
-            alert("Encrypted save file imported successfully! Reloading...");
-            location.reload();
-        } catch (err) {
-            alert("Failed to import encrypted save file. Are you sure it’s valid?");
-            console.error(err);
-        }
-    };
-    reader.readAsText(file);
-});
-
     </script>
 </body>
 </html>
