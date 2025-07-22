@@ -1,6 +1,122 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>...</head>
-<body>...</body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unban Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        .code {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #007bff;
+        }
+        .countdown {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            color: #dc3545;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Temporary Unban Code Generator</h1>
+        <p>Your generated unban code (valid for 5 minutes, one-time use):</p>
+        <div class="code" id="unbanCode">Click "Create Code"</div>
+        <div class="countdown" id="countdown"></div>
+        <div class="button-container">
+            <button id="createCodeButton">Create Code</button>
+        </div>
+        <p style="margin-top: 20px;">Use this code before it expires. Enter it on the ban page to attempt unbanning.</p>
+    </div>
+
+    <script>
+        const unbanCodeElement = document.getElementById('unbanCode');
+        const countdownElement = document.getElementById('countdown');
+        const createCodeButton = document.getElementById('createCodeButton');
+        let countdownInterval;
+
+        function generateCode() {
+            const charset = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = 'UNBAN-';
+            for (let i = 0; i < 8; i++) {
+                code += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return code;
+        }
+
+        function createCode() {
+            const code = generateCode();
+            const expiryTime = Date.now() + 5 * 60 * 1000;
+            localStorage.setItem('generatedUnbanCode', code);
+            localStorage.setItem('unbanCodeExpiry', expiryTime);
+            localStorage.setItem('unbanCodeUsed', 'false');
+
+            unbanCodeElement.textContent = code;
+            updateCountdown();
+
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function updateCountdown() {
+            const expiryTime = parseInt(localStorage.getItem('unbanCodeExpiry'));
+            const remainingTime = Math.max(0, expiryTime - Date.now());
+            const minutes = Math.floor(remainingTime / 60000);
+            const seconds = Math.floor((remainingTime % 60000) / 1000);
+
+            countdownElement.textContent = `Time remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (remainingTime <= 0) {
+                unbanCodeElement.textContent = 'Expired';
+                countdownElement.textContent = 'Code expired.';
+                localStorage.removeItem('generatedUnbanCode');
+                localStorage.removeItem('unbanCodeExpiry');
+                localStorage.removeItem('unbanCodeUsed');
+                clearInterval(countdownInterval);
+            }
+        }
+
+        createCodeButton.addEventListener('click', createCode);
+    </script>
+</body>
 </html>
