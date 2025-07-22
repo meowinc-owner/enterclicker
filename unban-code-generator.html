@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unban Code Generator</title>
+    <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDRZjJpvd9TvP7aNaXnHvAKwbycn-O1VW4",
+    authDomain: "enterclickerleaderboard.firebaseapp.com",
+    projectId: "enterclickerleaderboard",
+    storageBucket: "enterclickerleaderboard.appspot.com",
+    messagingSenderId: "339564023566",
+    appId: "1:339564023566:web:bacf4857486349c240515f",
+    measurementId: "G-VZ3YBCEKYW"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
