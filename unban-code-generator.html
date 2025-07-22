@@ -115,30 +115,34 @@
             return code;
         }
 
-        function createCode() {
+        async function createCode() {
             const code = generateCode();
             const expiryTime = Date.now() + 5 * 60 * 1000;
-            localStorage.setItem('generatedUnbanCode', code);
-            localStorage.setItem('unbanCodeExpiry', expiryTime);
-            localStorage.setItem('unbanCodeUsed', 'false');
-
+        
+            await db.collection('unbanCodes').doc(code).set({
+                code: code,
+                expiryTime: expiryTime,
+                used: false
+            });
+        
             unbanCodeElement.textContent = code;
             unbanCodeElement.style.display = 'block';
             confettiElement.style.display = 'none';
-            updateCountdown();
-
+            updateCountdown(expiryTime);
+        
             clearInterval(countdownInterval);
-            countdownInterval = setInterval(updateCountdown, 1000);
+            countdownInterval = setInterval(() => updateCountdown(expiryTime), 1000);
         }
 
-        function removeCode() {
-            localStorage.removeItem('generatedUnbanCode');
-            localStorage.removeItem('unbanCodeExpiry');
-            localStorage.removeItem('unbanCodeUsed');
+
+        async function removeCode() {
+            const code = unbanCodeElement.textContent;
+            await db.collection('unbanCodes').doc(code).delete();
             unbanCodeElement.textContent = 'Code deleted.';
             countdownElement.textContent = '';
             clearInterval(countdownInterval);
         }
+
 
         function celebrateCodeUsed() {
             confettiElement.style.display = 'block';
