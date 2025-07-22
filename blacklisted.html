@@ -179,17 +179,32 @@ submitButton.addEventListener('click', () => {
     }
 
     if (userCode === storedCode) {
-        // Mark code as used
-        localStorage.setItem('unbanCodeUsed', 'true');
-        // Unban actions:
-        localStorage.removeItem('permanentBan');
-        localStorage.removeItem('blacklistExpiry');
-        localStorage.removeItem('unbanAttempts');
-        window.location.href = 'https://meowinc-owner.github.io/enterclicker/';
-    } else {
-        errorMessage.textContent = 'Invalid unban code.';
-        errorMessage.style.display = 'block';
+        const db = firebase.firestore();
+
+async function validateUnbanCode(userCode) {
+    const doc = await db.collection('unbanCodes').doc(userCode).get();
+
+    if (!doc.exists) {
+        showError('Invalid unban code.');
+        return;
     }
+
+    const data = doc.data();
+
+    if (data.used) {
+        showError('Code already used.');
+        return;
+    }
+
+    if (Date.now() > data.expiryTime) {
+        showError('Code expired.');
+        return;
+    }
+
+    await db.collection('unbanCodes').doc(userCode).update({ used: true });
+    unbanUser();
+}
+
 });
 
         
