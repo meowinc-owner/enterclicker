@@ -87,123 +87,103 @@
         <p style="margin-top: 30px;">If you wish to appeal, please email bertid000@niagaracatholic.ca or meowinc.owner@gmail.com.</p>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRZjJpvd9TvP7aNaXnHvAKwbycn-O1VW4",
+            authDomain: "enterclickerleaderboard.firebaseapp.com",
+            projectId: "enterclickerleaderboard",
+            storageBucket: "enterclickerleaderboard.appspot.com",
+            messagingSenderId: "339564023566",
+            appId: "1:339564023566:web:bacf4857486349c240515f",
+            measurementId: "G-VZ3YBCEKYW"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         const PERMANENT_BAN_URL = 'https://meowinc-owner.github.io/enterclicker/permanent-ban';
         const MAX_ATTEMPTS = 5;
-        
-        // Get the expiry time from URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        let expiryTime = parseInt(urlParams.get('expiry'));
-        
-        // If no expiry in URL, check localStorage
-        if (!expiryTime) {
-            expiryTime = parseInt(localStorage.getItem('blacklistExpiry'));
-        }
-        
-        // If still no expiry, default to 10 minutes from now
-        if (!expiryTime) {
-            expiryTime = Date.now() + 600000;
-            localStorage.setItem('blacklistExpiry', expiryTime.toString());
-        }
-        
-        // Check for obvious tampering (expiry time in past or suspiciously short)
-        if (expiryTime < Date.now() || (expiryTime - Date.now()) < 300000) { // Less than 5 minutes remaining
-            // Only set permanent ban if expiry was in URL (indicating tampering)
-            if (urlParams.has('expiry')) {
-                localStorage.setItem('permanentBan', 'true');
-                window.location.href = PERMANENT_BAN_URL;
-            } else {
-                // If from localStorage, just reset to 10 minutes
-                expiryTime = Date.now() + 600000;
-                localStorage.setItem('blacklistExpiry', expiryTime.toString());
-            }
-        }
-        
-        // Get or initialize attempt counter
-        let attempts = parseInt(localStorage.getItem('unbanAttempts')) || 0;
-        if (attempts >= MAX_ATTEMPTS) {
-            localStorage.setItem('permanentBan', 'true');
-            window.location.href = PERMANENT_BAN_URL;
-        }
-        
+        const userId = 'replace_with_user_id';
+        const userRef = db.collection('bannedUsers').doc(userId);
+
         const countdownElement = document.getElementById('countdown');
         const unbanCodeInput = document.getElementById('unbanCode');
         const submitButton = document.getElementById('submitCode');
         const errorMessage = document.getElementById('errorMessage');
         const attemptsCounter = document.getElementById('attemptsCounter');
-        
-        // Update attempts counter display
-        function updateAttemptsDisplay() {
-            attemptsCounter.textContent = `Attempts remaining: ${MAX_ATTEMPTS - attempts}`;
+
+        async function fetchUserData() {
+            const doc = await userRef.get();
+            return doc.exists ? doc.data() : {};
         }
-        updateAttemptsDisplay();
-        
-        // Update countdown every second
-        function updateCountdown() {
-            const now = Date.now();
-            const remainingTime = Math.max(0, expiryTime - now);
-            
+
+        async function updateUserData(data) {
+            await userRef.set(data, { merge: true });
+        }
+
+        async function updateCountdown() {
+            const data = await fetchUserData();
+
+            const expiryTime = data.blacklistExpiry || (Date.now() + 600000);
+            if (!data.blacklistExpiry) {
+                await updateUserData({ blacklistExpiry: expiryTime });
+            }
+
+            const remainingTime = Math.max(0, expiryTime - Date.now());
+
+            if (data.permanentBan) {
+                window.location.href = PERMANENT_BAN_URL;
+                return;
+            }
+
             if (remainingTime <= 0) {
-                countdownElement.textContent = "Ban expired! You will be redirected...";
-                localStorage.removeItem('blacklistExpiry');
-                localStorage.removeItem('unbanAttempts');
+                countdownElement.textContent = "Ban expired! Redirecting...";
+                await userRef.delete();
                 setTimeout(() => {
                     window.location.href = "https://meowinc-owner.github.io/enterclicker/";
                 }, 2000);
                 return;
             }
-            
+
             const minutes = Math.floor(remainingTime / 60000);
             const seconds = Math.floor((remainingTime % 60000) / 1000);
             countdownElement.textContent = `Time remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            setTimeout(updateCountdown, 1000);
         }
-        
-        // Unban code dynamic checker
-submitButton.addEventListener('click', () => {
-    const userCode = unbanCodeInput.value.trim().toUpperCase();
-    const storedCode = localStorage.getItem('generatedUnbanCode');
-    const expiry = parseInt(localStorage.getItem('unbanCodeExpiry') || '0');
-    const codeUsed = localStorage.getItem('unbanCodeUsed');
 
-    if (Date.now() > expiry) {
-        errorMessage.textContent = 'Code expired.';
-        errorMessage.style.display = 'block';
-        return;
-    }
+        async function handleUnbanAttempt() {
+            const data = await fetchUserData();
+            let attempts = data.unbanAttempts || 0;
 
-    if (codeUsed === 'true') {
-        errorMessage.textContent = 'Code already used.';
-        errorMessage.style.display = 'block';
-        return;
-    }
-
-    if (userCode === storedCode) {
-        // Mark code as used
-        localStorage.setItem('unbanCodeUsed', 'true');
-        // Unban actions:
-        localStorage.removeItem('permanentBan');
-        localStorage.removeItem('blacklistExpiry');
-        localStorage.removeItem('unbanAttempts');
-        window.location.href = 'https://meowinc-owner.github.io/enterclicker/';
-    } else {
-        errorMessage.textContent = 'Invalid unban code.';
-        errorMessage.style.display = 'block';
-    }
-});
-
-        
-        // Also allow Enter key to submit
-        unbanCodeInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                submitButton.click();
+            if (unbanCodeInput.value.trim().toUpperCase() === "UNBAN-CHECKDEV") {
+                await userRef.delete();
+                window.location.href = "https://meowinc-owner.github.io/enterclicker/";
+                return;
             }
+
+            attempts++;
+            await updateUserData({ unbanAttempts: attempts });
+
+            const remainingAttempts = MAX_ATTEMPTS - attempts;
+            attemptsCounter.textContent = `Attempts remaining: ${remainingAttempts}`;
+
+            errorMessage.style.display = 'block';
+            setTimeout(() => { errorMessage.style.display = 'none'; }, 3000);
+
+            if (attempts >= MAX_ATTEMPTS) {
+                await updateUserData({ permanentBan: true });
+                window.location.href = PERMANENT_BAN_URL;
+            }
+        }
+
+        submitButton.addEventListener('click', handleUnbanAttempt);
+        unbanCodeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitButton.click();
         });
-        
-        // Initial update
+
         updateCountdown();
-        setInterval(updateCountdown, 1000);
-        
-        // Remove console tampering detection as it was causing false positives
     </script>
 </body>
 </html>
