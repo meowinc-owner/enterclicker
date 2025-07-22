@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Blacklisted</title>
+    <title>Permanent Ban - Enter Clicker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,18 +29,18 @@
             color: #dc3545;
             margin-bottom: 20px;
         }
-        .countdown {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 20px 0;
+        .permanent-ban-warning {
             color: #dc3545;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 20px 0;
         }
         .unban-form {
             margin-top: 30px;
         }
         input[type="text"] {
             padding: 10px;
-            width: 200px;
+            width: 250px;
             border: 1px solid #ced4da;
             border-radius: 4px;
             margin-right: 10px;
@@ -62,128 +62,71 @@
             margin-top: 10px;
             display: none;
         }
-        .attempts {
-            margin-top: 10px;
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Account Blacklisted</h1>
-        <p>Regrettably, the use of an autoclicker in an attempt to gain an unfair advantage resulted in the blacklisting of this account from the platform for 10 minutes, a consequence of violating the established terms of service.</p>
-        
-        <div class="countdown" id="countdown">Time remaining: 10:00</div>
-        
-        <div class="unban-form">
-            <p>If you have an unban code, you may enter it below:</p>
-            <input type="text" id="unbanCode" placeholder="Enter unban code">
-            <button id="submitCode">Submit</button>
-            <div class="error" id="errorMessage">Invalid unban code</div>
-            <div class="attempts" id="attemptsCounter">Attempts remaining: 5</div>
+        <h1>PERMANENT BAN</h1>
+        <div class="permanent-ban-warning">
+            You have been permanently banned for attempting to evade the blacklist system.
         </div>
         
-        <p style="margin-top: 30px;">If you wish to appeal, please email bertid000@niagaracatholic.ca or meowinc.owner@gmail.com.</p>
+        <p>Your account has been flagged for attempting to manipulate the ban system through console tampering or URL manipulation.</p>
+        
+        <div class="unban-form">
+            <p>To appeal this ban, please enter the permanent unban code:</p>
+            <input type="text" id="unbanCode" placeholder="Enter permanent unban code">
+            <button id="submitCode">Submit Appeal</button>
+            <div class="error" id="errorMessage">Invalid unban code</div>
+        </div>
+        
+        <p style="margin-top: 30px;">If you believe this is a mistake, please email bertid000@niagaracatholic.ca or meowinc.owner@gmail.com with proof of innocence.</p>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDRZjJpvd9TvP7aNaXnHvAKwbycn-O1VW4",
-            authDomain: "enterclickerleaderboard.firebaseapp.com",
-            projectId: "enterclickerleaderboard",
-            storageBucket: "enterclickerleaderboard.appspot.com",
-            messagingSenderId: "339564023566",
-            appId: "1:339564023566:web:bacf4857486349c240515f",
-            measurementId: "G-VZ3YBCEKYW"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        const PERMANENT_BAN_URL = 'https://meowinc-owner.github.io/enterclicker/permanent-ban';
-        const MAX_ATTEMPTS = 5;
-        const userId = 'replace_with_user_id';
-        const userRef = db.collection('bannedUsers').doc(userId);
-
-        const countdownElement = document.getElementById('countdown');
+        const PERMANENT_BAN_PASSCODE = "BANEVASION-APPEAL7819350264";
         const unbanCodeInput = document.getElementById('unbanCode');
         const submitButton = document.getElementById('submitCode');
         const errorMessage = document.getElementById('errorMessage');
-        const attemptsCounter = document.getElementById('attemptsCounter');
-
-        async function fetchUserData() {
-            const doc = await userRef.get();
-            return doc.exists ? doc.data() : {};
+        
+        // Check if actually permanently banned
+        if (localStorage.getItem('permanentBan') !== 'true') {
+            window.location.href = "https://meowinc-owner.github.io/enterclicker/";
         }
-
-        async function updateUserData(data) {
-            await userRef.set(data, { merge: true });
-        }
-
-        async function updateCountdown() {
-            const data = await fetchUserData();
-
-            const expiryTime = data.blacklistExpiry || (Date.now() + 600000);
-            if (!data.blacklistExpiry) {
-                await updateUserData({ blacklistExpiry: expiryTime });
-            }
-
-            const remainingTime = Math.max(0, expiryTime - Date.now());
-
-            if (data.permanentBan) {
-                window.location.href = PERMANENT_BAN_URL;
-                return;
-            }
-
-            if (remainingTime <= 0) {
-                countdownElement.textContent = "Ban expired! Redirecting...";
-                await userRef.delete();
-                setTimeout(() => {
-                    window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-                }, 2000);
-                return;
-            }
-
-            const minutes = Math.floor(remainingTime / 60000);
-            const seconds = Math.floor((remainingTime % 60000) / 1000);
-            countdownElement.textContent = `Time remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-
-            setTimeout(updateCountdown, 1000);
-        }
-
-        async function handleUnbanAttempt() {
-            const data = await fetchUserData();
-            let attempts = data.unbanAttempts || 0;
-
-            if (unbanCodeInput.value.trim().toUpperCase() === "UNBAN-CHECKDEV") {
-                await userRef.delete();
+        
+        // Check unban code
+        submitButton.addEventListener('click', () => {
+            if (unbanCodeInput.value.trim() === PERMANENT_BAN_PASSCODE) {
+                localStorage.removeItem('permanentBan');
+                localStorage.removeItem('blacklistExpiry');
                 window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-                return;
+            } else {
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
             }
-
-            attempts++;
-            await updateUserData({ unbanAttempts: attempts });
-
-            const remainingAttempts = MAX_ATTEMPTS - attempts;
-            attemptsCounter.textContent = `Attempts remaining: ${remainingAttempts}`;
-
-            errorMessage.style.display = 'block';
-            setTimeout(() => { errorMessage.style.display = 'none'; }, 3000);
-
-            if (attempts >= MAX_ATTEMPTS) {
-                await updateUserData({ permanentBan: true });
-                window.location.href = PERMANENT_BAN_URL;
-            }
-        }
-
-        submitButton.addEventListener('click', handleUnbanAttempt);
-        unbanCodeInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') submitButton.click();
         });
-
-        updateCountdown();
+        
+        // Also allow Enter key to submit
+        unbanCodeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitButton.click();
+            }
+        });
+        
+        // Basic console tampering detection
+        let consoleOpen = false;
+        const checkConsole = () => {
+            consoleOpen = true;
+        };
+        console.log('%c', checkConsole);
+        setTimeout(() => {
+            if (consoleOpen) {
+                // Just refresh to maintain ban if they keep console open
+                window.location.reload();
+            }
+        }, 1000);
     </script>
 </body>
 </html>
