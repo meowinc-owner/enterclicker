@@ -95,18 +95,39 @@
         }
         
         // Check unban code
-        submitButton.addEventListener('click', () => {
-            if (unbanCodeInput.value.trim() === PERMANENT_BAN_PASSCODE) {
-                localStorage.removeItem('permanentBan');
-                localStorage.removeItem('blacklistExpiry');
-                window.location.href = "https://meowinc-owner.github.io/enterclicker/";
-            } else {
-                errorMessage.style.display = 'block';
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                }, 3000);
-            }
-        });
+        // Unban code dynamic checker
+submitButton.addEventListener('click', () => {
+    const userCode = unbanCodeInput.value.trim().toUpperCase();
+    const storedCode = localStorage.getItem('generatedUnbanCode');
+    const expiry = parseInt(localStorage.getItem('unbanCodeExpiry') || '0');
+    const codeUsed = localStorage.getItem('unbanCodeUsed');
+
+    if (Date.now() > expiry) {
+        errorMessage.textContent = 'Code expired.';
+        errorMessage.style.display = 'block';
+        return;
+    }
+
+    if (codeUsed === 'true') {
+        errorMessage.textContent = 'Code already used.';
+        errorMessage.style.display = 'block';
+        return;
+    }
+
+    if (userCode === storedCode) {
+        // Mark code as used
+        localStorage.setItem('unbanCodeUsed', 'true');
+        // Unban actions:
+        localStorage.removeItem('permanentBan');
+        localStorage.removeItem('blacklistExpiry');
+        localStorage.removeItem('unbanAttempts');
+        window.location.href = 'https://meowinc-owner.github.io/enterclicker/';
+    } else {
+        errorMessage.textContent = 'Invalid unban code.';
+        errorMessage.style.display = 'block';
+    }
+});
+
         
         // Also allow Enter key to submit
         unbanCodeInput.addEventListener('keypress', (e) => {
