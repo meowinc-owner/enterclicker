@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Enter Clicker!</title>
@@ -59,18 +58,25 @@
             background-color: #1976D2;
         }
     </style>
-</head>
+<style type="text/css" id="operaUserStyle"></style></head>
 <body>
     <div class="welcome-content">
         <h1>Welcome to Enter Clicker!</h1>
         <p>Click your way to infinity and beyond! Press the button below to start playing.</p>
         <button class="play-button" id="playButton">Play</button>
+        <button class="leaderboard-button" id="leaderboardButton">Official Discord</button> <!-- New Leaderboard Button -->
     </div>
 
     <script>
         document.getElementById('playButton').addEventListener('click', function() {
             window.location.href = 'https://meowinc-owner.github.io/enterclicker/';
         });
+
+        // New Event Listener for the Leaderboard Button
+        document.getElementById('leaderboardButton').addEventListener('click', function() {
+            window.location.href = 'https://discord.gg/Hbp7WPkJm6';
+        });
     </script>
-</body>
-</html>
+
+
+</body></html>
